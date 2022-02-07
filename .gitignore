@@ -1,0 +1,43 @@
+# Ignore bundler config.
+/api/.bundle
+
+# Ignore all logfiles and tempfiles.
+/api/log/*
+/api/tmp/*
+/api!/log/.keep
+/api!/tmp/.keep
+
+# Ignore pidfiles, but keep the directory.
+/api/tmp/pids/*
+/api!/tmp/pids/
+/api!/tmp/pids/.keep
+
+# Ignore uploaded files in development.
+/api/storage/*
+/api!/storage/.keep
+/api/.byebug_history
+
+# Ignore master key for decrypting credentials and more.
+/api/config/master.key
+
+# dependencies
+/frontend/node_modules
+/frontend/.pnp
+/frontend/.pnp.js
+
+# testing
+/frontend/coverage
+
+# production
+/frontend/build
+
+# misc
+/frontend/.DS_Store
+/frontend/.env.local
+/frontend/.env.development.local
+/frontend/.env.test.local
+/frontend/.env.production.local
+
+/frontend/npm-debug.log*
+/frontend/yarn-debug.log*
+/frontend/yarn-error.log*
