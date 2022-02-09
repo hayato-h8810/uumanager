@@ -11,6 +11,8 @@ export default function Login() {
     onCompleted: (data) => {
       setEmail('')
       setPassword('')
+      // eslint-disable-next-line no-console
+      console.log(data.login?.user?.id)
       if (data.login?.user) {
         history.push(`/${data.login.user.id}`)
       }

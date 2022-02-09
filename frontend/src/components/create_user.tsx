@@ -13,6 +13,8 @@ export default function CreateUser() {
       setName('')
       setEmail('')
       setPassword('')
+      // eslint-disable-next-line no-console
+      console.log(data.createUser?.id)
       if (data.createUser?.id) {
         history.push(`/${data.createUser.id}`)
       }
