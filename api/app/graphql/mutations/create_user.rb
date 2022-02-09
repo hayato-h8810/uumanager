@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 module Mutations
-class CreateUser < BaseMutation
+  class CreateUser < BaseMutation
     # often we will need input types for specific mutation
     # in those cases we can define those input types in the mutation class itself
     class AuthProviderSignupData < Types::BaseInputObject
@@ -12,11 +14,13 @@ class CreateUser < BaseMutation
     type ObjectTypes::User
 
     def resolve(name: nil, auth_provider: nil)
-      User.create!(
+      user = User.create!(
         name: name,
         email: auth_provider&.[](:credentials)&.[](:email),
         password: auth_provider&.[](:credentials)&.[](:password)
       )
+      ConfirmationMailer.send_confirmation_mail(user).deliver
+      user
     end
   end
 end
