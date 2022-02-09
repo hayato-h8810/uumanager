@@ -20,6 +20,7 @@ module Mutations
         password: auth_provider&.[](:credentials)&.[](:password)
       )
       ConfirmationMailer.send_confirmation_mail(user).deliver
+      context[:session][:user_id] = user.id
       user
     end
   end

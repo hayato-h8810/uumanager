@@ -1,31 +1,25 @@
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useCreateUserMutation } from '../api/graphql'
+import { useLoginMutation } from '../api/graphql'
 
-export default function CreateUser() {
-  const [name, setName] = useState('')
+export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const history = useHistory()
-  const [createuser] = useCreateUserMutation({
-    variables: { name, credentials: { password, email } },
+  const [loginMutation] = useLoginMutation({
+    variables: { credentials: { password, email } },
     onCompleted: (data) => {
-      setName('')
       setEmail('')
       setPassword('')
-      if (data.createUser?.id) {
-        history.push(`/${data.createUser.id}`)
+      if (data.login?.user) {
+        history.push(`/${data.login.user.id}`)
       }
     },
   })
 
   return (
     <>
-      <h1>create_user</h1>
-      <label htmlFor="name">
-        name:
-        <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
-      </label>
+      <h1>login</h1>
       <label htmlFor="email">
         email:
         <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -35,7 +29,7 @@ export default function CreateUser() {
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </label>
       <br />
-      <input type="submit" value="新規作成" onClick={() => createuser()} />
+      <input onClick={() => loginMutation()} type="submit" value="ログイン" />
     </>
   )
 }
