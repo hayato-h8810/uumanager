@@ -7,7 +7,7 @@ export default function CreateUser() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const history = useHistory()
-  const [createuser] = useCreateUserMutation({
+  const [createuser,{loading}] = useCreateUserMutation({
     variables: { name, credentials: { password, email } },
     onCompleted: (data) => {
       setName('')
@@ -20,6 +20,8 @@ export default function CreateUser() {
       }
     },
   })
+
+  if (loading) return <h1>ロード中</h1>
 
   return (
     <>
@@ -36,7 +38,7 @@ export default function CreateUser() {
         password:
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </label>
-      <br />
+      <br/>
       <input type="submit" value="新規作成" onClick={() => createuser()} />
     </>
   )
