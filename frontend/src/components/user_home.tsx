@@ -1,18 +1,20 @@
 import { useHistory } from 'react-router-dom'
-import { useCurrentUserQuery,useLogoutLazyQuery } from '../api/graphql'
+import { useCurrentUserQuery, useLogoutLazyQuery } from '../api/graphql'
 
 export default function UserHome() {
-  const history = useHistory();
+  const history = useHistory()
   const [logoutquery] = useLogoutLazyQuery({
     onCompleted: (data) => {
       // eslint-disable-next-line no-console
       console.log(data?.logout?.id)
       if (!data?.logout?.id) history.push('/')
-    }
-  });
+    },
+  })
   const { data: { currentUser = null } = {}, loading } = useCurrentUserQuery({
     fetchPolicy: 'network-only',
     onCompleted: () => {
+      // eslint-disable-next-line no-console
+      console.log(currentUser?.id)
       if (!currentUser) history.push('/login')
     },
   })
@@ -21,8 +23,10 @@ export default function UserHome() {
 
   return (
     <>
-  <h1>user home</h1>
-  <button type = "button" onClick={() => logoutquery()}>ログアウト</button>
-  </>
+      <h1>user home</h1>
+      <button type="button" onClick={() => logoutquery()}>
+        ログアウト
+      </button>
+    </>
   )
 }
