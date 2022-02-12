@@ -2,10 +2,10 @@ import React from 'react'
 import './App.css'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import Home from './components/home'
-import CreateUser from './components/create_user'
+import CreateUser from './components/createUser'
 import Login from './components/login'
-import UserHome from './components/user_home'
-import PageNotFound from './components/page_not_found'
+import UserHome from './components/userHome'
+import PageNotFound from './components/pageNotFound'
 
 function App() {
   return (
