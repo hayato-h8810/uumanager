@@ -11,7 +11,6 @@ export default function Login() {
     onCompleted: (data) => {
       setEmail('')
       setPassword('')
-      // eslint-disable-next-line no-console
       console.log(data.login?.user?.id)
       if (data.login?.user) {
         history.push(`/${data.login.user.id}`)
@@ -31,7 +30,9 @@ export default function Login() {
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </label>
       <br />
-      <input onClick={() => loginMutation()} type="submit" value="ログイン" />
+      <button onClick={() => loginMutation()} type="submit">
+        ログイン
+      </button>
     </>
   )
 }

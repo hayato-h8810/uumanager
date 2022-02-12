@@ -6,14 +6,17 @@ export default function CreateUser() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [validateValue, setValidateValue] = useState('')
   const history = useHistory()
-  const [createuser,{loading}] = useCreateUserMutation({
+  const [createuser, { loading }] = useCreateUserMutation({
     variables: { name, credentials: { password, email } },
     onCompleted: (data) => {
       setName('')
       setEmail('')
       setPassword('')
-      // eslint-disable-next-line no-console
+      setConfirmPassword('')
+      setValidateValue('')
       console.log(data.createUser?.id)
       if (data.createUser?.id) {
         history.push(`/${data.createUser.id}`)
@@ -38,8 +41,26 @@ export default function CreateUser() {
         password:
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </label>
-      <br/>
-      <input type="submit" value="新規作成" onClick={() => createuser()} />
+      <br />
+      <p>{validateValue}</p>
+      <br />
+      <label htmlFor="password">
+        password(確認):
+        <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+      </label>
+      <br />
+      <button
+        type="button"
+        onClick={() => {
+          if (password === confirmPassword) {
+            createuser()
+          } else {
+            setValidateValue('入力値が一致しません。')
+          }
+        }}
+      >
+        新規作成
+      </button>
     </>
   )
 }
