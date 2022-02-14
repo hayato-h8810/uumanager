@@ -9,12 +9,13 @@ module Mutations
     field :user, ObjectTypes::User, null: true
 
     def resolve(credentials: nil)
+      raise GraphQL::ExecutionError, 'SESSION_ERROR' unless context[:session][:user_id].blank?
       return unless credentials
 
       user = User.find_by(email: credentials[:email])
 
-      return unless user
-      return unless user.authenticate(credentials[:password])
+      raise GraphQL::ExecutionError, 'EMAIL_ERROR' unless user
+      raise GraphQL::ExecutionError, 'PASSWORD_ERROR' unless user.authenticate(credentials[:password])
 
       context[:session][:user_id] = user.id
 

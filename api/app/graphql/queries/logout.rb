@@ -9,7 +9,7 @@ module Queries
     type Id, null: true
 
     def resolve
-      context[:session][:user_id]=nil
+      context[:session][:user_id] = nil
     end
   end
 end

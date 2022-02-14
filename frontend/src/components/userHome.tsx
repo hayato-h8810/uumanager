@@ -3,7 +3,7 @@ import { useCurrentUserQuery, useLogoutLazyQuery } from '../api/graphql'
 
 export default function UserHome() {
   const history = useHistory()
-  const [logoutquery] = useLogoutLazyQuery({
+  const [logoutQuery] = useLogoutLazyQuery({
     onCompleted: (data) => {
       console.log(data?.logout?.id)
       if (!data?.logout?.id) history.push('/')
@@ -22,7 +22,7 @@ export default function UserHome() {
   return (
     <>
       <h1>user home</h1>
-      <button type="button" onClick={() => logoutquery()}>
+      <button type="button" onClick={() => logoutQuery()}>
         ログアウト
       </button>
     </>
