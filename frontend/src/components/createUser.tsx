@@ -9,6 +9,8 @@ import Stack from '@mui/material/Stack'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import { useCreateUserMutation } from '../api/graphql'
+import Header from './header'
+import Footer from './footer'
 
 type FormInput = {
   name: string
@@ -63,7 +65,7 @@ export default function CreateUser() {
 
   return (
     <>
-      <Header>header</Header>
+      <Header />
       <Container>
         <h1>ユーザー新規作成</h1>
         <Stack direction="row" spacing={54.5} className="stack">
@@ -171,28 +173,10 @@ export default function CreateUser() {
           </LoadingButton>
         </form>
       </Container>
-      <Footer>footer</Footer>
+      <Footer />
     </>
   )
 }
-
-const Header = styled.div`
-  background: #344460;
-  width: 100%;
-  margin: 0 calc(50% - 50vw);
-  position: absolute;
-  top: 0;
-  height: 75px;
-`
-
-const Footer = styled.div`
-  background: #344460;
-  width: 100%;
-  margin: 0 calc(50% - 50vw);
-  position: absolute;
-  bottom: 0;
-  height: 55px;
-`
 
 const Container = styled.div`
   background: #fefefe;
@@ -238,7 +222,7 @@ const Container = styled.div`
         display: inline-block;
         position: absolute;
         right: 65%;
-        font-size: 15px;
+        font-size: 14px;
         z-index: 2;
       }
       .MuiTextField-root {
@@ -248,8 +232,8 @@ const Container = styled.div`
         z-index: 2;
       }
       .MuiTextField-root label {
-        font-size: 0.8rem;
-        top: -8px;
+        font-size: 0.7rem;
+        top: -7px;
       }
       .MuiTextField-root input {
         height: 0.01rem;
@@ -348,8 +332,8 @@ const Container = styled.div`
   .serverErrorcontainer {
     height: 30px;
     width: 100%;
-    position: relative;
-    top: 10px;
+    position: absolute;
+    top: 81.5%;
     .errorValue {
       font-size: 11px;
       color: red;
