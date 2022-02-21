@@ -9,8 +9,6 @@ import Stack from '@mui/material/Stack'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import { useLoginMutation } from '../api/graphql'
-import Header from './header'
-import Footer from './footer'
 
 type FormInput = {
   email: string
@@ -65,104 +63,113 @@ export default function Login() {
   }
 
   return (
-    <>
-      <Header />
-      <Container>
-        <h1>login</h1>
-        <Stack direction="row" spacing={54.5} className="stack">
+    <Container>
+      <h1>login</h1>
+      <Stack direction="row" spacing={54.5} className="stack">
+        <IconButton>
+          <RefreshIcon style={{ color: '#adadad', fontSize: '30px' }} />
+        </IconButton>
+        <div className="questionIcon">
           <IconButton>
-            <RefreshIcon style={{ color: '#adadad', fontSize: '30px' }} />
+            <QuestionMarkIcon style={{ color: 'white', fontSize: '15px' }} />
           </IconButton>
-          <div className="questionIcon">
-            <IconButton>
-              <QuestionMarkIcon style={{ color: 'white', fontSize: '15px' }} />
-            </IconButton>
+        </div>
+      </Stack>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="inputContainer">
+          <div className="inputLabel">
+            <div className="inputValue">メールアドレス:</div>
+            <TextField
+              {...register('email', {
+                required: { value: true, message: 'メールアドレス欄の入力は必須です' },
+                pattern: {
+                  value: /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]+\.[A-Za-z0-9]+$/,
+                  message: '無効なメールアドレスです',
+                },
+              })}
+              type="text"
+              variant="outlined"
+              label="メールアドレス"
+              inputProps={{
+                'data-cy': 'email',
+              }}
+            />
           </div>
-        </Stack>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="inputContainer">
-            <div className="inputLabel">
-              <div className="inputValue">メールアドレス:</div>
-              <TextField
-                {...register('email', {
-                  required: { value: true, message: 'メールアドレス欄の入力は必須です' },
-                  pattern: {
-                    value: /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]+\.[A-Za-z0-9]+$/,
-                    message: '無効なメールアドレスです',
-                  },
-                })}
-                type="text"
-                variant="outlined"
-                label="メールアドレス"
-              />
-            </div>
-            <div className="emailErrorContainer">
-              {emailServerError !== '' && (
-                <div className="error">
-                  <p className="errorValue">{emailServerError}</p>
-                </div>
-              )}
-              {errors.email?.message && (
-                <div className="error">
-                  <p className="errorValue">{errors.email.message}</p>
-                </div>
-              )}
-            </div>
-            <div className="inputLabel">
-              <div className="inputValue">パスワード:</div>
-              <TextField
-                {...register('password', { required: true })}
-                type="password"
-                variant="outlined"
-                label="パスワード"
-              />
-            </div>
-            <div className="passwordErrorContainer">
-              {passwordServerError !== '' && (
-                <div className="error">
-                  <p className="errorValue">{passwordServerError}</p>
-                </div>
-              )}
-              {errors.password && (
-                <div className="error">
-                  <p className="errorValue">パスワード欄の入力は必須です</p>
-                </div>
-              )}
-            </div>
+          <div className="emailErrorContainer">
+            {emailServerError !== '' && (
+              <div className="error">
+                <p className="errorValue">{emailServerError}</p>
+              </div>
+            )}
+            {errors.email?.message && (
+              <div className="error">
+                <p className="errorValue" data-cy="errorMessage">
+                  {errors.email.message}
+                </p>
+              </div>
+            )}
           </div>
-          {sessionServerError !== '' && (
-            <div className="serverErrorcontainer">
-              <p className="errorValue">{sessionServerError}</p>
-            </div>
-          )}
-          <LoadingButton
-            loading={loadingButton}
-            variant="contained"
-            type="submit"
-            onClick={() => {
-              setEmailServerError('')
-              setPasswordServerError('')
-              setSessionServerError('')
-            }}
-          >
-            ログイン
-          </LoadingButton>
-        </form>
-      </Container>
-      <Footer />
-    </>
+          <div className="inputLabel">
+            <div className="inputValue">パスワード:</div>
+            <TextField
+              {...register('password', { required: true })}
+              type="password"
+              variant="outlined"
+              label="パスワード"
+              inputProps={{
+                'data-cy': 'password',
+              }}
+            />
+          </div>
+          <div className="passwordErrorContainer">
+            {passwordServerError !== '' && (
+              <div className="error">
+                <p className="errorValue" data-cy="errorMessage">
+                  {passwordServerError}
+                </p>
+              </div>
+            )}
+            {errors.password && (
+              <div className="error">
+                <p className="errorValue">パスワード欄の入力は必須です</p>
+              </div>
+            )}
+          </div>
+        </div>
+        {sessionServerError !== '' && (
+          <div className="serverErrorcontainer">
+            <p className="errorValue" data-cy="errorMessage">
+              {sessionServerError}
+            </p>
+          </div>
+        )}
+        <LoadingButton
+          loading={loadingButton}
+          variant="contained"
+          type="submit"
+          onClick={() => {
+            setEmailServerError('')
+            setPasswordServerError('')
+            setSessionServerError('')
+          }}
+          data-cy="button"
+        >
+          ログイン
+        </LoadingButton>
+      </form>
+    </Container>
   )
 }
 
 const Container = styled.div`
   background: #fefefe;
-  width: 600px;
-  height: 550px;
+  height: 70vh;
+  aspect-ratio: 27/24;
   position: relative;
-  left: 0;
   right: 0;
-  top: 120px;
+  left: 0;
   margin: auto;
+  top: 16vh;
   > h1 {
     font-size: 30px;
     position: absolute;

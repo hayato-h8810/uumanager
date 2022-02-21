@@ -22,7 +22,7 @@ export default function UserHome() {
   return (
     <>
       <h1>user home</h1>
-      <button type="button" onClick={() => logoutQuery()}>
+      <button type="button" onClick={() => logoutQuery()} data-cy="logoutButton">
         ログアウト
       </button>
     </>

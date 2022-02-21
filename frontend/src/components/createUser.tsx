@@ -9,8 +9,6 @@ import Stack from '@mui/material/Stack'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import { useCreateUserMutation } from '../api/graphql'
-import Header from './header'
-import Footer from './footer'
 
 type FormInput = {
   name: string
@@ -64,129 +62,125 @@ export default function CreateUser() {
   }
 
   return (
-    <>
-      <Header />
-      <Container>
-        <h1>ユーザー新規作成</h1>
-        <Stack direction="row" spacing={54.5} className="stack">
+    <Container>
+      <h1>ユーザー新規作成</h1>
+      <Stack direction="row" spacing={54.5} className="stack">
+        <IconButton>
+          <RefreshIcon style={{ color: '#adadad', fontSize: '30px' }} />
+        </IconButton>
+        <div className="questionIcon">
           <IconButton>
-            <RefreshIcon style={{ color: '#adadad', fontSize: '30px' }} />
+            <QuestionMarkIcon style={{ color: 'white', fontSize: '15px' }} />
           </IconButton>
-          <div className="questionIcon">
-            <IconButton>
-              <QuestionMarkIcon style={{ color: 'white', fontSize: '15px' }} />
-            </IconButton>
+        </div>
+      </Stack>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="inputContainer">
+          <div className="inputLabel">
+            <div className="inputValue">名前:</div>
+            <TextField {...register('name', { required: true })} type="text" label="名前" variant="outlined" />
           </div>
-        </Stack>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="inputContainer">
-            <div className="inputLabel">
-              <div className="inputValue">名前:</div>
-              <TextField {...register('name', { required: true })} type="text" label="名前" variant="outlined" />
-            </div>
-            <div className="nameErrorContainer">
-              {errors.name && (
-                <div className="error">
-                  <p className="errorValue">名前欄の入力は必須です</p>
-                </div>
-              )}
-            </div>
-            <div className="inputLabel">
-              <div className="inputValue">メールアドレス:</div>
-              <TextField
-                {...register('email', {
-                  required: { value: true, message: 'email欄の入力は必須です' },
-                  pattern: {
-                    value: /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]+\.[A-Za-z0-9]+$/,
-                    message: '無効なメールアドレスです',
-                  },
-                })}
-                type="text"
-                label="メールアドレス"
-                variant="outlined"
-              />
-            </div>
-            <div className="emailErrorContainer">
-              {emailServerError !== '' && (
-                <div className="error">
-                  <p className="errorValue">{emailServerError}</p>
-                </div>
-              )}
-              {errors.email?.message && (
-                <div className="error">
-                  <p className="errorValue">{errors.email.message}</p>
-                </div>
-              )}
-            </div>
-            <div className="inputLabel">
-              <div className="inputValue">パスワード:</div>
-              <TextField
-                {...register('password', {
-                  required: { value: true, message: 'パスワード欄の入力は必須です' },
-                  minLength: { value: 6, message: 'パスワードは6文字以上、12文字以下です' },
-                  maxLength: { value: 12, message: 'パスワードは6文字以上、12文字以下です' },
-                })}
-                type="password"
-                label="パスワード(6文字以上、12文字以下)"
-                variant="outlined"
-              />
-            </div>
-            <div className="passwordErrorContainer">
-              {errors.password?.message && (
-                <div className="error">
-                  <p className="errorValue">{errors.password.message}</p>
-                </div>
-              )}
-            </div>
-            <div className="inputLabel">
-              <div className="inputValue">パスワード(確認):</div>
-              <TextField
-                {...register('confirmPassword', { validate: (value) => getValues('password') === value })}
-                type="password"
-                label="パスワード(確認)"
-                variant="outlined"
-              />
-            </div>
-            <div className="confirmPasswordErrorContainer">
-              {errors.confirmPassword && (
-                <div className="error">
-                  <p className="errorValue">入力値が一致しません</p>
-                </div>
-              )}
-            </div>
+          <div className="nameErrorContainer">
+            {errors.name && (
+              <div className="error">
+                <p className="errorValue">名前欄の入力は必須です</p>
+              </div>
+            )}
           </div>
-          {sessionServerError !== '' && (
-            <div className="serverErrorcontainer">
-              <p className="errorValue">{sessionServerError}</p>
-            </div>
-          )}
-          <LoadingButton
-            loading={loadingButton}
-            variant="contained"
-            type="submit"
-            onClick={() => {
-              setEmailServerError('')
-              setSessionServerError('')
-            }}
-          >
-            登録
-          </LoadingButton>
-        </form>
-      </Container>
-      <Footer />
-    </>
+          <div className="inputLabel">
+            <div className="inputValue">メールアドレス:</div>
+            <TextField
+              {...register('email', {
+                required: { value: true, message: 'email欄の入力は必須です' },
+                pattern: {
+                  value: /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]+\.[A-Za-z0-9]+$/,
+                  message: '無効なメールアドレスです',
+                },
+              })}
+              type="text"
+              label="メールアドレス"
+              variant="outlined"
+            />
+          </div>
+          <div className="emailErrorContainer">
+            {emailServerError !== '' && (
+              <div className="error">
+                <p className="errorValue">{emailServerError}</p>
+              </div>
+            )}
+            {errors.email?.message && (
+              <div className="error">
+                <p className="errorValue">{errors.email.message}</p>
+              </div>
+            )}
+          </div>
+          <div className="inputLabel">
+            <div className="inputValue">パスワード:</div>
+            <TextField
+              {...register('password', {
+                required: { value: true, message: 'パスワード欄の入力は必須です' },
+                minLength: { value: 6, message: 'パスワードは6文字以上、12文字以下です' },
+                maxLength: { value: 12, message: 'パスワードは6文字以上、12文字以下です' },
+              })}
+              type="password"
+              label="パスワード(6文字以上、12文字以下)"
+              variant="outlined"
+            />
+          </div>
+          <div className="passwordErrorContainer">
+            {errors.password?.message && (
+              <div className="error">
+                <p className="errorValue">{errors.password.message}</p>
+              </div>
+            )}
+          </div>
+          <div className="inputLabel">
+            <div className="inputValue">パスワード(確認):</div>
+            <TextField
+              {...register('confirmPassword', { validate: (value) => getValues('password') === value })}
+              type="password"
+              label="パスワード(確認)"
+              variant="outlined"
+            />
+          </div>
+          <div className="confirmPasswordErrorContainer">
+            {errors.confirmPassword && (
+              <div className="error">
+                <p className="errorValue">入力値が一致しません</p>
+              </div>
+            )}
+          </div>
+        </div>
+        {sessionServerError !== '' && (
+          <div className="serverErrorcontainer">
+            <p className="errorValue">{sessionServerError}</p>
+          </div>
+        )}
+        <LoadingButton
+          loading={loadingButton}
+          variant="contained"
+          type="submit"
+          onClick={() => {
+            setEmailServerError('')
+            setSessionServerError('')
+          }}
+        >
+          登録
+        </LoadingButton>
+      </form>
+    </Container>
   )
 }
 
 const Container = styled.div`
   background: #fefefe;
-  width: 600px;
-  height: 550px;
+  height: 70vh;
+  aspect-ratio: 27/24;
   position: relative;
-  left: 0;
   right: 0;
-  top: 120px;
+  left: 0;
   margin: auto;
+  top: 16vh;
   > h1 {
     font-size: 30px;
     position: absolute;

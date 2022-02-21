@@ -10,5 +10,5 @@ const HeaderContainer = styled.div`
   margin: 0 calc(50% - 50vw);
   position: absolute;
   top: 0;
-  height: 75px;
+  height: 9vh;
 `

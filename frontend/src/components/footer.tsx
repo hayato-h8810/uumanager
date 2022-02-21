@@ -10,5 +10,5 @@ const FooterContainer = styled.div`
   margin: 0 calc(50% - 50vw);
   position: absolute;
   bottom: 0;
-  height: 55px;
+  height: 7.5vh;
 `
