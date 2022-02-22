@@ -1,5 +1,7 @@
 import { useHistory } from 'react-router-dom'
 import { useCurrentUserQuery, useLogoutLazyQuery } from '../api/graphql'
+import Header from './header'
+import Footer from './footer'
 
 export default function UserHome() {
   const history = useHistory()
@@ -21,10 +23,12 @@ export default function UserHome() {
 
   return (
     <>
+      <Header />
       <h1>user home</h1>
       <button type="button" onClick={() => logoutQuery()} data-cy="logoutButton">
         ログアウト
       </button>
+      <Footer />
     </>
   )
 }

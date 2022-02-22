@@ -9,6 +9,8 @@ import Stack from '@mui/material/Stack'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import { useLoginMutation } from '../api/graphql'
+import Header from './header'
+import Footer from './footer'
 
 type FormInput = {
   email: string
@@ -63,101 +65,105 @@ export default function Login() {
   }
 
   return (
-    <Container>
-      <h1>login</h1>
-      <Stack direction="row" spacing={54.5} className="stack">
-        <IconButton>
-          <RefreshIcon style={{ color: '#adadad', fontSize: '30px' }} />
-        </IconButton>
-        <div className="questionIcon">
+    <>
+      <Header />
+      <Container>
+        <h1>login</h1>
+        <IconContainer direction="row" spacing={54.5}>
           <IconButton>
-            <QuestionMarkIcon style={{ color: 'white', fontSize: '15px' }} />
+            <RefreshIcon style={{ color: '#adadad', fontSize: '30px' }} />
           </IconButton>
-        </div>
-      </Stack>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="inputContainer">
-          <div className="inputLabel">
-            <div className="inputValue">メールアドレス:</div>
-            <TextField
-              {...register('email', {
-                required: { value: true, message: 'メールアドレス欄の入力は必須です' },
-                pattern: {
-                  value: /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]+\.[A-Za-z0-9]+$/,
-                  message: '無効なメールアドレスです',
-                },
-              })}
-              type="text"
-              variant="outlined"
-              label="メールアドレス"
-              inputProps={{
-                'data-cy': 'email',
-              }}
-            />
+          <div className="questionIcon">
+            <IconButton>
+              <QuestionMarkIcon style={{ color: 'white', fontSize: '15px' }} />
+            </IconButton>
           </div>
-          <div className="emailErrorContainer">
-            {emailServerError !== '' && (
-              <div className="error">
-                <p className="errorValue">{emailServerError}</p>
-              </div>
-            )}
-            {errors.email?.message && (
-              <div className="error">
-                <p className="errorValue" data-cy="errorMessage">
-                  {errors.email.message}
-                </p>
-              </div>
-            )}
-          </div>
-          <div className="inputLabel">
-            <div className="inputValue">パスワード:</div>
-            <TextField
-              {...register('password', { required: true })}
-              type="password"
-              variant="outlined"
-              label="パスワード"
-              inputProps={{
-                'data-cy': 'password',
-              }}
-            />
-          </div>
-          <div className="passwordErrorContainer">
-            {passwordServerError !== '' && (
-              <div className="error">
-                <p className="errorValue" data-cy="errorMessage">
-                  {passwordServerError}
-                </p>
-              </div>
-            )}
-            {errors.password && (
-              <div className="error">
-                <p className="errorValue">パスワード欄の入力は必須です</p>
-              </div>
-            )}
-          </div>
-        </div>
-        {sessionServerError !== '' && (
-          <div className="serverErrorcontainer">
-            <p className="errorValue" data-cy="errorMessage">
-              {sessionServerError}
-            </p>
-          </div>
-        )}
-        <LoadingButton
-          loading={loadingButton}
-          variant="contained"
-          type="submit"
-          onClick={() => {
-            setEmailServerError('')
-            setPasswordServerError('')
-            setSessionServerError('')
-          }}
-          data-cy="button"
-        >
-          ログイン
-        </LoadingButton>
-      </form>
-    </Container>
+        </IconContainer>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <InputContainer>
+            <InputField>
+              <div className="inputValue">メールアドレス:</div>
+              <TextField
+                {...register('email', {
+                  required: { value: true, message: 'メールアドレス欄の入力は必須です' },
+                  pattern: {
+                    value: /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]+\.[A-Za-z0-9]+$/,
+                    message: '無効なメールアドレスです',
+                  },
+                })}
+                type="text"
+                variant="outlined"
+                label="メールアドレス"
+                inputProps={{
+                  'data-cy': 'email',
+                }}
+              />
+            </InputField>
+            <EmailErrorContainer>
+              {emailServerError !== '' && (
+                <div className="error">
+                  <p className="errorValue">{emailServerError}</p>
+                </div>
+              )}
+              {errors.email?.message && (
+                <ErrorField>
+                  <p className="errorValue" data-cy="errorMessage">
+                    {errors.email.message}
+                  </p>
+                </ErrorField>
+              )}
+            </EmailErrorContainer>
+            <InputField>
+              <div className="inputValue">パスワード:</div>
+              <TextField
+                {...register('password', { required: true })}
+                type="password"
+                variant="outlined"
+                label="パスワード"
+                inputProps={{
+                  'data-cy': 'password',
+                }}
+              />
+            </InputField>
+            <PasswordErrorContainer>
+              {passwordServerError !== '' && (
+                <ErrorField>
+                  <p className="errorValue" data-cy="errorMessage">
+                    {passwordServerError}
+                  </p>
+                </ErrorField>
+              )}
+              {errors.password && (
+                <div className="error">
+                  <p className="errorValue">パスワード欄の入力は必須です</p>
+                </div>
+              )}
+            </PasswordErrorContainer>
+          </InputContainer>
+          {sessionServerError !== '' && (
+            <ServerErrorContainer>
+              <p className="errorValue" data-cy="errorMessage">
+                {sessionServerError}
+              </p>
+            </ServerErrorContainer>
+          )}
+          <LoadingButton
+            loading={loadingButton}
+            variant="contained"
+            type="submit"
+            onClick={() => {
+              setEmailServerError('')
+              setPasswordServerError('')
+              setSessionServerError('')
+            }}
+            data-cy="button"
+          >
+            ログイン
+          </LoadingButton>
+        </form>
+      </Container>
+      <Footer />
+    </>
   )
 }
 
@@ -177,110 +183,105 @@ const Container = styled.div`
     margin: auto;
     top: 10%;
   }
-  .stack {
-    position: absolute;
-    left: 6%;
-    top: 5%;
-    .questionIcon {
-      margin-top: 5px;
-      .MuiIconButton-root {
-        background: #ffc120;
-      }
-    }
-  }
-  .inputContainer {
-    position: relative;
-    top: 130px;
-    padding-top: 75px;
-    height: 250px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 440px;
-    border-top: 1px solid #b4b4b4;
-    border-bottom: 1px solid #b4b4b4;
-    .inputLabel {
-      padding-bottom: 130px;
-      .inputValue {
-        padding-top: 5px;
-        display: inline-block;
-        position: absolute;
-        right: 65%;
-        font-size: 13px;
-        z-index: 2;
-      }
-      .MuiTextField-root {
-        width: 225px;
-        position: absolute;
-        right: 10%;
-        z-index: 2;
-      }
-      .MuiTextField-root label {
-        font-size: 0.7rem;
-        top: -7px;
-      }
-      .MuiTextField-root input {
-        height: 0.01rem;
-        font-size: 0.8rem;
-        font-weight: normal;
-        background-color: #ffffff;
-      }
-    }
-    .emailErrorContainer {
-      background: #f6f6f6;
-      height: 30px;
-      width: 100%;
-      position: absolute;
-      top: 28%;
-      z-index: 1;
-      .error {
-        background: #f6f6f6;
-        height: 37px;
-        position: relative;
-        .errorValue {
-          font-size: 11px;
-          position: absolute;
-          left: 40%;
-          top: 18%;
-          color: red;
-        }
-      }
-    }
-    .passwordErrorContainer {
-      background: #f6f6f6;
-      height: 30px;
-      width: 100%;
-      position: absolute;
-      top: 68%;
-      z-index: 1;
-      .error {
-        background: #f6f6f6;
-        height: 37px;
-        position: relative;
-        .errorValue {
-          font-size: 11px;
-          position: absolute;
-          left: 40%;
-          top: 18%;
-          color: red;
-        }
-      }
-    }
-  }
   .MuiLoadingButton-root {
     position: absolute;
     top: 87%;
     left: 42%;
     background: #20a1ff;
   }
-  .serverErrorcontainer {
-    height: 30px;
-    width: 100%;
-    position: absolute;
-    top: 81.5%;
-    .errorValue {
-      font-size: 11px;
-      color: red;
-      text-align: center;
+`
+
+const IconContainer = styled(Stack)`
+  position: absolute;
+  left: 6%;
+  top: 5%;
+  .questionIcon {
+    margin-top: 5px;
+    .MuiIconButton-root {
+      background: #ffc120;
     }
+  }
+`
+
+const InputContainer = styled.div`
+  position: relative;
+  top: 130px;
+  padding-top: 75px;
+  height: 250px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 440px;
+  border-top: 1px solid #b4b4b4;
+  border-bottom: 1px solid #b4b4b4;
+`
+
+const InputField = styled.div`
+  padding-bottom: 130px;
+  .inputValue {
+    padding-top: 5px;
+    display: inline-block;
+    position: absolute;
+    right: 65%;
+    font-size: 13px;
+    z-index: 2;
+  }
+  .MuiTextField-root {
+    width: 225px;
+    position: absolute;
+    right: 10%;
+    z-index: 2;
+  }
+  .MuiTextField-root label {
+    font-size: 0.7rem;
+    top: -7px;
+  }
+  .MuiTextField-root input {
+    height: 0.01rem;
+    font-size: 0.8rem;
+    font-weight: normal;
+    background-color: #ffffff;
+  }
+`
+
+const EmailErrorContainer = styled.div`
+  background: #f6f6f6;
+  height: 30px;
+  width: 100%;
+  position: absolute;
+  top: 28%;
+  z-index: 1;
+`
+
+const PasswordErrorContainer = styled.div`
+  background: #f6f6f6;
+  height: 30px;
+  width: 100%;
+  position: absolute;
+  top: 68%;
+  z-index: 1;
+`
+
+const ErrorField = styled.div`
+  background: #f6f6f6;
+  height: 37px;
+  position: relative;
+  .errorValue {
+    font-size: 11px;
+    position: absolute;
+    left: 40%;
+    top: 18%;
+    color: red;
+  }
+`
+
+const ServerErrorContainer = styled.div`
+  height: 30px;
+  width: 100%;
+  position: absolute;
+  top: 81.5%;
+  .errorValue {
+    font-size: 11px;
+    color: red;
+    text-align: center;
   }
 `
