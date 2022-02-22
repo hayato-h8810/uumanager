@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  query logout {
+  mutation logout {
     logout {
       id
     }

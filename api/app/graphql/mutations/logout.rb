@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
-module Queries
-  class Logout < BaseQuery
-    class Id < Types::BaseObject
+module Mutations
+  class Logout < BaseNoArgumentMutation
+    null true
       field :id, String, null: true
-    end
-
-    type Id, null: true
+    
 
     def resolve
       context[:session][:user_id] = nil

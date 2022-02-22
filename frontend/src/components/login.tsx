@@ -101,9 +101,9 @@ export default function Login() {
             </InputField>
             <EmailErrorContainer>
               {emailServerError !== '' && (
-                <div className="error">
+                <ErrorField>
                   <p className="errorValue">{emailServerError}</p>
-                </div>
+                </ErrorField>
               )}
               {errors.email?.message && (
                 <ErrorField>
@@ -134,9 +134,9 @@ export default function Login() {
                 </ErrorField>
               )}
               {errors.password && (
-                <div className="error">
+                <ErrorField>
                   <p className="errorValue">パスワード欄の入力は必須です</p>
-                </div>
+                </ErrorField>
               )}
             </PasswordErrorContainer>
           </InputContainer>

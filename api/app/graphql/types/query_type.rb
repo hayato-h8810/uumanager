@@ -10,6 +10,6 @@ module Types
     # They will be entry points for queries on your schema.
 
     field :current_user, resolver: Queries::CurrentUser
-    field :logout, resolver: Queries::Logout
+    
   end
 end
