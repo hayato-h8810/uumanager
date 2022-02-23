@@ -5,7 +5,6 @@ import styled from 'styled-components'
 import LoadingButton from '@mui/lab/LoadingButton'
 import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
-import Stack from '@mui/material/Stack'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import { useCreateUserMutation } from '../api/graphql'
@@ -67,22 +66,28 @@ export default function CreateUser() {
     <>
       <Header />
       <Container>
-        <h1>ユーザー新規作成</h1>
-        <IconContainer direction="row" spacing={54.5}>
+        <RefreshIconContainer>
           <IconButton>
             <RefreshIcon style={{ color: '#adadad', fontSize: '30px' }} />
           </IconButton>
-          <div className="questionIcon">
-            <IconButton>
-              <QuestionMarkIcon style={{ color: 'white', fontSize: '15px' }} />
-            </IconButton>
-          </div>
-        </IconContainer>
+        </RefreshIconContainer>
+        <QuestionIconContainer>
+          <IconButton size="small">
+            <QuestionMarkIcon style={{ color: 'white', fontSize: '20px' }} />
+          </IconButton>
+        </QuestionIconContainer>
+        <h1>ユーザー新規作成</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           <InputContainer>
             <InputField>
               <div className="inputValue">名前:</div>
-              <TextField {...register('name', { required: true })} type="text" label="名前" variant="outlined" />
+              <TextField
+                {...register('name', { required: true })}
+                type="text"
+                label="名前"
+                variant="outlined"
+                size="small"
+              />
             </InputField>
             <NameErrorContainer>
               {errors.name && (
@@ -104,6 +109,7 @@ export default function CreateUser() {
                 type="text"
                 label="メールアドレス"
                 variant="outlined"
+                size="small"
               />
             </InputField>
             <EmailErrorContainer>
@@ -129,6 +135,7 @@ export default function CreateUser() {
                 type="password"
                 label="パスワード(6文字以上、12文字以下)"
                 variant="outlined"
+                size="small"
               />
             </InputField>
             <PasswordErrorContainer>
@@ -145,6 +152,7 @@ export default function CreateUser() {
                 type="password"
                 label="パスワード(確認)"
                 variant="outlined"
+                size="small"
               />
             </InputField>
             <ConfirmPasswordErrorContainer>
@@ -179,20 +187,17 @@ export default function CreateUser() {
 }
 
 const Container = styled.div`
-  background: #fefefe;
-  height: 70vh;
-  aspect-ratio: 27/24;
   position: relative;
-  right: 0;
-  left: 0;
-  margin: auto;
-  top: 16vh;
+  height: 544px;
+  margin-top: 60px;
+  width: 676px;
+  background: #fefefe;
+  margin-left: auto;
+  margin-right: auto;
   > h1 {
+    padding-top: 70px;
     font-size: 30px;
-    position: absolute;
-    left: 30%;
-    margin: auto;
-    top: 10%;
+    text-align: center;
   }
   .MuiLoadingButton-root {
     position: absolute;
@@ -202,13 +207,19 @@ const Container = styled.div`
   }
 `
 
-const IconContainer = styled(Stack)`
+const RefreshIconContainer = styled.div`
   position: absolute;
-  left: 6%;
-  top: 5%;
-  .questionIcon {
-    margin-top: 5px;
-    .MuiIconButton-root {
+  top: 30px;
+  left: 40px;
+`
+
+const QuestionIconContainer = styled.div`
+  position: absolute;
+  top: 30px;
+  right: 45px;
+  .MuiIconButton-root {
+    background: #ffc120;
+    :hover {
       background: #ffc120;
     }
   }
@@ -216,38 +227,37 @@ const IconContainer = styled(Stack)`
 
 const InputContainer = styled.div`
   position: relative;
-  top: 130px;
-  padding-top: 30px;
-  padding-bottom: 10px;
+  padding-top: 44px;
+  padding-bottom: 24px;
   margin-left: auto;
   margin-right: auto;
-  width: 440px;
+  width: 470px;
   border-top: 1px solid #b4b4b4;
   border-bottom: 1px solid #b4b4b4;
 `
 
 const InputField = styled.div`
-  padding-bottom: 70px;
+  padding-bottom: 63px;
   .inputValue {
     padding-top: 5px;
     display: inline-block;
     position: absolute;
     right: 65%;
-    font-size: 14px;
+    font-size: 13px;
     z-index: 2;
   }
   .MuiTextField-root {
     width: 225px;
     position: absolute;
-    right: 10%;
+    right: 13%;
     z-index: 2;
   }
   .MuiTextField-root label {
     font-size: 0.7rem;
-    top: -7px;
+    top: -2px;
   }
   .MuiTextField-root input {
-    height: 0.01rem;
+    height: 1em;
     font-size: 0.8rem;
     font-weight: normal;
     background-color: #ffffff;
@@ -259,7 +269,7 @@ const NameErrorContainer = styled.div`
   height: 30px;
   width: 100%;
   position: absolute;
-  top: 14%;
+  top: 60px;
   z-index: 1;
 `
 
@@ -268,7 +278,7 @@ const EmailErrorContainer = styled.div`
   height: 30px;
   width: 100%;
   position: absolute;
-  top: 36%;
+  top: 123px;
   z-index: 1;
 `
 
@@ -277,7 +287,7 @@ const PasswordErrorContainer = styled.div`
   height: 30px;
   width: 100%;
   position: absolute;
-  top: 58%;
+  top: 186px;
   z-index: 1;
 `
 
@@ -286,7 +296,7 @@ const ConfirmPasswordErrorContainer = styled.div`
   height: 30px;
   width: 100%;
   position: absolute;
-  top: 80%;
+  top: 249px;
   z-index: 1;
 `
 
@@ -307,7 +317,7 @@ const ServerErrorContainer = styled.div`
   height: 30px;
   width: 100%;
   position: absolute;
-  top: 81.5%;
+  top: 82%;
   .errorValue {
     font-size: 11px;
     color: red;

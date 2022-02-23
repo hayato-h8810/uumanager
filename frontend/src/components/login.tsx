@@ -69,16 +69,16 @@ export default function Login() {
       <Header />
       <Container>
         <h1>login</h1>
-        <IconContainer direction="row" spacing={54.5}>
+        <RefreshIconContainer>
           <IconButton>
             <RefreshIcon style={{ color: '#adadad', fontSize: '30px' }} />
           </IconButton>
-          <div className="questionIcon">
-            <IconButton>
-              <QuestionMarkIcon style={{ color: 'white', fontSize: '15px' }} />
-            </IconButton>
-          </div>
-        </IconContainer>
+        </RefreshIconContainer>
+        <QuestionIconContainer>
+          <IconButton size="small">
+            <QuestionMarkIcon style={{ color: 'white', fontSize: '20px' }} />
+          </IconButton>
+        </QuestionIconContainer>
         <form onSubmit={handleSubmit(onSubmit)}>
           <InputContainer>
             <InputField>
@@ -168,20 +168,17 @@ export default function Login() {
 }
 
 const Container = styled.div`
-  background: #fefefe;
-  height: 70vh;
-  aspect-ratio: 27/24;
   position: relative;
-  right: 0;
-  left: 0;
-  margin: auto;
-  top: 16vh;
+  height: 544px;
+  margin-top: 60px;
+  width: 676px;
+  background: #fefefe;
+  margin-left: auto;
+  margin-right: auto;
   > h1 {
+    padding-top: 70px;
     font-size: 30px;
-    position: absolute;
-    left: 43%;
-    margin: auto;
-    top: 10%;
+    text-align: center;
   }
   .MuiLoadingButton-root {
     position: absolute;
@@ -191,13 +188,19 @@ const Container = styled.div`
   }
 `
 
-const IconContainer = styled(Stack)`
+const RefreshIconContainer = styled.div`
   position: absolute;
-  left: 6%;
-  top: 5%;
-  .questionIcon {
-    margin-top: 5px;
-    .MuiIconButton-root {
+  top: 30px;
+  left: 40px;
+`
+
+const QuestionIconContainer = styled.div`
+  position: absolute;
+  top: 30px;
+  right: 45px;
+  .MuiIconButton-root {
+    background: #ffc120;
+    :hover {
       background: #ffc120;
     }
   }
@@ -205,18 +208,16 @@ const IconContainer = styled(Stack)`
 
 const InputContainer = styled.div`
   position: relative;
-  top: 130px;
-  padding-top: 75px;
-  height: 250px;
+  padding-top: 80px;
   margin-left: auto;
   margin-right: auto;
-  width: 440px;
+  width: 470px;
   border-top: 1px solid #b4b4b4;
   border-bottom: 1px solid #b4b4b4;
 `
 
 const InputField = styled.div`
-  padding-bottom: 130px;
+  padding-bottom: 120px;
   .inputValue {
     padding-top: 5px;
     display: inline-block;
@@ -248,7 +249,7 @@ const EmailErrorContainer = styled.div`
   height: 30px;
   width: 100%;
   position: absolute;
-  top: 28%;
+  top: 30%;
   z-index: 1;
 `
 
@@ -257,7 +258,7 @@ const PasswordErrorContainer = styled.div`
   height: 30px;
   width: 100%;
   position: absolute;
-  top: 68%;
+  top: 67%;
   z-index: 1;
 `
 
@@ -278,7 +279,7 @@ const ServerErrorContainer = styled.div`
   height: 30px;
   width: 100%;
   position: absolute;
-  top: 81.5%;
+  top: 82%;
   .errorValue {
     font-size: 11px;
     color: red;

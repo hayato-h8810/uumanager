@@ -19,7 +19,7 @@ const GlobalStyle = createGlobalStyle`
   body{     
     background: #E9EEEF;     
     margin: 0 calc(50% - 50vw);  
-    font-family: "Noto Sans JP";     
+    font-family: "Noto Sans JP";
   }
 `
 

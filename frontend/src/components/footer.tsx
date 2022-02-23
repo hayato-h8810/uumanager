@@ -7,8 +7,6 @@ export default function Footer() {
 const FooterContainer = styled.div`
   background: #344460;
   width: 100%;
-  margin: 0 calc(50% - 50vw);
-  position: absolute;
-  bottom: 0;
-  height: 7.5vh;
+  margin-top: 55px;
+  height: 55px;
 `
