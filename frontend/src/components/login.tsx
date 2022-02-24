@@ -5,12 +5,9 @@ import styled from 'styled-components'
 import LoadingButton from '@mui/lab/LoadingButton'
 import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
-import Stack from '@mui/material/Stack'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import { useLoginMutation } from '../api/graphql'
-import Header from './header'
-import Footer from './footer'
 
 type FormInput = {
   email: string
@@ -65,105 +62,101 @@ export default function Login() {
   }
 
   return (
-    <>
-      <Header />
-      <Container>
-        <h1>login</h1>
-        <RefreshIconContainer>
-          <IconButton>
-            <RefreshIcon style={{ color: '#adadad', fontSize: '30px' }} />
-          </IconButton>
-        </RefreshIconContainer>
-        <QuestionIconContainer>
-          <IconButton size="small">
-            <QuestionMarkIcon style={{ color: 'white', fontSize: '20px' }} />
-          </IconButton>
-        </QuestionIconContainer>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <InputContainer>
-            <InputField>
-              <div className="inputValue">メールアドレス:</div>
-              <TextField
-                {...register('email', {
-                  required: { value: true, message: 'メールアドレス欄の入力は必須です' },
-                  pattern: {
-                    value: /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]+\.[A-Za-z0-9]+$/,
-                    message: '無効なメールアドレスです',
-                  },
-                })}
-                type="text"
-                variant="outlined"
-                label="メールアドレス"
-                inputProps={{
-                  'data-cy': 'email',
-                }}
-              />
-            </InputField>
-            <EmailErrorContainer>
-              {emailServerError !== '' && (
-                <ErrorField>
-                  <p className="errorValue">{emailServerError}</p>
-                </ErrorField>
-              )}
-              {errors.email?.message && (
-                <ErrorField>
-                  <p className="errorValue" data-cy="errorMessage">
-                    {errors.email.message}
-                  </p>
-                </ErrorField>
-              )}
-            </EmailErrorContainer>
-            <InputField>
-              <div className="inputValue">パスワード:</div>
-              <TextField
-                {...register('password', { required: true })}
-                type="password"
-                variant="outlined"
-                label="パスワード"
-                inputProps={{
-                  'data-cy': 'password',
-                }}
-              />
-            </InputField>
-            <PasswordErrorContainer>
-              {passwordServerError !== '' && (
-                <ErrorField>
-                  <p className="errorValue" data-cy="errorMessage">
-                    {passwordServerError}
-                  </p>
-                </ErrorField>
-              )}
-              {errors.password && (
-                <ErrorField>
-                  <p className="errorValue">パスワード欄の入力は必須です</p>
-                </ErrorField>
-              )}
-            </PasswordErrorContainer>
-          </InputContainer>
-          {sessionServerError !== '' && (
-            <ServerErrorContainer>
-              <p className="errorValue" data-cy="errorMessage">
-                {sessionServerError}
-              </p>
-            </ServerErrorContainer>
-          )}
-          <LoadingButton
-            loading={loadingButton}
-            variant="contained"
-            type="submit"
-            onClick={() => {
-              setEmailServerError('')
-              setPasswordServerError('')
-              setSessionServerError('')
-            }}
-            data-cy="button"
-          >
-            ログイン
-          </LoadingButton>
-        </form>
-      </Container>
-      <Footer />
-    </>
+    <Container>
+      <h1>login</h1>
+      <RefreshIconContainer>
+        <IconButton>
+          <RefreshIcon style={{ color: '#adadad', fontSize: '30px' }} />
+        </IconButton>
+      </RefreshIconContainer>
+      <QuestionIconContainer>
+        <IconButton size="small">
+          <QuestionMarkIcon style={{ color: 'white', fontSize: '20px' }} />
+        </IconButton>
+      </QuestionIconContainer>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <InputContainer>
+          <InputField>
+            <div className="inputValue">メールアドレス:</div>
+            <TextField
+              {...register('email', {
+                required: { value: true, message: 'メールアドレス欄の入力は必須です' },
+                pattern: {
+                  value: /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]+\.[A-Za-z0-9]+$/,
+                  message: '無効なメールアドレスです',
+                },
+              })}
+              type="text"
+              variant="outlined"
+              label="メールアドレス"
+              inputProps={{
+                'data-cy': 'email',
+              }}
+            />
+          </InputField>
+          <EmailErrorContainer>
+            {emailServerError !== '' && (
+              <ErrorField>
+                <p className="errorValue">{emailServerError}</p>
+              </ErrorField>
+            )}
+            {errors.email?.message && (
+              <ErrorField>
+                <p className="errorValue" data-cy="errorMessage">
+                  {errors.email.message}
+                </p>
+              </ErrorField>
+            )}
+          </EmailErrorContainer>
+          <InputField>
+            <div className="inputValue">パスワード:</div>
+            <TextField
+              {...register('password', { required: true })}
+              type="password"
+              variant="outlined"
+              label="パスワード"
+              inputProps={{
+                'data-cy': 'password',
+              }}
+            />
+          </InputField>
+          <PasswordErrorContainer>
+            {passwordServerError !== '' && (
+              <ErrorField>
+                <p className="errorValue" data-cy="errorMessage">
+                  {passwordServerError}
+                </p>
+              </ErrorField>
+            )}
+            {errors.password && (
+              <ErrorField>
+                <p className="errorValue">パスワード欄の入力は必須です</p>
+              </ErrorField>
+            )}
+          </PasswordErrorContainer>
+        </InputContainer>
+        {sessionServerError !== '' && (
+          <ServerErrorContainer>
+            <p className="errorValue" data-cy="errorMessage">
+              {sessionServerError}
+            </p>
+          </ServerErrorContainer>
+        )}
+        <LoadingButton
+          loading={loadingButton}
+          variant="contained"
+          type="submit"
+          onClick={() => {
+            setEmailServerError('')
+            setPasswordServerError('')
+            setSessionServerError('')
+          }}
+          data-cy="button"
+        >
+          ログイン
+        </LoadingButton>
+      </form>
+    </Container>
   )
 }
 

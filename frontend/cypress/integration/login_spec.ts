@@ -10,21 +10,20 @@ describe('ログインテスト', () => {
     cy.get('[data-cy=email]').type('hoge@example.com').should('have.value', 'hoge@example.com')
     cy.get('[data-cy=password]').type('sample').should('have.value', 'sample')
     cy.get('[data-cy=button]').click()
-    cy.url().should('include', '/16')
+    cy.url().should('match', /http:\/\/localhost:8000\/\d+/)
   })
 })
 
 describe('バリデーションテスト', () => {
   beforeEach(() => {
     cy.visit('/login')
-    // Cypress.Cookies.preserveOnce('_session_id')
   })
   it('ログイン済みの場合、サーバーエラーを表示', () => {
     // 一度目のログイン
     cy.get('[data-cy=email]').type('hoge@example.com')
     cy.get('[data-cy=password]').type('sample')
     cy.get('[data-cy=button]').click()
-    cy.url().should('include', '/16')
+    cy.url().should('match', /http:\/\/localhost:8000\/\d+/)
     // 二度目のログイン
     cy.visit('/login').url().should('include', '/login')
     cy.get('[data-cy=email]').type('hoge@example.com')

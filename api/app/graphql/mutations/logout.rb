@@ -3,8 +3,7 @@
 module Mutations
   class Logout < BaseNoArgumentMutation
     null true
-      field :id, String, null: true
-    
+    field :id, String, null: true
 
     def resolve
       context[:session][:user_id] = nil

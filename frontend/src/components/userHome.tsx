@@ -3,8 +3,6 @@ import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import Modal from '@mui/material/Modal'
 import { useCurrentUserQuery, useLogoutMutation, useDeleteUserMutation } from '../api/graphql'
-import Header from './header'
-import Footer from './footer'
 
 export default function UserHome() {
   const [serverError, setServerError] = useState('')
@@ -42,42 +40,39 @@ export default function UserHome() {
   if (loading) return <h1>ロード中</h1>
 
   return (
-    <>
-      <Header />
-      <Container>
-        <h1>user home</h1>
-        <button type="button" onClick={() => logoutMutation()} data-cy="logoutButton">
-          ログアウト
-        </button>
-        <button type="button" onClick={() => handleModalOpen()} data-cy="openModal">
-          ユーザー削除モーダル
-        </button>
-        <ModalContainer open={modalOpen} onClose={handleModalClose}>
-          <div className="modalFrame">
-            <button type="button" onClick={() => handleModalClose()}>
-              閉じる
-            </button>
-            <div className="inputValue">パスワード</div>
-            <input
-              type="password"
-              onChange={(e) => {
-                setPasswordValue(e.target.value)
-              }}
-              value={passwordValue}
-            />
-            {serverError !== '' && <p className="errorValue">{serverError}</p>}
-            <button
-              type="button"
-              onClick={() => deleteUserMutation({ variables: { password: passwordValue } })}
-              data-cy="deleteUserButton"
-            >
-              ユーザー削除
-            </button>
-          </div>
-        </ModalContainer>
-      </Container>
-      <Footer />
-    </>
+    <Container>
+      <h1>user home</h1>
+      <button type="button" onClick={() => logoutMutation()} data-cy="logoutButton">
+        ログアウト
+      </button>
+      <button type="button" onClick={() => handleModalOpen()} data-cy="openModal">
+        ユーザー削除モーダル
+      </button>
+      <ModalContainer open={modalOpen} onClose={handleModalClose}>
+        <div className="modalFrame">
+          <button type="button" onClick={() => handleModalClose()}>
+            閉じる
+          </button>
+          <div className="inputValue">パスワード</div>
+          <input
+            type="password"
+            onChange={(e) => {
+              setPasswordValue(e.target.value)
+            }}
+            value={passwordValue}
+            data-cy="password"
+          />
+          {serverError !== '' && <p className="errorValue">{serverError}</p>}
+          <button
+            type="button"
+            onClick={() => deleteUserMutation({ variables: { password: passwordValue } })}
+            data-cy="deleteUserButton"
+          >
+            ユーザー削除
+          </button>
+        </div>
+      </ModalContainer>
+    </Container>
   )
 }
 
