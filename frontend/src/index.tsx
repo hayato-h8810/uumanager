@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import './index.css'
 import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from '@apollo/client'
+import { createGlobalStyle } from 'styled-components'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 
@@ -15,9 +15,18 @@ const client = new ApolloClient({
   link,
 })
 
+const GlobalStyle = createGlobalStyle`
+  body{     
+    background: #E9EEEF;     
+    margin: 0 calc(50% - 50vw);  
+    font-family: "Noto Sans JP";
+  }
+`
+
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
+      <GlobalStyle />
       <App />
     </ApolloProvider>
   </React.StrictMode>,
