@@ -2,12 +2,43 @@ import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import Modal from '@mui/material/Modal'
-import { useCurrentUserQuery, useLogoutMutation, useDeleteUserMutation } from '../api/graphql'
+import {
+  useCurrentUserQuery,
+  useLogoutMutation,
+  useDeleteUserMutation,
+  useFetchFolderUrlQuery,
+  useSaveUrlMutation,
+  FetchFolderUrlDocument,
+} from '../api/graphql'
+
+interface fetchFolderUrlCacheType {
+  fetchFolderUrl: Array<{
+    __typename?: 'Folder' | undefined
+    id: string
+    name: string
+    urls: urltype[]
+  }>
+}
+
+interface urltype {
+  __typename?: 'Url' | undefined
+  id: string
+  title?: string | null | undefined
+  memo?: string | null | undefined
+  notification?: string | null | undefined
+  url: string
+  importance: number
+  folderId: string
+}
 
 export default function UserHome() {
   const [serverError, setServerError] = useState('')
   const [passwordValue, setPasswordValue] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
+  const [urls, setUrls] = useState<urltype[] | undefined>([])
+  const [newFolderName, setNewFolderName] = useState('')
+  const [newUrl, setNewUrl] = useState('')
+  const [newImportance, setNewImportance] = useState(1)
   const handleModalOpen = () => setModalOpen(true)
   const handleModalClose = () => setModalOpen(false)
   const history = useHistory()
@@ -20,8 +51,39 @@ export default function UserHome() {
   const { data: { currentUser = null } = {}, loading } = useCurrentUserQuery({
     fetchPolicy: 'network-only',
     onCompleted: () => {
-      console.log(currentUser?.id)
       if (!currentUser) history.push('/login')
+    },
+  })
+  const { data: { fetchFolderUrl = null } = {} } = useFetchFolderUrlQuery({
+    fetchPolicy: 'network-only',
+    nextFetchPolicy: 'cache-first',
+    skip: !currentUser,
+  })
+  const [saveUrlMutation] = useSaveUrlMutation({
+    update(cache, { data }) {
+      const newCache = data?.saveUrl?.folder
+      const existingCache: fetchFolderUrlCacheType | null = cache.readQuery({
+        query: FetchFolderUrlDocument,
+      })
+      if (newCache && existingCache) {
+        if (!existingCache.fetchFolderUrl.find((cacheData) => cacheData.id === newCache.id)) {
+          cache.writeQuery({
+            query: FetchFolderUrlDocument,
+            data: { fetchFolderUrl: [...existingCache.fetchFolderUrl, newCache] },
+          })
+        }
+      } else if (newCache && !existingCache) {
+        cache.writeQuery({
+          query: FetchFolderUrlDocument,
+          data: { fetchFolderUrl: [newCache] },
+        })
+      }
+    },
+    onCompleted: ({ saveUrl }) => {
+      if (urls && urls[0].folderId === saveUrl?.folder.urls[0].folderId) {
+        setUrls(saveUrl?.folder.urls)
+        console.log(saveUrl?.folder.urls)
+      }
     },
   })
   const [deleteUserMutation] = useDeleteUserMutation({
@@ -72,6 +134,60 @@ export default function UserHome() {
           </button>
         </div>
       </ModalContainer>
+      <UrlButton>
+        {fetchFolderUrl &&
+          fetchFolderUrl.map((folder) => (
+            <button
+              type="button"
+              key={folder.id}
+              onClick={() => {
+                setUrls(folder.urls)
+                console.log(urls)
+              }}
+            >
+              {folder.name}
+            </button>
+          ))}
+      </UrlButton>
+      <input
+        type="text"
+        onChange={(e) => {
+          setNewFolderName(e.target.value)
+        }}
+        value={newFolderName}
+      />
+      <input
+        type="text"
+        onChange={(e) => {
+          setNewUrl(e.target.value)
+        }}
+        value={newUrl}
+      />
+      <input
+        type="number"
+        onChange={(e) => {
+          setNewImportance(e.target.valueAsNumber)
+        }}
+        value={newImportance}
+      />
+      <button
+        type="button"
+        onClick={() => {
+          saveUrlMutation({ variables: { folderName: newFolderName, url: { url: newUrl, importance: newImportance } } })
+          setNewFolderName('')
+          setNewUrl('')
+          setNewImportance(1)
+        }}
+      >
+        urlsakusei
+      </button>
+      {urls &&
+        urls.length !== 0 &&
+        urls.map((url) => (
+          <div key={url.id}>
+            {url.url}:{url.importance}
+          </div>
+        ))}
     </Container>
   )
 }
@@ -92,4 +208,8 @@ const ModalContainer = styled(Modal)`
     margin: auto;
     top: 16vh;
   }
+`
+
+const UrlButton = styled.div`
+  background: red;
 `
