@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  notification: 
+  importance: 1
+  url: MyString
+  title: MyString
+  memo: MyString
+
+two:
+  notification: 
+  importance: 1
+  url: MyString
+  title: MyString
+  memo: MyString
