@@ -6,7 +6,7 @@ module Mutations
 
     argument :folder_name, String, required: false
 
-    field :folder, ObjectTypes::Folder, null: false
+    type ObjectTypes::Folder
 
     def resolve(url:, folder_name: nil)
       user = context[:current_user]
@@ -17,72 +17,39 @@ module Mutations
                         else
                           user.folders.find_by(origin: 'true')
                         end
-        new_url = origin_folder.urls.create(
+        origin_folder.urls.create(
           title: url.title,
           memo: url.memo,
           url: url.url,
           importance: url.importance,
           notification: url.notification
         )
-        { folder: {
-          id: origin_folder.id,
-          name: origin_folder.name,
-          urls: [{
-            id: new_url.id,
-            title: new_url.title,
-            memo: new_url.memo,
-            notification: new_url.notification,
-            url: new_url.url,
-            folder_id: new_url.folder_id,
-            importance: new_url.importance
-          }]
-        } }
+
+        { id: origin_folder.id, name: origin_folder.name, urls: origin_folder.urls.all }
       # フォルダーが指定されていて、そのフォルダーが既に存在している場合。
       elsif user.folders.find_by(name: folder_name)
         specified_folder = user.folders.find_by(name: folder_name)
-        new_url = specified_folder.urls.create(
+        specified_folder.urls.create(
           title: url.title,
           memo: url.memo,
           url: url.url,
           importance: url.importance,
           notification: url.notification
         )
-        { folder: {
-          id: specified_folder.id,
-          name: specified_folder.name,
-          urls: [{
-            id: new_url.id,
-            title: new_url.title,
-            memo: new_url.memo,
-            notification: new_url.notification,
-            url: new_url.url,
-            folder_id: new_url.folder_id,
-            importance: new_url.importance
-          }]
-        } }
+
+        { id: specified_folder.id, name: specified_folder.name, urls: specified_folder.urls.all }
       # 指定されたフォルダーがまだ一度も作成されていない場合。
       else
         new_folder = user.folders.create(name: folder_name)
-        new_url = new_folder.urls.create(
+        new_folder.urls.create(
           title: url.title,
           memo: url.memo,
           url: url.url,
           importance: url.importance,
           notification: url.notification
         )
-        { folder: {
-          id: new_folder.id,
-          name: new_folder.name,
-          urls: [{
-            id: new_url.id,
-            title: new_url.title,
-            memo: new_url.memo,
-            notification: new_url.notification,
-            url: new_url.url,
-            folder_id: new_url.folder_id,
-            importance: new_url.importance
-          }]
-        } }
+
+        { id: new_folder.id, name: new_folder.name, urls: new_folder.urls.all }
       end
     end
   end

@@ -8,6 +8,7 @@ import {
   useDeleteUserMutation,
   useFetchFolderUrlQuery,
   useSaveUrlMutation,
+  useDeleteUrlMutation,
   FetchFolderUrlDocument,
 } from '../api/graphql'
 
@@ -83,7 +84,6 @@ export default function UserHome() {
     },
     onCompleted: ({ saveUrl }) => {
       if (urls && urls[0]?.folderId === saveUrl?.id) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         setUrls(saveUrl?.urls)
       }
     },
@@ -95,6 +95,13 @@ export default function UserHome() {
     onError: (error) => {
       if (error?.message === 'PASSWORD_ERROR') {
         setServerError('パスワードが間違っています')
+      }
+    },
+  })
+  const [deleteUrlMutation] = useDeleteUrlMutation({
+    onCompleted: ({ deleteUrl }) => {
+      if (urls && urls[0]?.folderId === deleteUrl?.id) {
+        setUrls(deleteUrl?.urls)
       }
     },
   })
@@ -142,7 +149,6 @@ export default function UserHome() {
               key={folder.id}
               onClick={() => {
                 setUrls(folder.urls)
-                console.log(urls)
               }}
             >
               {folder.name}
@@ -185,7 +191,18 @@ export default function UserHome() {
         urls.length !== 0 &&
         urls.map((url) => (
           <div key={url.id}>
-            {url.url}:{url.importance}
+            <div key={url.id}>
+              {url.url}:{url.importance}
+            </div>
+            <button
+              type="button"
+              key={`deletebutton${url.id}`}
+              onClick={() => {
+                deleteUrlMutation({ variables: { folderId: url.folderId, urlId: url.id } })
+              }}
+            >
+              削除
+            </button>
           </div>
         ))}
     </Container>

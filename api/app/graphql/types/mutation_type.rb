@@ -7,5 +7,7 @@ module Types
     field :logout, mutation: Mutations::Logout
     field :delete_user, mutation: Mutations::DeleteUser
     field :save_url, mutation: Mutations::SaveUrl
+    field :delete_url, mutation: Mutations::DeleteUrl
+    field :edit_url, mutation: Mutations::EditUrl
   end
 end
