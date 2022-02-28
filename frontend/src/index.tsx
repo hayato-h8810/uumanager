@@ -11,23 +11,7 @@ const link = createHttpLink({
 })
 
 const client = new ApolloClient({
-  cache: new InMemoryCache({
-    typePolicies: {
-      Folder: {
-        fields: {
-          urls: {
-            // eslint-disable-next-line
-            merge(existing = [], incoming: any[]) {
-              console.log(existing)
-              console.log(incoming)
-              // eslint-disable-next-line
-              return [...existing, ...incoming]
-            },
-          },
-        },
-      },
-    },
-  }),
+  cache: new InMemoryCache(),
   link,
 })
 

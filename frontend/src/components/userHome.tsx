@@ -44,7 +44,6 @@ export default function UserHome() {
   const history = useHistory()
   const [logoutMutation] = useLogoutMutation({
     onCompleted: (data) => {
-      console.log(data?.logout?.id)
       if (!data?.logout?.id) history.push('/')
     },
   })
@@ -61,17 +60,20 @@ export default function UserHome() {
   })
   const [saveUrlMutation] = useSaveUrlMutation({
     update(cache, { data }) {
-      const newCache = data?.saveUrl?.folder
+      const newCache = data?.saveUrl
       const existingCache: fetchFolderUrlCacheType | null = cache.readQuery({
         query: FetchFolderUrlDocument,
       })
+      // フォルダが既にある場合
       if (newCache && existingCache) {
+        // 新しいフォルダを作成した場合
         if (!existingCache.fetchFolderUrl.find((cacheData) => cacheData.id === newCache.id)) {
           cache.writeQuery({
             query: FetchFolderUrlDocument,
             data: { fetchFolderUrl: [...existingCache.fetchFolderUrl, newCache] },
           })
         }
+        // 初めてフォルダを作成する場合
       } else if (newCache && !existingCache) {
         cache.writeQuery({
           query: FetchFolderUrlDocument,
@@ -80,19 +82,17 @@ export default function UserHome() {
       }
     },
     onCompleted: ({ saveUrl }) => {
-      if (urls && urls[0].folderId === saveUrl?.folder.urls[0].folderId) {
-        setUrls(saveUrl?.folder.urls)
-        console.log(saveUrl?.folder.urls)
+      if (urls && urls[0]?.folderId === saveUrl?.id) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        setUrls(saveUrl?.urls)
       }
     },
   })
   const [deleteUserMutation] = useDeleteUserMutation({
     onCompleted: (data) => {
-      console.log(data?.deleteUser?.user?.id)
       if (data?.deleteUser?.user?.id) history.push('/')
     },
     onError: (error) => {
-      console.log(error)
       if (error?.message === 'PASSWORD_ERROR') {
         setServerError('パスワードが間違っています')
       }
