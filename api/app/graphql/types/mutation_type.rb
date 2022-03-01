@@ -9,5 +9,7 @@ module Types
     field :save_url, mutation: Mutations::SaveUrl
     field :delete_url, mutation: Mutations::DeleteUrl
     field :edit_url, mutation: Mutations::EditUrl
+    field :delete_folder, mutation: Mutations::DeleteFolder
+    field :edit_folder, mutation: Mutations::EditFolder
   end
 end

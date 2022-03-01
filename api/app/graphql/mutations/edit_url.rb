@@ -8,28 +8,27 @@ module Mutations
 
     type [ObjectTypes::Folder]
 
-    def resolve(url:,folder_id: nil,url_id:)
-
+    def resolve(url:, url_id:, folder_id: nil)
       return unless editUrl = Url.find_by(id: url_id)
 
       if folder_id
         previousFolderId = editUrl.folder_id
-        editUrl.update(folder_id: folder_id) 
+        editUrl.update(folder_id: folder_id)
         editUrl.update(title: url.title,
-        memo: url.memo,
-        url: url.url,
-        importance: url.importance,
-        notification: url.notification)
-        
-        [Folder.find(previousFolderId),Folder.find(folder_id)]
-      else
-      editUrl.update(title: url.title,
-      memo: url.memo,
-      url: url.url,
-      importance: url.importance,
-      notification: url.notification)
+                       memo: url.memo,
+                       url: url.url,
+                       importance: url.importance,
+                       notification: url.notification)
 
-      [Folder.find(editUrl.folder_id)]
+        [Folder.find(previousFolderId), Folder.find(folder_id)]
+      else
+        editUrl.update(title: url.title,
+                       memo: url.memo,
+                       url: url.url,
+                       importance: url.importance,
+                       notification: url.notification)
+
+        [Folder.find(editUrl.folder_id)]
       end
     end
   end
