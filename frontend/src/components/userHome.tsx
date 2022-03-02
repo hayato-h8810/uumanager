@@ -14,6 +14,8 @@ import {
   useSaveUrlMutation,
   useDeleteUrlMutation,
   useEditUrlMutation,
+  useDeleteFolderMutation,
+  useEditFolderMutation,
   FetchFolderUrlDocument,
 } from '../api/graphql'
 
@@ -53,8 +55,14 @@ export default function UserHome() {
   const [modalOpen, setModalOpen] = useState(false)
   const [saveUrlModal, setSaveUrlModal] = useState(false)
   const [editUrlModal, setEditUrlModal] = useState(false)
-  const [urls, setUrls] = useState<urltype[] | undefined>()
-  const [specifiedUrl, setSpecifiedUrl] = useState<urltype | undefined>()
+  const [deleteFolderModal, setDeleteFolderModal] = useState(false)
+  const [editFolderModal, setEditFolderModal] = useState(false)
+  const [urls, setUrls] = useState<urltype[] | null>()
+  const [specifiedUrl, setSpecifiedUrl] = useState<urltype | null>()
+  const [deletedFolder, setDeletedFolder] = useState<string | null>()
+  const [specifiedFolder, setSpecifiedFolder] = useState<string | null>()
+  const [isShownDeletedFolder, setIsShownDeletedFolder] = useState(false)
+  const [editFolderName, setEditFolderName] = useState('')
   const history = useHistory()
   const {
     register,
@@ -138,9 +146,31 @@ export default function UserHome() {
         setUrls(displayedFolder?.urls)
       }
       setEditUrlModal(false)
-      setSpecifiedUrl(undefined)
+      setSpecifiedUrl(null)
       reset()
     },
+  })
+  const [deleteFolderMutation] = useDeleteFolderMutation({
+    update(cache, { data }) {
+      const newCache = data?.deleteFolder
+      const existingCache: fetchFolderUrlCacheType | null = cache.readQuery({
+        query: FetchFolderUrlDocument,
+      })
+      cache.writeQuery({
+        query: FetchFolderUrlDocument,
+        data: { fetchFolderUrl: existingCache?.fetchFolderUrl.filter((cacheDate) => cacheDate.id !== newCache?.id) },
+      })
+    },
+    onCompleted: () => {
+      setDeleteFolderModal(false)
+      setDeletedFolder(null)
+      setUrls(null)
+    },
+  })
+  const [editFolderMutation] = useEditFolderMutation({
+    onCompleted: ()=>{
+      setEditFolderModal(false)
+    }
   })
   const onSaveUrlSubmit: SubmitHandler<FormInput> = (data) => {
     console.log(data)
@@ -212,17 +242,85 @@ export default function UserHome() {
       <UrlButton>
         {fetchFolderUrl &&
           fetchFolderUrl.map((folder) => (
-            <button
-              type="button"
+            <div
               key={folder.id}
-              onClick={() => {
-                setUrls(folder.urls)
+              onMouseEnter={() => {
+                setIsShownDeletedFolder(true)
+                setDeletedFolder(folder.id)
               }}
+              onMouseLeave={() => setIsShownDeletedFolder(false)}
             >
-              {folder.name}
-            </button>
+              <button
+                type="button"
+                key={folder.id}
+                onClick={() => {
+                  setUrls(folder.urls)
+                }}
+              >
+                {folder.name}
+              </button>
+              {isShownDeletedFolder && deletedFolder === folder.id && (
+                <button
+                  type="button"
+                  key={`deleteFolder${folder.id}`}
+                  onClick={() => {
+                    setDeleteFolderModal(true)
+                  }}
+                >
+                  {folder.name}を削除
+                </button>
+              )}
+              <button
+                key={`editFolder${folder.id}`}
+                type="button"
+                onClick={() => {
+                  setEditFolderModal(true)
+                  setSpecifiedFolder(folder.id)
+                }}
+              >
+                編集
+              </button>
+            </div>
           ))}
       </UrlButton>
+      <DeleteFolderModal open={deleteFolderModal}>
+        <div className="modalFrame">
+          <button
+            type="button"
+            onClick={() => {
+              deleteFolderMutation({ variables: { folderId: deletedFolder || '' } })
+            }}
+          >
+            {deletedFolder}を削除
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setDeleteFolderModal(false)
+              setDeletedFolder(null)
+            }}
+          >
+            戻る
+          </button>
+        </div>
+      </DeleteFolderModal>
+      <EditFolderModal open={editFolderModal}>
+        <div className="modalFrame">
+          <div>name:</div>
+          <input type="text" value={editFolderName} onChange={(e) => setEditFolderName(e.target.value)} />
+          <button
+            type="button"
+            onClick={() =>
+              editFolderMutation({ variables: { folderId: specifiedFolder || '', folderName: editFolderName } })
+            }
+          >
+            編集
+          </button>
+          <button type="button" onClick={() => setEditFolderModal(false)}>
+            閉じる
+          </button>
+        </div>
+      </EditFolderModal>
       <button type="button" onClick={() => setSaveUrlModal(true)}>
         url作成モーダルを開く
       </button>
@@ -381,6 +479,28 @@ const SaveUrlModal = styled(Modal)`
 `
 
 const EditUrlModal = styled(Modal)`
+  .MuiBackdrop-root {
+    background: rgba(0, 0, 0, 0.7);
+  }
+  .modalFrame {
+    background: white;
+
+    position: relative;
+  }
+`
+
+const DeleteFolderModal = styled(Modal)`
+  .MuiBackdrop-root {
+    background: rgba(0, 0, 0, 0.7);
+  }
+  .modalFrame {
+    background: white;
+
+    position: relative;
+  }
+`
+
+const EditFolderModal = styled(Modal)`
   .MuiBackdrop-root {
     background: rgba(0, 0, 0, 0.7);
   }
