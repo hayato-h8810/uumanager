@@ -16,6 +16,7 @@ import {
   useEditUrlMutation,
   useDeleteFolderMutation,
   useEditFolderMutation,
+  useAddFolderMutation,
   FetchFolderUrlDocument,
 } from '../api/graphql'
 
@@ -57,6 +58,7 @@ export default function UserHome() {
   const [editUrlModal, setEditUrlModal] = useState(false)
   const [deleteFolderModal, setDeleteFolderModal] = useState(false)
   const [editFolderModal, setEditFolderModal] = useState(false)
+  const [addFolderModal, setAddFolderModal] = useState(false)
   const [urls, setUrls] = useState<urltype[] | null>()
   const [specifiedUrl, setSpecifiedUrl] = useState<urltype | null>()
   const [deletedFolder, setDeletedFolder] = useState<string | null>()
@@ -168,9 +170,25 @@ export default function UserHome() {
     },
   })
   const [editFolderMutation] = useEditFolderMutation({
-    onCompleted: ()=>{
+    onCompleted: () => {
       setEditFolderModal(false)
-    }
+    },
+  })
+  const [addFolderMutation] = useAddFolderMutation({
+    update(cache, { data }) {
+      const newCache = data?.addFolder
+      const existingCache: fetchFolderUrlCacheType | null = cache.readQuery({
+        query: FetchFolderUrlDocument,
+      })
+      if (existingCache)
+        cache.writeQuery({
+          query: FetchFolderUrlDocument,
+          data: { fetchFolderUrl: [...existingCache.fetchFolderUrl, newCache] },
+        })
+    },
+    onCompleted: () => {
+      setAddFolderModal(false)
+    },
   })
   const onSaveUrlSubmit: SubmitHandler<FormInput> = (data) => {
     console.log(data)
@@ -321,6 +339,21 @@ export default function UserHome() {
           </button>
         </div>
       </EditFolderModal>
+      <button type="button" onClick={() => setAddFolderModal(true)}>
+        folder作成モーダルを開く
+      </button>
+      <AddFolderModal open={addFolderModal}>
+        <div className="modalFrame">
+          <div>folder作成</div>
+          <input type="text" value={editFolderName} onChange={(e) => setEditFolderName(e.target.value)} />
+          <button type="button" onClick={() => addFolderMutation({ variables: { folderName: editFolderName } })}>
+            作成
+          </button>
+          <button type="button" onClick={() => setAddFolderModal(false)}>
+            閉じる
+          </button>
+        </div>
+      </AddFolderModal>
       <button type="button" onClick={() => setSaveUrlModal(true)}>
         url作成モーダルを開く
       </button>
@@ -501,6 +534,17 @@ const DeleteFolderModal = styled(Modal)`
 `
 
 const EditFolderModal = styled(Modal)`
+  .MuiBackdrop-root {
+    background: rgba(0, 0, 0, 0.7);
+  }
+  .modalFrame {
+    background: white;
+
+    position: relative;
+  }
+`
+
+const AddFolderModal = styled(Modal)`
   .MuiBackdrop-root {
     background: rgba(0, 0, 0, 0.7);
   }

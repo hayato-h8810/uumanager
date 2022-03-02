@@ -11,5 +11,6 @@ module Types
     field :edit_url, mutation: Mutations::EditUrl
     field :delete_folder, mutation: Mutations::DeleteFolder
     field :edit_folder, mutation: Mutations::EditFolder
+    field :add_folder, mutation: Mutations::AddFolder
   end
 end
