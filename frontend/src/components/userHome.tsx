@@ -56,10 +56,13 @@ export default function UserHome() {
   const [saveUrlModal, setSaveUrlModal] = useState(false)
   const [editUrlModal, setEditUrlModal] = useState(false)
   const [deleteFolderModal, setDeleteFolderModal] = useState(false)
+  const [editFolderModal, setEditFolderModal] = useState(false)
   const [urls, setUrls] = useState<urltype[] | null>()
   const [specifiedUrl, setSpecifiedUrl] = useState<urltype | null>()
   const [deletedFolder, setDeletedFolder] = useState<string | null>()
+  const [specifiedFolder, setSpecifiedFolder] = useState<string | null>()
   const [isShownDeletedFolder, setIsShownDeletedFolder] = useState(false)
+  const [editFolderName, setEditFolderName] = useState('')
   const history = useHistory()
   const {
     register,
@@ -164,7 +167,11 @@ export default function UserHome() {
       setUrls(null)
     },
   })
-  const [editFolderMutation] = useEditFolderMutation()
+  const [editFolderMutation] = useEditFolderMutation({
+    onCompleted: ()=>{
+      setEditFolderModal(false)
+    }
+  })
   const onSaveUrlSubmit: SubmitHandler<FormInput> = (data) => {
     console.log(data)
     saveUrlMutation({
@@ -252,7 +259,7 @@ export default function UserHome() {
               >
                 {folder.name}
               </button>
-              { isShownDeletedFolder && deletedFolder === folder.id && (
+              {isShownDeletedFolder && deletedFolder === folder.id && (
                 <button
                   type="button"
                   key={`deleteFolder${folder.id}`}
@@ -263,6 +270,16 @@ export default function UserHome() {
                   {folder.name}を削除
                 </button>
               )}
+              <button
+                key={`editFolder${folder.id}`}
+                type="button"
+                onClick={() => {
+                  setEditFolderModal(true)
+                  setSpecifiedFolder(folder.id)
+                }}
+              >
+                編集
+              </button>
             </div>
           ))}
       </UrlButton>
@@ -287,6 +304,23 @@ export default function UserHome() {
           </button>
         </div>
       </DeleteFolderModal>
+      <EditFolderModal open={editFolderModal}>
+        <div className="modalFrame">
+          <div>name:</div>
+          <input type="text" value={editFolderName} onChange={(e) => setEditFolderName(e.target.value)} />
+          <button
+            type="button"
+            onClick={() =>
+              editFolderMutation({ variables: { folderId: specifiedFolder || '', folderName: editFolderName } })
+            }
+          >
+            編集
+          </button>
+          <button type="button" onClick={() => setEditFolderModal(false)}>
+            閉じる
+          </button>
+        </div>
+      </EditFolderModal>
       <button type="button" onClick={() => setSaveUrlModal(true)}>
         url作成モーダルを開く
       </button>
@@ -456,6 +490,17 @@ const EditUrlModal = styled(Modal)`
 `
 
 const DeleteFolderModal = styled(Modal)`
+  .MuiBackdrop-root {
+    background: rgba(0, 0, 0, 0.7);
+  }
+  .modalFrame {
+    background: white;
+
+    position: relative;
+  }
+`
+
+const EditFolderModal = styled(Modal)`
   .MuiBackdrop-root {
     background: rgba(0, 0, 0, 0.7);
   }
