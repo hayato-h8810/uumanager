@@ -65,6 +65,9 @@ export default function UserHome() {
   const [specifiedFolder, setSpecifiedFolder] = useState<string | null>()
   const [isShownDeletedFolder, setIsShownDeletedFolder] = useState(false)
   const [editFolderName, setEditFolderName] = useState('')
+
+  const [urlSortRule, setUrlSortRule] = useState('sort')
+
   const history = useHistory()
   const {
     register,
@@ -452,34 +455,58 @@ export default function UserHome() {
           </button>
         </div>
       </EditUrlModal>
+
+      <Select
+        value={urlSortRule}
+        onChange={(e) => {
+          setUrlSortRule(e.target.value)
+        }}
+      >
+        <MenuItem value="sort">新しい順</MenuItem>
+        <MenuItem value="sortReverse">古い順</MenuItem>
+        <MenuItem value="sortImportance">お気に入り順</MenuItem>
+      </Select>
       {urls &&
-        urls.length !== 0 &&
-        urls.map((url) => (
-          <div key={url.id}>
+        (() => {
+          const urlArrayForSort = [...urls]
+
+          if (urlSortRule === 'sort') {
+            urlArrayForSort.sort((a, b) => Number(a.id) - Number(b.id))
+          } else if (urlSortRule === 'sortReverse') {
+            urlArrayForSort.sort((a, b) => Number(b.id) - Number(a.id))
+          } else if (urlSortRule === 'sortImportance') {
+            urlArrayForSort.sort((a, b) =>  b.importance-a.importance)
+          }
+
+          return urlArrayForSort.map((url) => (
             <div key={url.id}>
-              {url.url}:{url.importance}
+              <div key={url.id}>
+              {url.id}:{url.url}:{url.importance}
+              </div>
+              <button
+                type="button"
+                key={`editButton${url.id}`}
+                onClick={() => {
+                  setEditUrlModal(true)
+                  setSpecifiedUrl(url)
+                }}
+              >
+                url編集モーダルを開く
+              </button>
+              <button
+                type="button"
+                key={`deleteButton${url.id}`}
+                onClick={() => {
+                  deleteUrlMutation({ variables: { folderId: url.folderId, urlId: url.id } })
+                }}
+              >
+                削除
+              </button>
             </div>
-            <button
-              type="button"
-              key={`editButton${url.id}`}
-              onClick={() => {
-                setEditUrlModal(true)
-                setSpecifiedUrl(url)
-              }}
-            >
-              url編集モーダルを開く
-            </button>
-            <button
-              type="button"
-              key={`deleteButton${url.id}`}
-              onClick={() => {
-                deleteUrlMutation({ variables: { folderId: url.folderId, urlId: url.id } })
-              }}
-            >
-              削除
-            </button>
-          </div>
-        ))}
+          ))
+        })()}
+
+               
     </Container>
   )
 }
