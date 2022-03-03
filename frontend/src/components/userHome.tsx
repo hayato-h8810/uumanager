@@ -65,7 +65,9 @@ export default function UserHome() {
   const [specifiedFolder, setSpecifiedFolder] = useState<string | null>()
   const [isShownDeletedFolder, setIsShownDeletedFolder] = useState(false)
   const [editFolderName, setEditFolderName] = useState('')
+
   const [urlSortRule, setUrlSortRule] = useState('sort')
+
   const history = useHistory()
   const {
     register,
@@ -453,6 +455,7 @@ export default function UserHome() {
           </button>
         </div>
       </EditUrlModal>
+
       <Select
         value={urlSortRule}
         onChange={(e) => {
@@ -502,6 +505,8 @@ export default function UserHome() {
             </div>
           ))
         })()}
+
+               
     </Container>
   )
 }
