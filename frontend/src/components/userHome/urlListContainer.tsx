@@ -1,11 +1,7 @@
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import { useState } from 'react'
-import {
-  useDeleteUrlMutation,
-  FetchFolderUrlQuery,
-  Url,
-} from '../../api/graphql'
+import { useDeleteUrlMutation, FetchFolderUrlQuery, Url } from '../../api/graphql'
 import SaveUrlModal from './saveUrlModal'
 import EditUrlModal from './editUrlModal'
 
@@ -16,11 +12,12 @@ interface propsType {
 }
 
 export default function UrlListContainer({ props }: { props: propsType }) {
-  const { urls, setUrls,fetchFolderUrl } = props
+  const { urls, setUrls, fetchFolderUrl } = props
   const [urlSortRule, setUrlSortRule] = useState('sort')
   const [saveUrlModal, setSaveUrlModal] = useState(false)
   const [editUrlModal, setEditUrlModal] = useState(false)
   const [specifiedUrl, setSpecifiedUrl] = useState<Url | null>()
+  const [filterValueForUrlList, setFilterValueForUrlList] = useState('')
   const [deleteUrlMutation] = useDeleteUrlMutation({
     onCompleted: ({ deleteUrl }) => {
       if (urls && urls[0]?.folderId === deleteUrl?.id) {
@@ -34,8 +31,8 @@ export default function UrlListContainer({ props }: { props: propsType }) {
       <button type="button" onClick={() => setSaveUrlModal(true)}>
         url作成モーダルを開く
       </button>
-      <SaveUrlModal props={{saveUrlModal, setSaveUrlModal,urls, setUrls}}/>
-      <EditUrlModal props={{fetchFolderUrl,editUrlModal, setEditUrlModal,specifiedUrl,setSpecifiedUrl,setUrls}}/>
+      <SaveUrlModal props={{ saveUrlModal, setSaveUrlModal, urls, setUrls }} />
+      <EditUrlModal props={{ fetchFolderUrl, editUrlModal, setEditUrlModal, specifiedUrl, setSpecifiedUrl, setUrls }} />
       <Select
         value={urlSortRule}
         onChange={(e) => {
@@ -46,6 +43,16 @@ export default function UrlListContainer({ props }: { props: propsType }) {
         <MenuItem value="sortReverse">古い順</MenuItem>
         <MenuItem value="sortImportance">お気に入り順</MenuItem>
       </Select>
+      <input
+        type="text"
+        value={filterValueForUrlList}
+        onChange={(e) => {
+          setFilterValueForUrlList(e.target.value)
+        }}
+      />
+      <button type="button" onClick={() => setFilterValueForUrlList('')}>
+        reset
+      </button>
       {urls &&
         (() => {
           const urlArrayForSort = [...urls]
@@ -56,10 +63,22 @@ export default function UrlListContainer({ props }: { props: propsType }) {
           } else if (urlSortRule === 'sortImportance') {
             urlArrayForSort.sort((a, b) => b.importance - a.importance)
           }
-          return urlArrayForSort.map((url) => (
+          let filteredArray: Url[] = []
+          if (filterValueForUrlList !== '') {
+            filteredArray = urlArrayForSort.filter(
+              (url) =>
+                url.url.match(filterValueForUrlList) ||
+                url.title?.match(filterValueForUrlList) ||
+                url.memo?.match(filterValueForUrlList)
+            )
+          } else {
+            filteredArray = urlArrayForSort
+          }
+
+          return filteredArray.map((url) => (
             <div key={url.id}>
               <div key={url.id}>
-                {url.id}:{url.url}:{url.importance}
+                {url.id}:{url.url}:{url.importance}:{url.title}
               </div>
               <button
                 type="button"
@@ -86,5 +105,3 @@ export default function UrlListContainer({ props }: { props: propsType }) {
     </>
   )
 }
-
-
