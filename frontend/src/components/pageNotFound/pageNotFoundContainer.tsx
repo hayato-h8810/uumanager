@@ -1,4 +1,4 @@
-export default function PageNotFound() {
+export default function PageNotFoundContainer() {
   return (
     <>
       <h1>404error</h1>

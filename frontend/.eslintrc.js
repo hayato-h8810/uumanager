@@ -22,13 +22,14 @@ module.exports = {
     project: ['./tsconfig.json'],
   },
   plugins: ['react', '@typescript-eslint'],
-  ignorePatterns: ['.eslintrc.js','cypress/'],
+  ignorePatterns: ['.eslintrc.js', 'cypress/'],
   rules: {
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/no-floating-promises': 'off',
     'no-console': 'off',
     'react/jsx-props-no-spreading': 'off',
+    'react/prop-types': 'off',
     'import/prefer-default-export': 'off',
     'import/extensions': [
       'error',
