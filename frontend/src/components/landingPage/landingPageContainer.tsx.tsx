@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 
-export default function Home() {
+export default function LandingPageContainer() {
   return (
     <>
       <h1>home component</h1>
