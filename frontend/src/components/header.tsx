@@ -10,17 +10,23 @@ export default function Header() {
   const [modalOpen, setModalOpen] = useState(false)
   const history = useHistory()
   const location = useLocation()
-  const { data: { currentUser = null } = {} } = useCurrentUserQuery({
+  const { data: { currentUser = null } = {}, refetch } = useCurrentUserQuery({
     fetchPolicy: 'network-only',
   })
   const [logoutMutation] = useLogoutMutation({
     onCompleted: (data) => {
-      if (!data?.logout?.id) history.push('/')
+      if (!data?.logout?.id) {
+        history.push('/')
+        refetch()
+      }
     },
   })
   const [deleteUserMutation] = useDeleteUserMutation({
     onCompleted: (data) => {
-      if (data?.deleteUser?.user?.id) history.push('/')
+      if (data?.deleteUser?.user?.id) {
+        history.push('/')
+        refetch()
+      }
     },
     onError: (error) => {
       if (error?.message === 'PASSWORD_ERROR') {
@@ -62,11 +68,11 @@ export default function Header() {
             </button>
           </div>
         </ModalContainer>
-        {location.pathname !== `/${currentUser.id}` && (
+        {location.pathname !== '/userHome' && (
           <button
             type="button"
             onClick={() => {
-              history.push(`/${currentUser.id}`)
+              history.push('/userHome')
             }}
             data-cy="moveToUserHomeButton"
           >

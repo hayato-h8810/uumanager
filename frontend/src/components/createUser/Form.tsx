@@ -31,7 +31,7 @@ export default function Form() {
     onCompleted: (data) => {
       console.log(data.createUser?.id)
       if (data.createUser?.id) {
-        history.push(`/${data.createUser.id}`)
+        history.push('/userHome')
       }
     },
     onError: (error) => {

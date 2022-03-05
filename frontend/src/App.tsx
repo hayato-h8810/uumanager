@@ -16,7 +16,7 @@ function App() {
         <Route exact path="/" component={LandingPage} />
         <Route path="/createUser" component={CreateUser} />
         <Route path="/login" component={Login} />
-        <Route path="/:id" component={UserHome} />
+        <Route path="/userHome" component={UserHome} />
         <Route component={PageNotFound} />
       </Switch>
       <Footer />

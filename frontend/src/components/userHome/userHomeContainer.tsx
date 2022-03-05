@@ -27,7 +27,6 @@ export default function UserHomeContainer() {
     skip: !currentUser,
   })
   
-
   if (loading) return <h1>ロード中</h1>
 
   return (
