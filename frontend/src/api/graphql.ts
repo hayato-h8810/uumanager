@@ -184,6 +184,7 @@ export type Query = {
 export type SaveUrlInput = {
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: InputMaybe<Scalars['String']>;
+  folderId?: InputMaybe<Scalars['String']>;
   folderName?: InputMaybe<Scalars['String']>;
   url: UrlInput;
 };
@@ -283,6 +284,7 @@ export type LogoutMutation = { __typename?: 'Mutation', logout?: { __typename?: 
 export type SaveUrlMutationVariables = Exact<{
   url: UrlInput;
   folderName?: InputMaybe<Scalars['String']>;
+  folderId?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -661,8 +663,8 @@ export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
 export const SaveUrlDocument = gql`
-    mutation saveUrl($url: UrlInput!, $folderName: String) {
-  saveUrl(input: {url: $url, folderName: $folderName}) {
+    mutation saveUrl($url: UrlInput!, $folderName: String, $folderId: String) {
+  saveUrl(input: {url: $url, folderName: $folderName, folderId: $folderId}) {
     id
     name
     urls {
@@ -694,6 +696,7 @@ export type SaveUrlMutationFn = Apollo.MutationFunction<SaveUrlMutation, SaveUrl
  *   variables: {
  *      url: // value for 'url'
  *      folderName: // value for 'folderName'
+ *      folderId: // value for 'folderId'
  *   },
  * });
  */

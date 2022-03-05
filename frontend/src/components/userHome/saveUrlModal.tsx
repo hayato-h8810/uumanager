@@ -1,19 +1,24 @@
+import { useState } from 'react'
 import Modal from '@mui/material/Modal'
 import TextField from '@mui/material/TextField'
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
 import styled from 'styled-components'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { useSaveUrlMutation, FetchFolderUrlDocument, FetchFolderUrlQuery, Url } from '../../api/graphql'
 
 type FormInput = {
+  folderId: string | null
   importance: number
   url: string
-  folder: string | null
+  folderName: string | null
   title: string | null
   memo: string | null
   notification: string | null
 }
 
 interface propsType {
+  fetchFolderUrl: FetchFolderUrlQuery['fetchFolderUrl']
   saveUrlModal: boolean
   setSaveUrlModal: (argument: boolean) => void
   urls: Url[] | null | undefined
@@ -21,10 +26,11 @@ interface propsType {
 }
 
 export default function SaveUrlModal({ props }: { props: propsType }) {
-  const { saveUrlModal, setSaveUrlModal, urls, setUrls } = props
+  const { fetchFolderUrl, saveUrlModal, setSaveUrlModal, urls, setUrls } = props
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
     reset,
   } = useForm<FormInput>({
@@ -65,7 +71,8 @@ export default function SaveUrlModal({ props }: { props: propsType }) {
     console.log(data)
     saveUrlMutation({
       variables: {
-        folderName: data.folder === '' ? null : data.folder,
+        folderId: data.folderId === 'new' ? null : data.folderId,
+        folderName: data.folderName === '' ? null : data.folderName,
         url: {
           url: data.url,
           importance: data.importance,
@@ -82,7 +89,23 @@ export default function SaveUrlModal({ props }: { props: propsType }) {
       <div className="modalFrame">
         <form onSubmit={handleSubmit(onSaveUrlSubmit)}>
           <div>folder:</div>
-          <TextField {...register('folder')} type="text" label="フォルダー" variant="outlined" size="small" />
+          <Select {...register('folderId')} defaultValue="new">
+            <MenuItem value="new">新しくフォルダーを作成する。</MenuItem>
+            {fetchFolderUrl &&
+              fetchFolderUrl.map((folder) => (
+                <MenuItem value={folder.id} key={folder.id}>
+                  {folder.name}
+                </MenuItem>
+              ))}
+          </Select>
+          <TextField
+            {...register('folderName')}
+            type="text"
+            label="フォルダー"
+            variant="outlined"
+            size="small"
+            disabled={watch('folderId') !== undefined && watch('folderId') !== 'new'}
+          />
           <div>url:</div>
           <TextField {...register('url', { required: true })} type="text" label="url" variant="outlined" size="small" />
           {errors.url && <p>url欄の入力は必須です。</p>}

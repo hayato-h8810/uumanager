@@ -3,15 +3,15 @@
 module Mutations
   class SaveUrl < BaseMutation
     argument :url, InputTypes::UrlInput, required: true
-
+    argument :folder_id, String, required: false
     argument :folder_name, String, required: false
 
     type ObjectTypes::Folder
 
-    def resolve(url:, folder_name: nil)
+    def resolve(url:, folder_name: nil,folder_id: nil)
       user = context[:current_user]
       # フォルダーの指定がなかった場合、ユーザーごとに作成されるデフォルトのフォルダーを使用する。
-      if !folder_name
+      if !folder_name && !folder_id
         origin_folder = if !user.folders.find_by(origin: 'true')
                           user.folders.create(name: 'root', origin: 'true')
                         else
@@ -27,8 +27,8 @@ module Mutations
 
         { id: origin_folder.id, name: origin_folder.name, urls: origin_folder.urls.all }
       # フォルダーが指定されていて、そのフォルダーが既に存在している場合。
-      elsif user.folders.find_by(name: folder_name)
-        specified_folder = user.folders.find_by(name: folder_name)
+      elsif folder_id
+        specified_folder = user.folders.find_by(id: folder_id)
         specified_folder.urls.create(
           title: url.title,
           memo: url.memo,
