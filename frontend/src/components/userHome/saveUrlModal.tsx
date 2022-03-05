@@ -56,9 +56,9 @@ export default function SaveUrlModal({ props }: { props: propsType }) {
     onCompleted: ({ saveUrl }) => {
       if (urls && urls[0]?.folderId === saveUrl?.id) {
         setUrls(saveUrl?.urls)
-        setSaveUrlModal(false)
-        reset()
       }
+      setSaveUrlModal(false)
+      reset()
     },
   })
   const onSaveUrlSubmit: SubmitHandler<FormInput> = (data) => {

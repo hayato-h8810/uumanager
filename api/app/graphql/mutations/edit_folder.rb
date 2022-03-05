@@ -12,7 +12,7 @@ module Mutations
       user = context[:current_user]
 
       return unless selectedFolder = user.folders.find_by(id: folder_id)
-
+      return unless !selectedFolder.origin
       selectedFolder.update(name: folder_name)
 
       folder = Folder.find(folder_id)
