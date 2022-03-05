@@ -31,7 +31,7 @@ export default function UrlListContainer({ props }: { props: propsType }) {
       <button type="button" onClick={() => setSaveUrlModal(true)}>
         url作成モーダルを開く
       </button>
-      <SaveUrlModal props={{ saveUrlModal, setSaveUrlModal, urls, setUrls }} />
+      <SaveUrlModal props={{ fetchFolderUrl,saveUrlModal, setSaveUrlModal, urls, setUrls }} />
       <EditUrlModal props={{ fetchFolderUrl, editUrlModal, setEditUrlModal, specifiedUrl, setSpecifiedUrl, setUrls }} />
       <Select
         value={urlSortRule}
