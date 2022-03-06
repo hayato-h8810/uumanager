@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import LoadingButton from '@mui/lab/LoadingButton'
 import TextField from '@mui/material/TextField'
 import { useCreateUserMutation } from '../../api/graphql'
+import Icons from '../icons'
 
 type FormInput = {
   name: string
@@ -23,6 +24,7 @@ export default function Form() {
     handleSubmit,
     getValues,
     formState: { errors },
+    reset,
   } = useForm<FormInput>({
     reValidateMode: 'onSubmit',
   })
@@ -58,134 +60,137 @@ export default function Form() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <InputContainer>
-        <InputField>
-          <div className="inputValue">名前:</div>
-          <TextField
-            {...register('name', { required: true })}
-            type="text"
-            label="名前"
-            variant="outlined"
-            size="small"
-            inputProps={{
-              'data-cy': 'name',
-            }}
-          />
-        </InputField>
-        <NameErrorContainer>
-          {errors.name && (
-            <ErrorField>
-              <p className="errorValue" data-cy="errorMessage">
-                名前欄の入力は必須です
-              </p>
-            </ErrorField>
-          )}
-        </NameErrorContainer>
-        <InputField>
-          <div className="inputValue">メールアドレス:</div>
-          <TextField
-            {...register('email', {
-              required: { value: true, message: 'email欄の入力は必須です' },
-              pattern: {
-                value: /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]+\.[A-Za-z0-9]+$/,
-                message: '無効なメールアドレスです',
-              },
-            })}
-            type="text"
-            label="メールアドレス"
-            variant="outlined"
-            size="small"
-            inputProps={{
-              'data-cy': 'email',
-            }}
-          />
-        </InputField>
-        <EmailErrorContainer>
-          {emailServerError !== '' && (
-            <ErrorField>
-              <p className="errorValue" data-cy="serverErrorMessage">
-                {emailServerError}
-              </p>
-            </ErrorField>
-          )}
-          {errors.email?.message && (
-            <ErrorField>
-              <p className="errorValue" data-cy="errorMessage">
-                {errors.email.message}
-              </p>
-            </ErrorField>
-          )}
-        </EmailErrorContainer>
-        <InputField>
-          <div className="inputValue">パスワード:</div>
-          <TextField
-            {...register('password', {
-              required: { value: true, message: 'パスワード欄の入力は必須です' },
-              minLength: { value: 6, message: 'パスワードは6文字以上、12文字以下です' },
-              maxLength: { value: 12, message: 'パスワードは6文字以上、12文字以下です' },
-            })}
-            type="password"
-            label="パスワード(6文字以上、12文字以下)"
-            variant="outlined"
-            size="small"
-            inputProps={{
-              'data-cy': 'password',
-            }}
-          />
-        </InputField>
-        <PasswordErrorContainer>
-          {errors.password?.message && (
-            <ErrorField>
-              <p className="errorValue" data-cy="errorMessage">
-                {errors.password.message}
-              </p>
-            </ErrorField>
-          )}
-        </PasswordErrorContainer>
-        <InputField>
-          <div className="inputValue">パスワード(確認):</div>
-          <TextField
-            {...register('confirmPassword', { validate: (value) => getValues('password') === value })}
-            type="password"
-            label="パスワード(確認)"
-            variant="outlined"
-            size="small"
-            inputProps={{
-              'data-cy': 'confirmPassword',
-            }}
-          />
-        </InputField>
-        <ConfirmPasswordErrorContainer>
-          {errors.confirmPassword && (
-            <ErrorField>
-              <p className="errorValue" data-cy="errorMessage">
-                入力値が一致しません
-              </p>
-            </ErrorField>
-          )}
-        </ConfirmPasswordErrorContainer>
-      </InputContainer>
-      {sessionServerError !== '' && (
-        <ServerErrorContainer>
-          <p className="errorValue" data-cy="serverErrorMessage">
-            {sessionServerError}
-          </p>
-        </ServerErrorContainer>
-      )}
-      <LoadingButton
-        loading={loadingButton}
-        variant="contained"
-        type="submit"
-        onClick={() => {
-          setEmailServerError('')
-          setSessionServerError('')
-        }}
-        data-cy="button"
-      >
-        登録
-      </LoadingButton>
-    </form>
+    <>
+      <Icons props={{ reset }} />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <InputContainer>
+          <InputField>
+            <div className="inputValue">名前:</div>
+            <TextField
+              {...register('name', { required: true })}
+              type="text"
+              label="名前"
+              variant="outlined"
+              size="small"
+              inputProps={{
+                'data-cy': 'name',
+              }}
+            />
+          </InputField>
+          <NameErrorContainer>
+            {errors.name && (
+              <ErrorField>
+                <p className="errorValue" data-cy="errorMessage">
+                  名前欄の入力は必須です
+                </p>
+              </ErrorField>
+            )}
+          </NameErrorContainer>
+          <InputField>
+            <div className="inputValue">メールアドレス:</div>
+            <TextField
+              {...register('email', {
+                required: { value: true, message: 'email欄の入力は必須です' },
+                pattern: {
+                  value: /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]+\.[A-Za-z0-9]+$/,
+                  message: '無効なメールアドレスです',
+                },
+              })}
+              type="text"
+              label="メールアドレス"
+              variant="outlined"
+              size="small"
+              inputProps={{
+                'data-cy': 'email',
+              }}
+            />
+          </InputField>
+          <EmailErrorContainer>
+            {emailServerError !== '' && (
+              <ErrorField>
+                <p className="errorValue" data-cy="serverErrorMessage">
+                  {emailServerError}
+                </p>
+              </ErrorField>
+            )}
+            {errors.email?.message && (
+              <ErrorField>
+                <p className="errorValue" data-cy="errorMessage">
+                  {errors.email.message}
+                </p>
+              </ErrorField>
+            )}
+          </EmailErrorContainer>
+          <InputField>
+            <div className="inputValue">パスワード:</div>
+            <TextField
+              {...register('password', {
+                required: { value: true, message: 'パスワード欄の入力は必須です' },
+                minLength: { value: 6, message: 'パスワードは6文字以上、12文字以下です' },
+                maxLength: { value: 12, message: 'パスワードは6文字以上、12文字以下です' },
+              })}
+              type="password"
+              label="パスワード(6文字以上、12文字以下)"
+              variant="outlined"
+              size="small"
+              inputProps={{
+                'data-cy': 'password',
+              }}
+            />
+          </InputField>
+          <PasswordErrorContainer>
+            {errors.password?.message && (
+              <ErrorField>
+                <p className="errorValue" data-cy="errorMessage">
+                  {errors.password.message}
+                </p>
+              </ErrorField>
+            )}
+          </PasswordErrorContainer>
+          <InputField>
+            <div className="inputValue">パスワード(確認):</div>
+            <TextField
+              {...register('confirmPassword', { validate: (value) => getValues('password') === value })}
+              type="password"
+              label="パスワード(確認)"
+              variant="outlined"
+              size="small"
+              inputProps={{
+                'data-cy': 'confirmPassword',
+              }}
+            />
+          </InputField>
+          <ConfirmPasswordErrorContainer>
+            {errors.confirmPassword && (
+              <ErrorField>
+                <p className="errorValue" data-cy="errorMessage">
+                  入力値が一致しません
+                </p>
+              </ErrorField>
+            )}
+          </ConfirmPasswordErrorContainer>
+        </InputContainer>
+        {sessionServerError !== '' && (
+          <ServerErrorContainer>
+            <p className="errorValue" data-cy="serverErrorMessage">
+              {sessionServerError}
+            </p>
+          </ServerErrorContainer>
+        )}
+        <LoadingButton
+          loading={loadingButton}
+          variant="contained"
+          type="submit"
+          onClick={() => {
+            setEmailServerError('')
+            setSessionServerError('')
+          }}
+          data-cy="button"
+        >
+          登録
+        </LoadingButton>
+      </form>
+    </>
   )
 }
 
@@ -269,10 +274,10 @@ const ErrorField = styled.div`
   height: 37px;
   position: relative;
   .errorValue {
-    font-size: 11px;
+    font-size: 5px;
     position: absolute;
     left: 40%;
-    top: 17%;
+    top: 30%;
     color: red;
   }
 `
@@ -281,9 +286,9 @@ const ServerErrorContainer = styled.div`
   height: 30px;
   width: 100%;
   position: absolute;
-  top: 82%;
+  top: 83.5%;
   .errorValue {
-    font-size: 11px;
+    font-size: 5px;
     color: red;
     text-align: center;
   }

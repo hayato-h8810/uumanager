@@ -1,12 +1,10 @@
 import styled from 'styled-components'
-import Icons from '../components/icons'
 import Form from '../components/login/Form'
 
 export default function LoginContainer() {
   return (
     <Container>
       <h1>login</h1>
-      <Icons/>
       <Form/>
     </Container>
   )
