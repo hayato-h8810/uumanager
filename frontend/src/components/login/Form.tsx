@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { useLoginMutation } from '../../api/graphql'
+import Icons from '../icons'
 
 type FormInput = {
   email: string
@@ -21,6 +22,7 @@ export default function Form() {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<FormInput>({
     reValidateMode: 'onSubmit',
   })
@@ -55,88 +57,91 @@ export default function Form() {
   }, [loading])
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <InputContainer>
-        <InputField>
-          <div className="inputValue">メールアドレス:</div>
-          <TextField
-            {...register('email', {
-              required: { value: true, message: 'メールアドレス欄の入力は必須です' },
-              pattern: {
-                value: /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]+\.[A-Za-z0-9]+$/,
-                message: '無効なメールアドレスです',
-              },
-            })}
-            type="text"
-            variant="outlined"
-            label="メールアドレス"
-            inputProps={{
-              'data-cy': 'email',
-            }}
-          />
-        </InputField>
-        <EmailErrorContainer>
-          {emailServerError !== '' && (
-            <ErrorField>
-              <p className="errorValue">{emailServerError}</p>
-            </ErrorField>
-          )}
-          {errors.email?.message && (
-            <ErrorField>
-              <p className="errorValue" data-cy="errorMessage">
-                {errors.email.message}
-              </p>
-            </ErrorField>
-          )}
-        </EmailErrorContainer>
-        <InputField>
-          <div className="inputValue">パスワード:</div>
-          <TextField
-            {...register('password', { required: true })}
-            type="password"
-            variant="outlined"
-            label="パスワード"
-            inputProps={{
-              'data-cy': 'password',
-            }}
-          />
-        </InputField>
-        <PasswordErrorContainer>
-          {passwordServerError !== '' && (
-            <ErrorField>
-              <p className="errorValue" data-cy="errorMessage">
-                {passwordServerError}
-              </p>
-            </ErrorField>
-          )}
-          {errors.password && (
-            <ErrorField>
-              <p className="errorValue">パスワード欄の入力は必須です</p>
-            </ErrorField>
-          )}
-        </PasswordErrorContainer>
-      </InputContainer>
-      {sessionServerError !== '' && (
-        <ServerErrorContainer>
-          <p className="errorValue" data-cy="errorMessage">
-            {sessionServerError}
-          </p>
-        </ServerErrorContainer>
-      )}
-      <LoadingButton
-        loading={loadingButton}
-        variant="contained"
-        type="submit"
-        onClick={() => {
-          setEmailServerError('')
-          setPasswordServerError('')
-          setSessionServerError('')
-        }}
-        data-cy="button"
-      >
-        ログイン
-      </LoadingButton>
-    </form>
+    <>
+      <Icons props={{reset}}/>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <InputContainer>
+          <InputField>
+            <div className="inputValue">メールアドレス:</div>
+            <TextField
+              {...register('email', {
+                required: { value: true, message: 'メールアドレス欄の入力は必須です' },
+                pattern: {
+                  value: /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]+\.[A-Za-z0-9]+$/,
+                  message: '無効なメールアドレスです',
+                },
+              })}
+              type="text"
+              variant="outlined"
+              label="メールアドレス"
+              inputProps={{
+                'data-cy': 'email',
+              }}
+            />
+          </InputField>
+          <EmailErrorContainer>
+            {emailServerError !== '' && (
+              <ErrorField>
+                <p className="errorValue">{emailServerError}</p>
+              </ErrorField>
+            )}
+            {errors.email?.message && (
+              <ErrorField>
+                <p className="errorValue" data-cy="errorMessage">
+                  {errors.email.message}
+                </p>
+              </ErrorField>
+            )}
+          </EmailErrorContainer>
+          <InputField>
+            <div className="inputValue">パスワード:</div>
+            <TextField
+              {...register('password', { required: true })}
+              type="password"
+              variant="outlined"
+              label="パスワード"
+              inputProps={{
+                'data-cy': 'password',
+              }}
+            />
+          </InputField>
+          <PasswordErrorContainer>
+            {passwordServerError !== '' && (
+              <ErrorField>
+                <p className="errorValue" data-cy="errorMessage">
+                  {passwordServerError}
+                </p>
+              </ErrorField>
+            )}
+            {errors.password && (
+              <ErrorField>
+                <p className="errorValue">パスワード欄の入力は必須です</p>
+              </ErrorField>
+            )}
+          </PasswordErrorContainer>
+        </InputContainer>
+        {sessionServerError !== '' && (
+          <ServerErrorContainer>
+            <p className="errorValue" data-cy="errorMessage">
+              {sessionServerError}
+            </p>
+          </ServerErrorContainer>
+        )}
+        <LoadingButton
+          loading={loadingButton}
+          variant="contained"
+          type="submit"
+          onClick={() => {
+            setEmailServerError('')
+            setPasswordServerError('')
+            setSessionServerError('')
+          }}
+          data-cy="button"
+        >
+          ログイン
+        </LoadingButton>
+      </form>
+    </>
   )
 }
 
@@ -201,10 +206,10 @@ const ErrorField = styled.div`
   height: 37px;
   position: relative;
   .errorValue {
-    font-size: 11px;
+    font-size: 5px;
     position: absolute;
     left: 40%;
-    top: 18%;
+    top: 32%;
     color: red;
   }
 `
@@ -213,9 +218,9 @@ const ServerErrorContainer = styled.div`
   height: 30px;
   width: 100%;
   position: absolute;
-  top: 82%;
+  top: 83.5%;
   .errorValue {
-    font-size: 11px;
+    font-size: 5px;
     color: red;
     text-align: center;
   }

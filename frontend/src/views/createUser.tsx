@@ -1,11 +1,9 @@
 import styled from 'styled-components'
-import Icons from '../components/icons'
 import Form from '../components/createUser/Form'
 
 export default function CreateUserContainer() {
   return (
     <Container>
-      <Icons />
       <h1>ユーザー新規作成</h1>
       <Form />
     </Container>
