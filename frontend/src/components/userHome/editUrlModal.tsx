@@ -1,8 +1,14 @@
+import { useState } from 'react'
 import Modal from '@mui/material/Modal'
 import TextField from '@mui/material/TextField'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import styled from 'styled-components'
+import AdapterDateFns from '@mui/lab/AdapterDateFns'
+import LocalizationProvider from '@mui/lab/LocalizationProvider'
+import DatePicker from '@mui/lab/DatePicker'
+import jaLocale from 'date-fns/locale/ja'
+import format from 'date-fns/format'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { useEditUrlMutation, FetchFolderUrlQuery, Url } from '../../api/graphql'
 
@@ -26,6 +32,7 @@ interface propsType {
 
 export default function EditUrlModal({ props }: { props: propsType }) {
   const { fetchFolderUrl, editUrlModal, setEditUrlModal, specifiedUrl, setSpecifiedUrl, setUrls } = props
+  const [notificationValue, setNotificationValue] = useState<string | null>(null)
   const [editUrlMutation] = useEditUrlMutation({
     onCompleted: ({ editUrl }) => {
       if (editUrl && editUrl.length === 1) {
@@ -36,6 +43,7 @@ export default function EditUrlModal({ props }: { props: propsType }) {
       }
       setEditUrlModal(false)
       setSpecifiedUrl(null)
+      setNotificationValue(null)
       reset()
     },
   })
@@ -59,10 +67,14 @@ export default function EditUrlModal({ props }: { props: propsType }) {
           importance: data.importance,
           title: data.title === '' ? null : data.title,
           memo: data.memo === '' ? null : data.memo,
-          notification: data.notification === '' ? null : data.notification,
+          notification: notificationValue || null,
         },
       },
     })
+  }
+  const today = () => {
+    const tz = (new Date().getTimezoneOffset() + 540) * 60 * 1000
+    return new Date(new Date().getTime() + tz)
   }
   return (
     <ModalContainer open={editUrlModal}>
@@ -98,7 +110,29 @@ export default function EditUrlModal({ props }: { props: propsType }) {
           <div>memo</div>
           <TextField {...register('memo')} type="text" label="メモ" variant="outlined" size="small" />
           <div>notification</div>
-          <TextField {...register('notification')} type="text" label="通知日" variant="outlined" size="small" />
+          <LocalizationProvider dateAdapter={AdapterDateFns} locale={jaLocale}>
+            <DatePicker
+              label="通知日"
+              value={notificationValue}
+              onChange={(newValue) => {
+                if (newValue) {
+                  setNotificationValue(format(newValue, 'yyyy-MM-dd'))
+                }
+              }}
+              renderInput={(params) => <TextField {...params} />}
+              mask="____/__/__"
+              disableHighlightToday
+              minDate={today()}
+            />
+          </LocalizationProvider>
+          <button
+            type="button"
+            onClick={() => {
+              setNotificationValue(null)
+            }}
+          >
+            clear data
+          </button>
           <button type="submit">編集</button>
         </form>
         <button
@@ -106,6 +140,7 @@ export default function EditUrlModal({ props }: { props: propsType }) {
           onClick={() => {
             setEditUrlModal(false)
             setSpecifiedUrl(undefined)
+            setNotificationValue(null)
             reset()
           }}
         >
