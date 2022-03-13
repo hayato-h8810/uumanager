@@ -1,7 +1,13 @@
+import { useState } from 'react'
 import Modal from '@mui/material/Modal'
 import TextField from '@mui/material/TextField'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
+import AdapterDateFns from '@mui/lab/AdapterDateFns'
+import LocalizationProvider from '@mui/lab/LocalizationProvider'
+import DatePicker from '@mui/lab/DatePicker'
+import jaLocale from 'date-fns/locale/ja'
+import format from 'date-fns/format'
 import styled from 'styled-components'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { useSaveUrlMutation, FetchFolderUrlDocument, FetchFolderUrlQuery, Url } from '../../api/graphql'
@@ -13,7 +19,6 @@ type FormInput = {
   folderName: string | null
   title: string | null
   memo: string | null
-  notification: string | null
 }
 
 interface propsType {
@@ -26,6 +31,7 @@ interface propsType {
 
 export default function SaveUrlModal({ props }: { props: propsType }) {
   const { fetchFolderUrl, saveUrlModal, setSaveUrlModal, urls, setUrls } = props
+  const [notificationValue, setNotificationValue] = useState<string | null>(null)
   const {
     register,
     handleSubmit,
@@ -64,6 +70,7 @@ export default function SaveUrlModal({ props }: { props: propsType }) {
       }
       setSaveUrlModal(false)
       reset()
+      setNotificationValue(null)
     },
   })
   const onSaveUrlSubmit: SubmitHandler<FormInput> = (data) => {
@@ -77,10 +84,14 @@ export default function SaveUrlModal({ props }: { props: propsType }) {
           importance: data.importance,
           title: data.title === '' ? null : data.title,
           memo: data.memo === '' ? null : data.memo,
-          notification: data.notification === '' ? null : data.notification,
+          notification: notificationValue || null,
         },
       },
     })
+  }
+  const today = () => {
+    const tz = (new Date().getTimezoneOffset() + 540) * 60 * 1000
+    return new Date(new Date().getTime() + tz)
   }
 
   return (
@@ -121,7 +132,30 @@ export default function SaveUrlModal({ props }: { props: propsType }) {
           <div>memo</div>
           <TextField {...register('memo')} type="text" label="メモ" variant="outlined" size="small" />
           <div>notification</div>
-          <TextField {...register('notification')} type="text" label="通知日" variant="outlined" size="small" />
+          <LocalizationProvider dateAdapter={AdapterDateFns} locale={jaLocale}>
+            <DatePicker
+              label="通知日"
+              value={notificationValue}
+              onChange={(newValue) => {
+                if (newValue) {
+                  setNotificationValue(format(newValue, 'yyyy-MM-dd'))
+                }
+              }}
+              renderInput={(params) => <TextField {...params} />}
+              mask="____/__/__"
+              disableHighlightToday
+              clearable
+              minDate={today()}
+            />
+          </LocalizationProvider>
+          <button
+            type="button"
+            onClick={() => {
+              setNotificationValue(null)
+            }}
+          >
+            clear data
+          </button>
           <button type="submit">url作成</button>
         </form>
         <button
@@ -129,6 +163,7 @@ export default function SaveUrlModal({ props }: { props: propsType }) {
           onClick={() => {
             setSaveUrlModal(false)
             reset()
+            setNotificationValue(null)
           }}
         >
           閉じる
