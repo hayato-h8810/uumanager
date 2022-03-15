@@ -31,7 +31,7 @@ interface propsType {
 
 export default function SaveUrlModal({ props }: { props: propsType }) {
   const { fetchFolderUrl, saveUrlModal, setSaveUrlModal, urls, setUrls } = props
-  const [notificationValue, setNotificationValue] = useState<string | null>(null)
+  const [notificationValue, setNotificationValue] = useState<Date | null>(null)
   const {
     register,
     handleSubmit,
@@ -84,7 +84,7 @@ export default function SaveUrlModal({ props }: { props: propsType }) {
           importance: data.importance,
           title: data.title === '' ? null : data.title,
           memo: data.memo === '' ? null : data.memo,
-          notification: notificationValue || null,
+          notification: notificationValue ? format(notificationValue, 'yyyy-MM-dd') : null,
         },
       },
     })
@@ -138,7 +138,7 @@ export default function SaveUrlModal({ props }: { props: propsType }) {
               value={notificationValue}
               onChange={(newValue) => {
                 if (newValue) {
-                  setNotificationValue(format(newValue, 'yyyy-MM-dd'))
+                  setNotificationValue(newValue)
                 }
               }}
               renderInput={(params) => <TextField {...params} />}
