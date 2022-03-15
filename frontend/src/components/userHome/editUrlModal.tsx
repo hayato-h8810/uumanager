@@ -32,7 +32,7 @@ interface propsType {
 
 export default function EditUrlModal({ props }: { props: propsType }) {
   const { fetchFolderUrl, editUrlModal, setEditUrlModal, specifiedUrl, setSpecifiedUrl, setUrls } = props
-  const [notificationValue, setNotificationValue] = useState<string | null>(null)
+  const [notificationValue, setNotificationValue] = useState<Date | null>(null)
   const [editUrlMutation] = useEditUrlMutation({
     onCompleted: ({ editUrl }) => {
       if (editUrl && editUrl.length === 1) {
@@ -57,7 +57,6 @@ export default function EditUrlModal({ props }: { props: propsType }) {
   })
 
   const onEditUrlSubmit: SubmitHandler<FormInput> = (data) => {
-    console.log(data)
     editUrlMutation({
       variables: {
         urlId: specifiedUrl?.id || '',
@@ -67,7 +66,7 @@ export default function EditUrlModal({ props }: { props: propsType }) {
           importance: data.importance,
           title: data.title === '' ? null : data.title,
           memo: data.memo === '' ? null : data.memo,
-          notification: notificationValue || null,
+          notification: notificationValue ? format(notificationValue, 'yyyy-MM-dd') : null,
         },
       },
     })
@@ -116,10 +115,10 @@ export default function EditUrlModal({ props }: { props: propsType }) {
               value={notificationValue}
               onChange={(newValue) => {
                 if (newValue) {
-                  setNotificationValue(format(newValue, 'yyyy-MM-dd'))
+                  setNotificationValue(newValue)
                 }
               }}
-              renderInput={(params) => <TextField {...params} />}
+              renderInput={(params) => <TextField {...params}/>}
               mask="____/__/__"
               disableHighlightToday
               minDate={today()}
@@ -131,7 +130,7 @@ export default function EditUrlModal({ props }: { props: propsType }) {
               setNotificationValue(null)
             }}
           >
-            clear data
+            clear date
           </button>
           <button type="submit">編集</button>
         </form>
