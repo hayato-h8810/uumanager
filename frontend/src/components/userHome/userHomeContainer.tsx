@@ -27,7 +27,7 @@ export default function UserHomeContainer() {
   return (
     <Container>
       <h1>user home</h1>
-      <Notification props={{fetchFolderUrl}}/>
+      <Notification props={{ fetchFolderUrl }} />
       <FolderListContainer props={{ fetchFolderUrl, setUrls }} />
       <UrlListContainer props={{ fetchFolderUrl, urls, setUrls }} />
     </Container>

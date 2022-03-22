@@ -78,7 +78,7 @@ export default function UrlListContainer({ props }: { props: propsType }) {
           return filteredArray.map((url) => (
             <div key={url.id}>
               <div key={url.id}>
-                {url.id}:{url.url}:{url.importance}:{url.title}
+                {url.id}:{url.url}:{url.importance}:{url.title}:{url.notification}
               </div>
               <button
                 type="button"

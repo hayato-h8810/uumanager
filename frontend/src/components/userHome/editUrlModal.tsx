@@ -71,10 +71,7 @@ export default function EditUrlModal({ props }: { props: propsType }) {
       },
     })
   }
-  const today = () => {
-    const tz = (new Date().getTimezoneOffset() + 540) * 60 * 1000
-    return new Date(new Date().getTime() + tz)
-  }
+
   return (
     <ModalContainer open={editUrlModal}>
       <div className="modalFrame">
@@ -118,10 +115,9 @@ export default function EditUrlModal({ props }: { props: propsType }) {
                   setNotificationValue(newValue)
                 }
               }}
-              renderInput={(params) => <TextField {...params}/>}
+              renderInput={(params) => <TextField {...params} />}
               mask="____/__/__"
-              disableHighlightToday
-              minDate={today()}
+              minDate={new Date()}
             />
           </LocalizationProvider>
           <button

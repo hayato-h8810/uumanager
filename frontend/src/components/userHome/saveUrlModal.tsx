@@ -89,10 +89,6 @@ export default function SaveUrlModal({ props }: { props: propsType }) {
       },
     })
   }
-  const today = () => {
-    const tz = (new Date().getTimezoneOffset() + 540) * 60 * 1000
-    return new Date(new Date().getTime() + tz)
-  }
 
   return (
     <ModalContainer open={saveUrlModal}>
@@ -143,9 +139,7 @@ export default function SaveUrlModal({ props }: { props: propsType }) {
               }}
               renderInput={(params) => <TextField {...params} />}
               mask="____/__/__"
-              disableHighlightToday
-              clearable
-              minDate={today()}
+              minDate={new Date()}
             />
           </LocalizationProvider>
           <button
