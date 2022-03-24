@@ -7,6 +7,7 @@ import UserHome from './views/userHome'
 import PageNotFound from './views/pageNotFound'
 import Header from './components/header'
 import Footer from './components/footer'
+import Calendar from './views/calendar'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Header />
       <Switch>
         <Route exact path="/" component={LandingPage} />
+        <Route path="/calendar" component={Calendar} />
         <Route path="/createUser" component={CreateUser} />
         <Route path="/login" component={Login} />
         <Route path="/userHome" component={UserHome} />

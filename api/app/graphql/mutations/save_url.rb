@@ -8,7 +8,7 @@ module Mutations
 
     type ObjectTypes::Folder
 
-    def resolve(url:, folder_name: nil,folder_id: nil)
+    def resolve(url:, folder_name: nil, folder_id: nil)
       user = context[:current_user]
       # フォルダーの指定がなかった場合、ユーザーごとに作成されるデフォルトのフォルダーを使用する。
       if !folder_name && !folder_id

@@ -5,7 +5,7 @@ export default function LoginContainer() {
   return (
     <Container>
       <h1>login</h1>
-      <Form/>
+      <Form />
     </Container>
   )
 }
