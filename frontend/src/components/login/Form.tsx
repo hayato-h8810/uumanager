@@ -58,7 +58,7 @@ export default function Form() {
 
   return (
     <>
-      <Icons props={{reset}}/>
+      <Icons props={{ reset }} />
       <form onSubmit={handleSubmit(onSubmit)}>
         <InputContainer>
           <InputField>

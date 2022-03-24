@@ -91,8 +91,18 @@ export default function EditUrlModal({ props }: { props: propsType }) {
               ))}
           </Select>
           <div>url:</div>
-          <TextField {...register('url', { required: true })} type="text" label="url" variant="outlined" size="small" />
-          {errors.url && <p>url欄の入力は必須です。</p>}
+          <TextField
+            {...register('url', {
+              required: true,
+              pattern: /https?:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#\u3000-\u30FE\u4E00-\u9FA0\uFF01-\uFFE3]+/g,
+            })}
+            type="text"
+            label="url"
+            variant="outlined"
+            size="small"
+          />
+          {errors.url?.type === 'required' && <p>url欄の入力は必須です。</p>}
+          {errors.url?.type === 'pattern' && <p>urlの形式が正しくありません。</p>}
           <div>importance:</div>
           <TextField
             {...register('importance', { valueAsNumber: true, required: true })}

@@ -9,9 +9,9 @@ module Mutations
     def resolve(folder_name:)
       user = context[:current_user]
 
-      newFolder=user.folders.create(name:folder_name)
+      newFolder = user.folders.create(name: folder_name)
 
-      {name:newFolder.name, id:newFolder.id,urls:[]}
+      { name: newFolder.name, id: newFolder.id, urls: [] }
     end
   end
 end

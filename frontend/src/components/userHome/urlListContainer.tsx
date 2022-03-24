@@ -1,7 +1,8 @@
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import { useState } from 'react'
-import { useDeleteUrlMutation, FetchFolderUrlQuery, Url } from '../../api/graphql'
+import format from 'date-fns/format'
+import { useDeleteUrlMutation, FetchFolderUrlQuery, useRecordVisitingHistoryMutation, Url } from '../../api/graphql'
 import SaveUrlModal from './saveUrlModal'
 import EditUrlModal from './editUrlModal'
 
@@ -25,13 +26,16 @@ export default function UrlListContainer({ props }: { props: propsType }) {
       }
     },
   })
+  const [recordVisitingHistoryMutation] = useRecordVisitingHistoryMutation()
+  const handleLinkClick = (urlId: string) =>
+    recordVisitingHistoryMutation({ variables: { urlId, date: format(new Date(), 'yyyy-MM-dd') } })
 
   return (
     <>
       <button type="button" onClick={() => setSaveUrlModal(true)}>
         url作成モーダルを開く
       </button>
-      <SaveUrlModal props={{ fetchFolderUrl,saveUrlModal, setSaveUrlModal, urls, setUrls }} />
+      <SaveUrlModal props={{ fetchFolderUrl, saveUrlModal, setSaveUrlModal, urls, setUrls }} />
       <EditUrlModal props={{ fetchFolderUrl, editUrlModal, setEditUrlModal, specifiedUrl, setSpecifiedUrl, setUrls }} />
       <Select
         value={urlSortRule}
@@ -79,6 +83,9 @@ export default function UrlListContainer({ props }: { props: propsType }) {
             <div key={url.id}>
               <div key={url.id}>
                 {url.id}:{url.url}:{url.importance}:{url.title}:{url.notification}
+                <a href={url.url} onClick={() => handleLinkClick(url.id)} target="_blank" rel="noopener noreferrer">
+                  link
+                </a>
               </div>
               <button
                 type="button"

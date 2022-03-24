@@ -113,8 +113,18 @@ export default function SaveUrlModal({ props }: { props: propsType }) {
             disabled={watch('folderId') !== undefined && watch('folderId') !== 'new'}
           />
           <div>url:</div>
-          <TextField {...register('url', { required: true })} type="text" label="url" variant="outlined" size="small" />
-          {errors.url && <p>url欄の入力は必須です。</p>}
+          <TextField
+            {...register('url', {
+              required: true,
+              pattern: /https?:\/\/[\w/:%#$&?()~.=+-]+/,
+            })}
+            type="text"
+            label="url"
+            variant="outlined"
+            size="small"
+          />
+          {errors.url?.type === 'required' && <p>url欄の入力は必須です。</p>}
+          {errors.url?.type === 'pattern' && <p>urlの形式が正しくありません。</p>}
           <div>importance:</div>
           <TextField
             {...register('importance', { valueAsNumber: true, required: true })}

@@ -5,13 +5,19 @@ import interactionPlugin from '@fullcalendar/interaction'
 import { useState } from 'react'
 import styled from 'styled-components'
 import { Modal } from '@mui/material'
-import { useFetchFolderUrlQuery, useEditUrlMutation, Url } from '../api/graphql'
+import {
+  useFetchFolderUrlQuery,
+  useEditUrlMutation,
+  useFetchVisitingHistoryQuery,
+  useDeleteVisitingHistoryMutation,
+  Url,
+} from '../api/graphql'
 
 export default function Calendar() {
   const [notificationEvents, setNotificationEvents] = useState<EventInput[]>()
-  const [deleteNotificationModal, setDeleteNotificationModal] = useState(false)
+  const [deleteEventModal, setDeleteEventModal] = useState(false)
   const [deleteEvent, setDeleteEvent] = useState<EventClickArg | undefined>()
-  const [deletedNotification, setDeletedNotification] = useState<Url | undefined>()
+  const [slectedEvent, setSelectedEvent] = useState<Url | undefined>()
   const { data: { fetchFolderUrl = null } = {} } = useFetchFolderUrlQuery({
     fetchPolicy: 'network-only',
     onCompleted: () => {
@@ -20,10 +26,36 @@ export default function Calendar() {
         folder.urls.map(
           (url) =>
             url.notification &&
-            INITIAL_EVENTS.push({ id: url.id, title: url.title ? url.title : 'no title', date: url.notification })
+            INITIAL_EVENTS.push({
+              id: url.id,
+              title: url.title ? url.title : 'no title',
+              date: url.notification,
+            })
         )
       )
       setNotificationEvents(INITIAL_EVENTS)
+    },
+  })
+  const { data: { fetchVisitingHistory = null } = {} } = useFetchVisitingHistoryQuery({
+    fetchPolicy: 'network-only',
+    skip: !fetchFolderUrl,
+    onCompleted: () => {
+      const historys = fetchVisitingHistory?.map((data) => ({
+        id: data.urlId,
+        title: identifyNotificationEvent(data.urlId)?.title
+          ? (identifyNotificationEvent(data.urlId)?.title as string)
+          : 'no title',
+        date: data.date,
+        backgroundColor: 'red',
+        borderColor: 'red',
+        editable: false,
+        extendedProps: { id: data.id },
+      }))
+      if (notificationEvents && historys) {
+        setNotificationEvents([...notificationEvents, ...historys])
+      } else if (!notificationEvents && historys) {
+        setNotificationEvents(historys)
+      }
     },
   })
   const [editUrlMutation] = useEditUrlMutation({
@@ -31,18 +63,32 @@ export default function Calendar() {
       if (deleteEvent) {
         deleteEvent?.event.remove()
         setDeleteEvent(undefined)
-        setDeletedNotification(undefined)
-        setDeleteNotificationModal(false)
+        setSelectedEvent(undefined)
+        setDeleteEventModal(false)
       }
     },
   })
+  const [deleteVisitingHistoryMutation] = useDeleteVisitingHistoryMutation({
+    onCompleted: () => {
+      if (deleteEvent) {
+        deleteEvent?.event.remove()
+        setDeleteEvent(undefined)
+        setSelectedEvent(undefined)
+        setDeleteEventModal(false)
+      }
+    },
+  })
+
   const identifyNotificationEvent = (eventId: string): Url | undefined =>
     fetchFolderUrl?.map((folder) => folder.urls.find((url) => url.id === eventId)).find((url) => url !== undefined)
+
   const handleEventClick = (clickInfo: EventClickArg) => {
+    console.log(clickInfo.event.extendedProps.id)
+    console.log(clickInfo.event.id)
     setDeleteEvent(clickInfo)
-    const deleteUrl = identifyNotificationEvent(clickInfo.event.id)
-    setDeletedNotification(deleteUrl)
-    setDeleteNotificationModal(true)
+    const selectedUrl = identifyNotificationEvent(clickInfo.event.id)
+    setSelectedEvent(selectedUrl)
+    setDeleteEventModal(true)
   }
   const handleEventDrop = (eventDropInfo: EventDropArg) => {
     const deleteUrl = identifyNotificationEvent(eventDropInfo.event.id)
@@ -76,35 +122,37 @@ export default function Calendar() {
         height={500}
         eventDrop={handleEventDrop}
       />
-      <ModalContainer open={deleteNotificationModal}>
+      <ModalContainer open={deleteEventModal}>
         <div className="modalFrame">
           <div>
             <div>
-              id: {deletedNotification?.id}
+              id: {slectedEvent?.id}
               <br />
-              url: {deletedNotification?.url}
+              url: {slectedEvent?.url}
               <br />
-              title: {deletedNotification?.title}
+              title: {slectedEvent?.title}
               <br />
-              memo: {deletedNotification?.memo}
+              memo: {slectedEvent?.memo}
               <br />
-              importance: {deletedNotification?.importance}
+              importance: {slectedEvent?.importance}
               <br />
-              notification: {deletedNotification?.notification}
+              notification: {slectedEvent?.notification}
             </div>
             <button
               type="button"
               onClick={() => {
-                if (deletedNotification)
+                if (deleteEvent?.event.extendedProps.id) {
+                  deleteVisitingHistoryMutation({ variables: { id: deleteEvent?.event.extendedProps.id as string } })
+                } else if (slectedEvent)
                   editUrlMutation({
                     variables: {
-                      urlId: deletedNotification.id,
+                      urlId: slectedEvent.id,
                       url: {
-                        title: deletedNotification.title,
-                        memo: deletedNotification.memo,
+                        title: slectedEvent.title,
+                        memo: slectedEvent.memo,
                         notification: null,
-                        importance: deletedNotification.importance,
-                        url: deletedNotification.url,
+                        importance: slectedEvent.importance,
+                        url: slectedEvent.url,
                       },
                     },
                   })
