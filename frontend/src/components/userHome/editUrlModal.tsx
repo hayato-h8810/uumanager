@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import Modal from '@mui/material/Modal'
 import TextField from '@mui/material/TextField'
 import Select from '@mui/material/Select'
@@ -28,11 +27,21 @@ interface propsType {
   specifiedUrl: Url | null | undefined
   setSpecifiedUrl: (urls: Url | null | undefined) => void
   setUrls: (urls: Url[] | null | undefined) => void
+  notificationValue: Date | null
+  setNotificationValue: (dateArgument: Date | null) => void
 }
 
 export default function EditUrlModal({ props }: { props: propsType }) {
-  const { fetchFolderUrl, editUrlModal, setEditUrlModal, specifiedUrl, setSpecifiedUrl, setUrls } = props
-  const [notificationValue, setNotificationValue] = useState<Date | null>(null)
+  const {
+    fetchFolderUrl,
+    editUrlModal,
+    setEditUrlModal,
+    specifiedUrl,
+    setSpecifiedUrl,
+    setUrls,
+    notificationValue,
+    setNotificationValue,
+  } = props
   const [editUrlMutation] = useEditUrlMutation({
     onCompleted: ({ editUrl }) => {
       if (editUrl && editUrl.length === 1) {
@@ -60,7 +69,7 @@ export default function EditUrlModal({ props }: { props: propsType }) {
     editUrlMutation({
       variables: {
         urlId: specifiedUrl?.id || '',
-        folderId: data.folderId === '選択しない' ? null : data.folderId,
+        folderId: data.folderId === specifiedUrl?.folderId ? null : data.folderId,
         url: {
           url: data.url,
           importance: data.importance,
@@ -72,6 +81,9 @@ export default function EditUrlModal({ props }: { props: propsType }) {
     })
   }
 
+  console.log(notificationValue)
+  console.log(specifiedUrl?.notification)
+
   return (
     <ModalContainer open={editUrlModal}>
       <div className="modalFrame">
@@ -80,15 +92,12 @@ export default function EditUrlModal({ props }: { props: propsType }) {
         </div>
         <form onSubmit={handleSubmit(onEditUrlSubmit)}>
           <div>folder:</div>
-          <Select {...register('folderId')} label="フォルダー" defaultValue="選択しない" autoWidth>
-            <MenuItem value="選択しない">選択しない</MenuItem>
-            {fetchFolderUrl
-              ?.filter((folder) => folder.id !== specifiedUrl?.folderId)
-              .map((folder) => (
-                <MenuItem value={folder.id} key={folder.id}>
-                  {folder.name}
-                </MenuItem>
-              ))}
+          <Select {...register('folderId')} label="フォルダー" defaultValue={specifiedUrl?.folderId} autoWidth>
+            {fetchFolderUrl?.map((folder) => (
+              <MenuItem value={folder.id} key={folder.id}>
+                {folder.name}
+              </MenuItem>
+            ))}
           </Select>
           <div>url:</div>
           <TextField
@@ -96,6 +105,7 @@ export default function EditUrlModal({ props }: { props: propsType }) {
               required: true,
               pattern: /https?:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#\u3000-\u30FE\u4E00-\u9FA0\uFF01-\uFFE3]+/g,
             })}
+            defaultValue={specifiedUrl?.url}
             type="text"
             label="url"
             variant="outlined"
@@ -106,15 +116,30 @@ export default function EditUrlModal({ props }: { props: propsType }) {
           <div>importance:</div>
           <TextField
             {...register('importance', { valueAsNumber: true, required: true })}
+            defaultValue={specifiedUrl?.importance}
             type="number"
             label="重要度"
             variant="outlined"
             size="small"
           />
           <div>title</div>
-          <TextField {...register('title')} type="text" label="タイトル" variant="outlined" size="small" />
+          <TextField
+            {...register('title')}
+            defaultValue={specifiedUrl?.title}
+            type="text"
+            label="タイトル"
+            variant="outlined"
+            size="small"
+          />
           <div>memo</div>
-          <TextField {...register('memo')} type="text" label="メモ" variant="outlined" size="small" />
+          <TextField
+            {...register('memo')}
+            defaultValue={specifiedUrl?.memo}
+            type="text"
+            label="メモ"
+            variant="outlined"
+            size="small"
+          />
           <div>notification</div>
           <LocalizationProvider dateAdapter={AdapterDateFns} locale={jaLocale}>
             <DatePicker

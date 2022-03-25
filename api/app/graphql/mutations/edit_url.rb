@@ -13,20 +13,22 @@ module Mutations
 
       if folder_id
         previousFolderId = editUrl.folder_id
-        editUrl.update(folder_id: folder_id)
         editUrl.update(title: url.title,
                        memo: url.memo,
                        url: url.url,
                        importance: url.importance,
-                       notification: url.notification)
+                       notification: url.notification,
+                       folder_id: folder_id)
 
         [Folder.find(previousFolderId), Folder.find(folder_id)]
       else
-        editUrl.update(title: url.title,
+        return unless editUrl.update(title: url.title,
                        memo: url.memo,
                        url: url.url,
                        importance: url.importance,
-                       notification: url.notification)
+                       notification: url.notification,
+                      
+                       )
 
         [Folder.find(editUrl.folder_id)]
       end
