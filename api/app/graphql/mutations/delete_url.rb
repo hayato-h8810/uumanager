@@ -14,8 +14,8 @@ module Mutations
       return unless user.folders.find_by(id: folder_id).urls.find_by(id: url_id)
 
       selectedFolder = Folder.find_by(id: folder_id)
-      selectedUrls = selectedFolder.urls.all
       user.folders.find_by(id: folder_id).urls.find_by(id: url_id).destroy
+      selectedUrls = selectedFolder.urls.all
 
       { id: selectedFolder.id, name: selectedFolder.name, urls: selectedUrls }
     end

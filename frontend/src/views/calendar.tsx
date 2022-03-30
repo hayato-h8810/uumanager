@@ -1,45 +1,60 @@
-import FullCalendar, { EventClickArg, EventDropArg, EventInput } from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import allLocales from '@fullcalendar/core/locales-all'
-import interactionPlugin from '@fullcalendar/interaction'
-import { useState } from 'react'
-import styled from 'styled-components'
-import { Modal } from '@mui/material'
-import {
-  useFetchFolderUrlQuery,
-  useEditUrlMutation,
-  useFetchVisitingHistoryQuery,
-  useDeleteVisitingHistoryMutation,
-  Url,
-} from '../api/graphql'
+import FullCalendar, { EventApi, EventInput } from '@fullcalendar/react'
+import { useRef, useState } from 'react'
+import CalendarComponent from '../components/calendar/calendarComponent'
+import { Url, useFetchFolderUrlQuery, useFetchVisitingHistoryQuery } from '../api/graphql'
+import EventList from '../components/calendar/EventList'
 
 export default function Calendar() {
-  const [notificationEvents, setNotificationEvents] = useState<EventInput[]>()
-  const [deleteEventModal, setDeleteEventModal] = useState(false)
-  const [deleteEvent, setDeleteEvent] = useState<EventClickArg | undefined>()
-  const [slectedEvent, setSelectedEvent] = useState<Url | undefined>()
+  const [calendarEvents, setCalendarEvents] = useState<EventInput[]>()
+  const [currentEvents, setCurrentEvents] = useState<EventApi[]>([])
+  const calendarRef = useRef<FullCalendar>(null)
   const { data: { fetchFolderUrl = null } = {} } = useFetchFolderUrlQuery({
     fetchPolicy: 'network-only',
-    onCompleted: () => {
-      const INITIAL_EVENTS: EventInput[] = []
-      fetchFolderUrl?.map((folder) =>
-        folder.urls.map(
-          (url) =>
-            url.notification &&
-            INITIAL_EVENTS.push({
-              id: url.id,
-              title: url.title ? url.title : 'no title',
-              date: url.notification,
-            })
+    onCompleted: (fetchData) => {
+      // 既に一度実行されている場合
+      if (!calendarEvents?.length) {
+        const INITIAL_EVENTS: EventInput[] = []
+        fetchFolderUrl?.map((folder) =>
+          folder.urls.map(
+            (url) =>
+              url.notification &&
+              INITIAL_EVENTS.push({
+                id: url.id,
+                title: url.title ? url.title : 'no title',
+                date: url.notification,
+              })
+          )
         )
-      )
-      setNotificationEvents(INITIAL_EVENTS)
+        setCalendarEvents(INITIAL_EVENTS)
+
+        // 初めて実行される場合
+      } else {
+        const INITIAL_EVENTS: EventInput[] = []
+        fetchData.fetchFolderUrl?.map((folder) =>
+          folder.urls.map(
+            (url) =>
+              url.notification &&
+              INITIAL_EVENTS.push({
+                id: url.id,
+                title: url.title ? url.title : 'no title',
+                date: url.notification,
+              })
+          )
+        )
+        setCalendarEvents((previousEvents) => {
+          const historyEvents = previousEvents?.filter((event) => event.extendedProps)
+          if (historyEvents) {
+            return [...INITIAL_EVENTS, ...historyEvents]
+          }
+          return [...INITIAL_EVENTS]
+        })
+      }
     },
   })
   const { data: { fetchVisitingHistory = null } = {} } = useFetchVisitingHistoryQuery({
     fetchPolicy: 'network-only',
     skip: !fetchFolderUrl,
-    onCompleted: () => {
+    onCompleted: (fetchData) => {
       const historys = fetchVisitingHistory?.map((data) => ({
         id: data.urlId,
         title: identifyNotificationEvent(data.urlId)?.title
@@ -51,156 +66,49 @@ export default function Calendar() {
         editable: false,
         extendedProps: { id: data.id },
       }))
-      if (notificationEvents && historys) {
-        setNotificationEvents([...notificationEvents, ...historys])
-      } else if (!notificationEvents && historys) {
-        setNotificationEvents(historys)
-      }
-    },
-  })
-  const [editUrlMutation] = useEditUrlMutation({
-    onCompleted: () => {
-      if (deleteEvent) {
-        deleteEvent?.event.remove()
-        setDeleteEvent(undefined)
-        setSelectedEvent(undefined)
-        setDeleteEventModal(false)
-      }
-    },
-  })
-  const [deleteVisitingHistoryMutation] = useDeleteVisitingHistoryMutation({
-    onCompleted: () => {
-      if (deleteEvent) {
-        deleteEvent?.event.remove()
-        setDeleteEvent(undefined)
-        setSelectedEvent(undefined)
-        setDeleteEventModal(false)
-      }
-    },
-  })
+      const historyEvents = calendarEvents?.filter((event) => event.extendedProps)
 
+      // 既に一度実行されている場合
+      if (historyEvents?.length) {
+        setCalendarEvents((events) => {
+          const notificatinEvents = events?.filter((event) => !event.extendedProps)
+          const newHistorys = fetchData.fetchVisitingHistory?.map((data) => ({
+            id: data.urlId,
+            title: identifyNotificationEvent(data.urlId)?.title
+              ? (identifyNotificationEvent(data.urlId)?.title as string)
+              : 'no title',
+            date: data.date,
+            backgroundColor: 'red',
+            borderColor: 'red',
+            editable: false,
+            extendedProps: { id: data.id },
+          }))
+          if (notificatinEvents && newHistorys) {
+            return [...notificatinEvents, ...newHistorys]
+          }
+          if (newHistorys) {
+            return [...newHistorys]
+          }
+          if (!newHistorys && notificatinEvents) {
+            return [...notificatinEvents]
+          }
+          return undefined
+        })
+
+        // 初めて実行される場合
+      } else if (calendarEvents && historys) {
+        setCalendarEvents([...calendarEvents, ...historys])
+      } else if (!calendarEvents && historys) {
+        setCalendarEvents(historys)
+      }
+    },
+  })
   const identifyNotificationEvent = (eventId: string): Url | undefined =>
     fetchFolderUrl?.map((folder) => folder.urls.find((url) => url.id === eventId)).find((url) => url !== undefined)
-
-  const handleEventClick = (clickInfo: EventClickArg) => {
-    console.log(clickInfo.event.extendedProps.id)
-    console.log(clickInfo.event.id)
-    setDeleteEvent(clickInfo)
-    const selectedUrl = identifyNotificationEvent(clickInfo.event.id)
-    setSelectedEvent(selectedUrl)
-    setDeleteEventModal(true)
-  }
-  const handleEventDrop = (eventDropInfo: EventDropArg) => {
-    const deleteUrl = identifyNotificationEvent(eventDropInfo.event.id)
-    if (deleteUrl)
-      editUrlMutation({
-        variables: {
-          urlId: deleteUrl.id,
-          url: {
-            title: deleteUrl.title,
-            memo: deleteUrl.memo,
-            notification: eventDropInfo.event.startStr,
-            importance: deleteUrl.importance,
-            url: deleteUrl.url,
-          },
-        },
-      })
-  }
-
   return (
-    <CalendarContainer>
-      <FullCalendar
-        plugins={[dayGridPlugin, interactionPlugin]}
-        initialView="dayGridMonth"
-        editable
-        events={notificationEvents}
-        locales={allLocales}
-        locale="ja"
-        eventClick={handleEventClick}
-        dayMaxEventRows={2}
-        droppable
-        height={500}
-        eventDrop={handleEventDrop}
-      />
-      <ModalContainer open={deleteEventModal}>
-        <div className="modalFrame">
-          <div>
-            <div>
-              id: {slectedEvent?.id}
-              <br />
-              url: {slectedEvent?.url}
-              <br />
-              title: {slectedEvent?.title}
-              <br />
-              memo: {slectedEvent?.memo}
-              <br />
-              importance: {slectedEvent?.importance}
-              <br />
-              notification: {slectedEvent?.notification}
-            </div>
-            <button
-              type="button"
-              onClick={() => {
-                if (deleteEvent?.event.extendedProps.id) {
-                  deleteVisitingHistoryMutation({ variables: { id: deleteEvent?.event.extendedProps.id as string } })
-                } else if (slectedEvent)
-                  editUrlMutation({
-                    variables: {
-                      urlId: slectedEvent.id,
-                      url: {
-                        title: slectedEvent.title,
-                        memo: slectedEvent.memo,
-                        notification: null,
-                        importance: slectedEvent.importance,
-                        url: slectedEvent.url,
-                      },
-                    },
-                  })
-              }}
-            >
-              通知を削除
-            </button>
-          </div>
-        </div>
-      </ModalContainer>
-    </CalendarContainer>
+    <>
+      <CalendarComponent props={{ calendarEvents, identifyNotificationEvent, setCurrentEvents, calendarRef }} />
+      <EventList props={{ calendarEvents, currentEvents, identifyNotificationEvent, calendarRef }} />
+    </>
   )
 }
-
-const CalendarContainer = styled.div`
-  width: 500px;
-  .fc h2 {
-    font-size: 5px;
-  }
-  .fc-today-button {
-    font-size: 5px;
-  }
-  .fc .fc-icon {
-    font-size: 5px;
-    padding-bottom: 18px;
-    padding-right: 10px;
-  }
-  .fc .fc-button-group .fc-button {
-    padding: 0.1em 0.3em;
-  }
-  .fc thead {
-    font-size: 5px;
-  }
-  .fc tbody {
-    font-size: 3px;
-    .fc-daygrid-day-events {
-      position: absolute;
-      min-width: 100%;
-      .fc-event-title {
-        font-size: 5px;
-      }
-    }
-  }
-`
-
-const ModalContainer = styled(Modal)`
-  background: rgba(0, 0, 0, 0.7);
-  .modalFrame {
-    background: white;
-  }
-`
