@@ -18,8 +18,9 @@ const client = new ApolloClient({
 const GlobalStyle = createGlobalStyle`
   body{     
     background: #E9EEEF;     
-    margin: 0 calc(50% - 50vw);  
+    margin: 0 auto;  
     font-family: "Noto Sans JP";
+    
   }
 `
 

@@ -40,14 +40,13 @@ export default function EventList({ props }: { props: propType }) {
     setSortEvent(
       calendarEvents?.sort((a, b) => {
         if (a?.date && b?.date) {
-          console.log('a')
           return a?.date > b?.date ? 1 : -1
         }
         return 1
       })
     )
   }, [calendarEvents])
-  console.log(sortEvent)
+
   return (
     <div>
       <button
@@ -58,24 +57,20 @@ export default function EventList({ props }: { props: propType }) {
             setSortEvent(
               calendarEvents?.sort((a, b) => {
                 if (a?.date && b?.date) {
-                  console.log('a')
                   return a?.date > b?.date ? 1 : -1
                 }
                 return 1
               })
             )
-            console.log('sort')
           } else if (sort) {
             setSortEvent(
               calendarEvents?.sort((a, b) => {
                 if (a?.date && b?.date) {
-                  console.log('b')
                   return a?.date < b?.date ? 1 : -1
                 }
                 return 1
               })
             )
-            console.log('sort reverse')
           }
         }}
       >
