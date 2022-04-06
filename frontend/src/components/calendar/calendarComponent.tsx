@@ -64,67 +64,123 @@ export default function CalendarComponent({ props }: { props: propType }) {
         },
       })
   }
-  const handleEvents = (events: EventApi[]) => setCurrentEvents(events)
+  const handleEvents = (events: EventApi[]) => {
+    setCurrentEvents(events)
+  }
 
   return (
-    <CalendarContainer>
-      <FullCalendar
-        plugins={[dayGridPlugin, interactionPlugin]}
-        initialView="dayGridMonth"
-        editable
-        events={calendarEvents}
-        locales={allLocales}
-        locale="ja"
-        eventClick={handleEventClick}
-        eventsSet={handleEvents}
-        dayMaxEventRows={2}
-        droppable
-        height={500}
-        eventDrop={handleEventDrop}
-        ref={calendarRef}
-      />
-      <ModalContainer open={deleteEventModal}>
-        <div className="modalFrame">
-          <div>
+    <>
+      <CalendarContainer>
+        <FullCalendar
+          plugins={[dayGridPlugin, interactionPlugin]}
+          initialView="dayGridMonth"
+          editable
+          events={calendarEvents}
+          locales={allLocales}
+          locale="ja"
+          eventClick={handleEventClick}
+          eventsSet={handleEvents}
+          dayMaxEventRows={2}
+          droppable
+          height={500}
+          eventDrop={handleEventDrop}
+          ref={calendarRef}
+        />
+        <ModalContainer open={deleteEventModal}>
+          <div className="modalFrame">
             <div>
-              id: {slectedEvent?.id}
-              <br />
-              url: {slectedEvent?.url}
-              <br />
-              title: {slectedEvent?.title}
-              <br />
-              memo: {slectedEvent?.memo}
-              <br />
-              importance: {slectedEvent?.importance}
-              <br />
-              notification: {slectedEvent?.notification}
-            </div>           
-            <button
-              type="button"
-              onClick={() => {
-                if (deleteEvent?.event.extendedProps.id) {
-                  deleteVisitingHistoryMutation({ variables: { id: deleteEvent?.event.extendedProps.id as string } })
-                } else if (slectedEvent)
-                  editUrlMutation({
-                    variables: {
-                      urlId: slectedEvent.id,
-                      url: {
-                        title: slectedEvent.title,
-                        memo: slectedEvent.memo,
-                        notification: null,
-                        importance: slectedEvent.importance,
-                        url: slectedEvent.url,
+              <div>
+                id: {slectedEvent?.id}
+                <br />
+                url: {slectedEvent?.url}
+                <br />
+                title: {slectedEvent?.title}
+                <br />
+                memo: {slectedEvent?.memo}
+                <br />
+                importance: {slectedEvent?.importance}
+                <br />
+                notification: {slectedEvent?.notification}
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  if (deleteEvent?.event.extendedProps.id) {
+                    deleteVisitingHistoryMutation({ variables: { id: deleteEvent?.event.extendedProps.id as string } })
+                  } else if (slectedEvent)
+                    editUrlMutation({
+                      variables: {
+                        urlId: slectedEvent.id,
+                        url: {
+                          title: slectedEvent.title,
+                          memo: slectedEvent.memo,
+                          notification: null,
+                          importance: slectedEvent.importance,
+                          url: slectedEvent.url,
+                        },
                       },
-                    },
-                  })
-              }}
-            >
-              通知を削除
-            </button>
+                    })
+                }}
+              >
+                通知を削除
+              </button>
+            </div>
           </div>
-        </div>
-      </ModalContainer>
-    </CalendarContainer>
+        </ModalContainer>
+      </CalendarContainer>
+      {(() => {
+        const monthButtonArray = []
+        for (let i = 1; i < 13; i += 1) {
+          monthButtonArray.push(
+            <>
+              <br />
+              <button
+                type="button"
+                key={`month${i}`}
+                onClick={() => {
+                  const currentYear = calendarRef.current?.getApi().getDate().getFullYear()
+                  if (currentYear) {
+                    const month = `0${i}`.slice(-2)
+                    calendarRef.current?.getApi().gotoDate(new Date(`${currentYear}-0${month}`))
+                    console.log(`${currentYear}-${month}`)
+                    console.log(i)
+                  } 
+                }}
+              >
+                {i}月に移動
+              </button>
+            </>
+          )
+        }
+        return monthButtonArray
+      })()}
+      {(() => {
+        const yearButtonArray = []
+        for (let i = 1; i < 13; i += 1) {
+          const currentYear = new Date().getFullYear()
+          if (currentYear) {
+            const displayYear = currentYear - 6 + i
+            yearButtonArray.push(
+              <button
+                key={`year${i}`}
+                type="button"
+                onClick={() => {
+                  const month = calendarRef.current?.getApi().getDate().getMonth()
+                  if (month) {
+                    const currentMonth = `0${month + 1}`.slice(-2)
+                    calendarRef.current?.getApi().gotoDate(new Date(`${displayYear}-${currentMonth}`))
+                    console.log(`${displayYear}-${currentMonth}`)
+                  }
+                }}
+              >
+                {displayYear}
+              </button>
+            )
+          }
+        }
+        return yearButtonArray
+      })()}
+    </>
   )
 }
 
