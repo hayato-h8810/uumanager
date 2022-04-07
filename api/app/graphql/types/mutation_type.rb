@@ -14,5 +14,6 @@ module Types
     field :add_folder, mutation: Mutations::AddFolder
     field :record_visiting_history, mutation: Mutations::RecordVisitingHistory
     field :delete_visiting_history, mutation: Mutations::DeleteVisitingHistory
+    field :add_login_history, mutation: Mutations::AddLoginHistory
   end
 end
