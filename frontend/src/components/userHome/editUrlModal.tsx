@@ -81,9 +81,6 @@ export default function EditUrlModal({ props }: { props: propsType }) {
     })
   }
 
-  console.log(notificationValue)
-  console.log(specifiedUrl?.notification)
-
   return (
     <ModalContainer open={editUrlModal}>
       <div className="modalFrame">

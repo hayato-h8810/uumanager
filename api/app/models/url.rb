@@ -5,5 +5,5 @@ class Url < ApplicationRecord
 
   belongs_to :user, optional: true
   belongs_to :folder
-  has_many :visitingHistorys, dependent: :destroy
+  has_many :visitingHistories, dependent: :destroy
 end

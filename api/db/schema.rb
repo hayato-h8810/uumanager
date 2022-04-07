@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_220_323_053_357) do
+ActiveRecord::Schema.define(version: 20_220_407_015_141) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'plpgsql'
 
@@ -22,6 +22,14 @@ ActiveRecord::Schema.define(version: 20_220_323_053_357) do
     t.integer 'user_id'
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
+  end
+
+  create_table 'login_histories', force: :cascade do |t|
+    t.string 'date'
+    t.bigint 'user_id', null: false
+    t.datetime 'created_at', precision: 6, null: false
+    t.datetime 'updated_at', precision: 6, null: false
+    t.index ['user_id'], name: 'index_login_histories_on_user_id'
   end
 
   create_table 'urls', force: :cascade do |t|
@@ -53,6 +61,7 @@ ActiveRecord::Schema.define(version: 20_220_323_053_357) do
     t.index ['user_id'], name: 'index_visiting_histories_on_user_id'
   end
 
+  add_foreign_key 'login_histories', 'users'
   add_foreign_key 'visiting_histories', 'urls'
   add_foreign_key 'visiting_histories', 'users'
 end

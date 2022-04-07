@@ -144,7 +144,7 @@ export default function CalendarComponent({ props }: { props: propType }) {
                     calendarRef.current?.getApi().gotoDate(new Date(`${currentYear}-0${month}`))
                     console.log(`${currentYear}-${month}`)
                     console.log(i)
-                  } 
+                  }
                 }}
               >
                 {i}月に移動

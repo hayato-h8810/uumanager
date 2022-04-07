@@ -23,12 +23,10 @@ module Mutations
         [Folder.find(previousFolderId), Folder.find(folder_id)]
       else
         return unless editUrl.update(title: url.title,
-                       memo: url.memo,
-                       url: url.url,
-                       importance: url.importance,
-                       notification: url.notification,
-                      
-                       )
+                                     memo: url.memo,
+                                     url: url.url,
+                                     importance: url.importance,
+                                     notification: url.notification)
 
         [Folder.find(editUrl.folder_id)]
       end

@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
-import { useCurrentUserQuery, useFetchFolderUrlQuery, Url } from '../../api/graphql'
+import { format } from 'date-fns'
+import { useCurrentUserQuery, useFetchFolderUrlQuery, useAddLoginHistoryMutation, Url } from '../../api/graphql'
 import FolderListContainer from './folderListContainer'
 import UrlListContainer from './urlListContainer'
 import Notification from './Notification'
@@ -13,7 +14,11 @@ export default function UserHomeContainer() {
   const { data: { currentUser = null } = {}, loading } = useCurrentUserQuery({
     fetchPolicy: 'network-only',
     onCompleted: () => {
-      if (!currentUser) history.push('/login')
+      if (!currentUser) {
+        history.push('/login')
+      } else {
+        addLoginHistoryMutation({ variables: { date: format(new Date(), 'yyyy-MM-dd') } })
+      }
     },
   })
   const { data: { fetchFolderUrl = null } = {} } = useFetchFolderUrlQuery({
@@ -21,6 +26,7 @@ export default function UserHomeContainer() {
     nextFetchPolicy: 'cache-first',
     skip: !currentUser,
   })
+  const [addLoginHistoryMutation] = useAddLoginHistoryMutation()
 
   if (loading) return <h1>ロード中</h1>
 

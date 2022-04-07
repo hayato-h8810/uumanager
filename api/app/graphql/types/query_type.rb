@@ -12,5 +12,6 @@ module Types
     field :current_user, resolver: Queries::CurrentUser
     field :fetch_folder_url, resolver: Queries::FetchFolderUrl
     field :fetch_visiting_history, resolver: Queries::FetchVisitingHistory
+    field :fetch_login_history, resolver: Queries::FetchLoginHistory
   end
 end
