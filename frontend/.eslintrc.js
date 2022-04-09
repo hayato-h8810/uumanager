@@ -31,7 +31,8 @@ module.exports = {
     'react/jsx-props-no-spreading': 'off',
     'react/prop-types': 'off',
     'import/prefer-default-export': 'off',
-    'react-hooks/exhaustive-deps':'off',
+    'react-hooks/exhaustive-deps': 'off',
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
     'import/extensions': [
       'error',
       {
