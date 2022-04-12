@@ -1,11 +1,11 @@
 import styled from 'styled-components'
-import Form from '../components/createUser/Form'
+import Index from '../components/createUser/index'
 
 export default function CreateUserContainer() {
   return (
     <Container>
       <h1>ユーザー新規作成</h1>
-      <Form />
+      <Index />
     </Container>
   )
 }

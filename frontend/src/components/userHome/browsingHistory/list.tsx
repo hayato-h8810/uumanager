@@ -1,41 +1,31 @@
 import FullCalendar, { EventApi, EventInput } from '@fullcalendar/react'
 import { MutableRefObject, useState, useEffect } from 'react'
-import {
-  useEditUrlMutation,
-  useDeleteVisitingHistoryMutation,
-  Url,
-  FetchVisitingHistoryDocument,
-} from '../../api/graphql'
+import { useDeleteBrowsingHistoryMutation, FetchBrowsingHistoryDocument } from '../../../api/graphql'
 
 interface propType {
   calendarEvents: EventInput[] | undefined
-  identifyNotificationEvent: (eventId: string) => Url | undefined
   currentEvents: EventApi[]
   calendarRef: MutableRefObject<FullCalendar | null>
 }
 
-export default function EventList({ props }: { props: propType }) {
-  const { calendarEvents, identifyNotificationEvent, calendarRef } = props
+export default function List({ props }: { props: propType }) {
+  const { calendarEvents, calendarRef } = props
   const [selectedId, setSelectedId] = useState<string | null>()
   const [sortEvent, setSortEvent] = useState<EventInput[] | undefined>()
   const [sort, setSort] = useState(true)
-  const [deleteVisitingHistoryMutation] = useDeleteVisitingHistoryMutation({
+  const [deleteBrowsingHistoryMutation] = useDeleteBrowsingHistoryMutation({
     onCompleted: () => {
       setSelectedId(null)
     },
     update(cache, { data }) {
-      const newCache = data?.deleteVisitingHistory
+      const newCache = data?.deleteBrowsingHistory
       cache.writeQuery({
-        query: FetchVisitingHistoryDocument,
-        data: { fetchVisitingHistory: newCache },
+        query: FetchBrowsingHistoryDocument,
+        data: { fetchBrowsingHistory: newCache },
       })
     },
   })
-  const [editUrlMutation] = useEditUrlMutation({
-    onCompleted: () => {
-      setSelectedId(null)
-    },
-  })
+
   useEffect(() => {
     setSortEvent(
       calendarEvents?.sort((a, b) => {
@@ -77,42 +67,15 @@ export default function EventList({ props }: { props: propType }) {
         {sort ? 'sort' : 'sort reverse'}
       </button>
       {sortEvent?.map((event) => (
-        <div
-          key={
-            event.extendedProps?.id && event.id ? `history${(event.extendedProps?.id as string) + event.id}` : event.id
-          }
-        >
+        <div key={event.extendedProps?.id as string}>
           {event.date}:{event.title}:{event.extendedProps?.id}
           <button
             type="button"
-            key={
-              event.extendedProps?.id && event.id
-                ? `history${(event.extendedProps?.id as string) + event.id}`
-                : event.id
-            }
+            key={`delete-${event.extendedProps?.id as string}`}
             onClick={() => {
-              // 履歴を削除した場合
               if (event.extendedProps) {
-                deleteVisitingHistoryMutation({ variables: { id: event.extendedProps.id as string } })
+                deleteBrowsingHistoryMutation({ variables: { id: event.extendedProps.id as string } })
                 setSelectedId(event.extendedProps.id as string)
-
-                // 通知を削除した場合
-              } else if (event.id) {
-                setSelectedId(event.id)
-                const selectedUrl = identifyNotificationEvent(event.id)
-                if (selectedUrl)
-                  editUrlMutation({
-                    variables: {
-                      urlId: selectedUrl.id,
-                      url: {
-                        title: selectedUrl.title,
-                        memo: selectedUrl.memo,
-                        notification: null,
-                        importance: selectedUrl.importance,
-                        url: selectedUrl.url,
-                      },
-                    },
-                  })
               }
             }}
           >
@@ -120,11 +83,7 @@ export default function EventList({ props }: { props: propType }) {
           </button>
           <button
             type="button"
-            key={
-              event.extendedProps?.id
-                ? event.id && `goto-history${(event.extendedProps?.id as string) + event.id}`
-                : event.id && `goto${event.id}`
-            }
+            key={`goto-${event.extendedProps?.id as string}`}
             onClick={() => {
               if (event.date) calendarRef.current?.getApi().gotoDate(new Date(event.date.toString()))
             }}

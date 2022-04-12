@@ -1,5 +1,5 @@
-import LandingPageContainer from '../components/landingPage/landingPageContainer.tsx'
+import Index from '../components/landingPage/index'
 
 export default function LandingPage() {
-  return <LandingPageContainer />
+  return <Index />
 }

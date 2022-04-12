@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  query fetchVisitingHistory {
-    fetchVisitingHistory {
+  query fetchBrowsingHistory {
+    fetchBrowsingHistory {
       id
       urlId
       date

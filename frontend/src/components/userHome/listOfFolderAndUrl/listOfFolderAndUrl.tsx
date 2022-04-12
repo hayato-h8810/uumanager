@@ -2,12 +2,12 @@ import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { format } from 'date-fns'
-import { useCurrentUserQuery, useFetchFolderUrlQuery, useAddLoginHistoryMutation, Url } from '../../api/graphql'
+import { useCurrentUserQuery, useFetchFolderUrlQuery, useAddLoginHistoryMutation, Url } from '../../../api/graphql'
 import FolderListContainer from './folderListContainer'
 import UrlListContainer from './urlListContainer'
-import Notification from './Notification'
+import Notification from './notification'
 
-export default function UserHomeContainer() {
+export default function ListOfFolderAndUrl() {
   const [urls, setUrls] = useState<Url[] | null>()
   const history = useHistory()
 

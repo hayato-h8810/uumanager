@@ -28,13 +28,11 @@ export default function Form() {
   })
   const [loginMutation, { loading }] = useLoginMutation({
     onCompleted: (data) => {
-      console.log(data.login?.user?.id)
       if (data.login?.user) {
         history.push('/userHome')
       }
     },
     onError: (error) => {
-      console.log(error.message)
       if (error?.message === 'EMAIL_ERROR') {
         setEmailServerError('このメールアドレスは登録されていません')
       } else if (error?.message === 'PASSWORD_ERROR') {
@@ -45,7 +43,6 @@ export default function Form() {
     },
   })
   const onSubmit: SubmitHandler<FormInput> = (data) => {
-    console.log(data)
     loginMutation({ variables: { credentials: { password: data.password, email: data.email } } })
   }
   useEffect(() => {

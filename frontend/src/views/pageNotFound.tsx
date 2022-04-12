@@ -1,5 +1,5 @@
-import PageNotFoundContainer from '../components/pageNotFound/pageNotFoundContainer'
+import Index from '../components/pageNotFound/index'
 
 export default function PageNotFound() {
-  return <PageNotFoundContainer />
+  return <Index />
 }

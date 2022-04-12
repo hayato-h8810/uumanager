@@ -1,35 +1,25 @@
-import FullCalendar, { EventApi, EventClickArg, EventDropArg, EventInput } from '@fullcalendar/react'
+import FullCalendar, { EventApi, EventClickArg, EventInput } from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import allLocales from '@fullcalendar/core/locales-all'
 import interactionPlugin from '@fullcalendar/interaction'
 import { MutableRefObject, useState } from 'react'
 import styled from 'styled-components'
 import { Modal } from '@mui/material'
-import { useEditUrlMutation, useDeleteVisitingHistoryMutation, Url } from '../../api/graphql'
+import { useDeleteBrowsingHistoryMutation, Url } from '../../../api/graphql'
 
 interface propType {
   calendarEvents: EventInput[] | undefined
-  identifyNotificationEvent: (eventId: string) => Url | undefined
+  identifyUrl: (eventId: string) => Url | undefined
   setCurrentEvents: (event: EventApi[]) => void
   calendarRef: MutableRefObject<FullCalendar | null>
 }
 
-export default function CalendarComponent({ props }: { props: propType }) {
-  const { calendarEvents, identifyNotificationEvent, setCurrentEvents, calendarRef } = props
+export default function Calendar({ props }: { props: propType }) {
+  const { calendarEvents, identifyUrl, setCurrentEvents, calendarRef } = props
   const [deleteEventModal, setDeleteEventModal] = useState(false)
   const [deleteEvent, setDeleteEvent] = useState<EventClickArg | undefined>()
   const [slectedEvent, setSelectedEvent] = useState<Url | undefined>()
-  const [editUrlMutation] = useEditUrlMutation({
-    onCompleted: () => {
-      if (deleteEvent) {
-        deleteEvent?.event.remove()
-        setDeleteEvent(undefined)
-        setSelectedEvent(undefined)
-        setDeleteEventModal(false)
-      }
-    },
-  })
-  const [deleteVisitingHistoryMutation] = useDeleteVisitingHistoryMutation({
+  const [deleteBrowsingHistoryMutation] = useDeleteBrowsingHistoryMutation({
     onCompleted: () => {
       if (deleteEvent) {
         deleteEvent?.event.remove()
@@ -41,28 +31,10 @@ export default function CalendarComponent({ props }: { props: propType }) {
   })
 
   const handleEventClick = (clickInfo: EventClickArg) => {
-    console.log(clickInfo.event.extendedProps.id)
-    console.log(clickInfo.event.id)
     setDeleteEvent(clickInfo)
-    const selectedUrl = identifyNotificationEvent(clickInfo.event.id)
+    const selectedUrl = identifyUrl(clickInfo.event.id)
     setSelectedEvent(selectedUrl)
     setDeleteEventModal(true)
-  }
-  const handleEventDrop = (eventDropInfo: EventDropArg) => {
-    const deleteUrl = identifyNotificationEvent(eventDropInfo.event.id)
-    if (deleteUrl)
-      editUrlMutation({
-        variables: {
-          urlId: deleteUrl.id,
-          url: {
-            title: deleteUrl.title,
-            memo: deleteUrl.memo,
-            notification: eventDropInfo.event.startStr,
-            importance: deleteUrl.importance,
-            url: deleteUrl.url,
-          },
-        },
-      })
   }
   const handleEvents = (events: EventApi[]) => {
     setCurrentEvents(events)
@@ -81,9 +53,7 @@ export default function CalendarComponent({ props }: { props: propType }) {
           eventClick={handleEventClick}
           eventsSet={handleEvents}
           dayMaxEventRows={2}
-          droppable
           height={500}
-          eventDrop={handleEventDrop}
           ref={calendarRef}
         />
         <ModalContainer open={deleteEventModal}>
@@ -105,24 +75,10 @@ export default function CalendarComponent({ props }: { props: propType }) {
               <button
                 type="button"
                 onClick={() => {
-                  if (deleteEvent?.event.extendedProps.id) {
-                    deleteVisitingHistoryMutation({ variables: { id: deleteEvent?.event.extendedProps.id as string } })
-                  } else if (slectedEvent)
-                    editUrlMutation({
-                      variables: {
-                        urlId: slectedEvent.id,
-                        url: {
-                          title: slectedEvent.title,
-                          memo: slectedEvent.memo,
-                          notification: null,
-                          importance: slectedEvent.importance,
-                          url: slectedEvent.url,
-                        },
-                      },
-                    })
+                  deleteBrowsingHistoryMutation({ variables: { id: deleteEvent?.event.extendedProps.id as string } })
                 }}
               >
-                通知を削除
+                削除
               </button>
             </div>
           </div>
@@ -142,8 +98,6 @@ export default function CalendarComponent({ props }: { props: propType }) {
                   if (currentYear) {
                     const month = `0${i}`.slice(-2)
                     calendarRef.current?.getApi().gotoDate(new Date(`${currentYear}-0${month}`))
-                    console.log(`${currentYear}-${month}`)
-                    console.log(i)
                   }
                 }}
               >
@@ -169,7 +123,6 @@ export default function CalendarComponent({ props }: { props: propType }) {
                   if (month) {
                     const currentMonth = `0${month + 1}`.slice(-2)
                     calendarRef.current?.getApi().gotoDate(new Date(`${displayYear}-${currentMonth}`))
-                    console.log(`${displayYear}-${currentMonth}`)
                   }
                 }}
               >

@@ -1,7 +1,7 @@
 import { Line } from 'react-chartjs-2'
 import { Chart, registerables, TooltipItem } from 'chart.js'
 import { useHistory } from 'react-router-dom'
-import { useCurrentUserQuery, useFetchLoginHistoryQuery } from '../../api/graphql'
+import { useCurrentUserQuery, useFetchLoginHistoryQuery } from '../../../api/graphql'
 
 Chart.register(...registerables)
 

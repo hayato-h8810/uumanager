@@ -9,7 +9,7 @@ import DatePicker from '@mui/lab/DatePicker'
 import jaLocale from 'date-fns/locale/ja'
 import format from 'date-fns/format'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { useEditUrlMutation, FetchFolderUrlQuery, Url } from '../../api/graphql'
+import { useEditUrlMutation, FetchFolderUrlQuery, Url } from '../../../api/graphql'
 
 type FormInput = {
   importance: number

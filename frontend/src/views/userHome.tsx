@@ -1,5 +1,5 @@
-import UserHomeContainer from '../components/userHome/userHomeContainer'
+import Index from '../components/userHome/index'
 
 export default function UserHome() {
-  return <UserHomeContainer />
+  return <Index />
 }
