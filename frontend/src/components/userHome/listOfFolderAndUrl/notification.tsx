@@ -3,7 +3,7 @@ import IconButton from '@mui/material/IconButton'
 import { useState } from 'react'
 import styled from 'styled-components'
 import format from 'date-fns/format'
-import { FetchFolderUrlQuery, Url } from '../../api/graphql'
+import { FetchFolderUrlQuery, Url } from '../../../api/graphql'
 
 interface propsType {
   fetchFolderUrl: FetchFolderUrlQuery['fetchFolderUrl']

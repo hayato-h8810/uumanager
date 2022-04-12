@@ -16,6 +16,16 @@ ActiveRecord::Schema.define(version: 20_220_407_015_141) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'plpgsql'
 
+  create_table 'browsing_histories', force: :cascade do |t|
+    t.string 'date'
+    t.bigint 'url_id', null: false
+    t.bigint 'user_id', null: false
+    t.datetime 'created_at', precision: 6, null: false
+    t.datetime 'updated_at', precision: 6, null: false
+    t.index ['url_id'], name: 'index_browsing_histories_on_url_id'
+    t.index ['user_id'], name: 'index_browsing_histories_on_user_id'
+  end
+
   create_table 'folders', force: :cascade do |t|
     t.string 'name'
     t.string 'origin'
@@ -51,17 +61,7 @@ ActiveRecord::Schema.define(version: 20_220_407_015_141) do
     t.datetime 'updated_at', precision: 6, null: false
   end
 
-  create_table 'visiting_histories', force: :cascade do |t|
-    t.string 'date'
-    t.bigint 'url_id', null: false
-    t.bigint 'user_id', null: false
-    t.datetime 'created_at', precision: 6, null: false
-    t.datetime 'updated_at', precision: 6, null: false
-    t.index ['url_id'], name: 'index_visiting_histories_on_url_id'
-    t.index ['user_id'], name: 'index_visiting_histories_on_user_id'
-  end
-
+  add_foreign_key 'browsing_histories', 'urls'
+  add_foreign_key 'browsing_histories', 'users'
   add_foreign_key 'login_histories', 'users'
-  add_foreign_key 'visiting_histories', 'urls'
-  add_foreign_key 'visiting_histories', 'users'
 end

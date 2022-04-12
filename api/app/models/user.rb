@@ -5,7 +5,7 @@ class User < ApplicationRecord
 
   has_many :folders, dependent: :destroy
   has_many :urls, through: :folders, dependent: :destroy
-  has_many :visitingHistories, through: :urls, dependent: :destroy
+  has_many :browsingHistories, through: :urls, dependent: :destroy
   has_many :loginHistories, dependent: :destroy
 
   validates :name, presence: true

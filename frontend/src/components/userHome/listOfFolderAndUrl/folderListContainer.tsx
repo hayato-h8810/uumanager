@@ -8,7 +8,7 @@ import {
   FetchFolderUrlDocument,
   FetchFolderUrlQuery,
   Url,
-} from '../../api/graphql'
+} from '../../../api/graphql'
 
 interface propsType {
   fetchFolderUrl: FetchFolderUrlQuery['fetchFolderUrl']

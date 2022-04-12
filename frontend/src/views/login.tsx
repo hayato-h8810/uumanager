@@ -1,11 +1,11 @@
 import styled from 'styled-components'
-import Form from '../components/login/Form'
+import Index from '../components/login/index'
 
 export default function LoginContainer() {
   return (
     <Container>
       <h1>login</h1>
-      <Form />
+      <Index />
     </Container>
   )
 }

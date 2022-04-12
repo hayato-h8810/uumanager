@@ -10,7 +10,7 @@ import jaLocale from 'date-fns/locale/ja'
 import format from 'date-fns/format'
 import styled from 'styled-components'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { useSaveUrlMutation, FetchFolderUrlDocument, FetchFolderUrlQuery, Url } from '../../api/graphql'
+import { useSaveUrlMutation, FetchFolderUrlDocument, FetchFolderUrlQuery, Url } from '../../../api/graphql'
 
 type FormInput = {
   folderId: string | null
@@ -74,7 +74,6 @@ export default function SaveUrlModal({ props }: { props: propsType }) {
     },
   })
   const onSaveUrlSubmit: SubmitHandler<FormInput> = (data) => {
-    console.log(data)
     saveUrlMutation({
       variables: {
         folderId: data.folderId === 'new' ? null : data.folderId,

@@ -31,13 +31,11 @@ export default function Form() {
 
   const [createUser, { loading }] = useCreateUserMutation({
     onCompleted: (data) => {
-      console.log(data.createUser?.id)
       if (data.createUser?.id) {
         history.push('/userHome')
       }
     },
     onError: (error) => {
-      console.log(error)
       if (error?.message === 'EMAIL_ERROR') {
         setEmailServerError('このメールアドレスは既に使用されています')
       } else if (error?.message === 'SESSION_ERROR') {
@@ -55,7 +53,6 @@ export default function Form() {
   }, [loading])
 
   const onSubmit: SubmitHandler<FormInput> = (data) => {
-    console.log(data)
     createUser({ variables: { name: data.name, credentials: { password: data.password, email: data.email } } })
   }
 

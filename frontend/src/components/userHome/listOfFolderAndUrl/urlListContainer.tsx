@@ -2,7 +2,7 @@ import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import { useState } from 'react'
 import format from 'date-fns/format'
-import { useDeleteUrlMutation, FetchFolderUrlQuery, useRecordVisitingHistoryMutation, Url } from '../../api/graphql'
+import { useDeleteUrlMutation, FetchFolderUrlQuery, useRecordBrowsingHistoryMutation, Url } from '../../../api/graphql'
 import SaveUrlModal from './saveUrlModal'
 import EditUrlModal from './editUrlModal'
 
@@ -27,9 +27,9 @@ export default function UrlListContainer({ props }: { props: propsType }) {
       }
     },
   })
-  const [recordVisitingHistoryMutation] = useRecordVisitingHistoryMutation()
+  const [recordBrowsingHistoryMutation] = useRecordBrowsingHistoryMutation()
   const handleLinkClick = (urlId: string) =>
-    recordVisitingHistoryMutation({ variables: { urlId, date: format(new Date(), 'yyyy-MM-dd') } })
+    recordBrowsingHistoryMutation({ variables: { urlId, date: format(new Date(), 'yyyy-MM-dd') } })
 
   return (
     <>
