@@ -68,7 +68,7 @@ export default function Header() {
             </button>
           </div>
         </ModalContainer>
-        {location.pathname !== '/userHome' && (
+        {/^(\/userHome|\/userHome\/)$/.test(location.pathname) && (
           <button
             type="button"
             onClick={() => {
@@ -98,7 +98,6 @@ const ModalContainer = styled(Modal)`
   }
   .modalFrame {
     background: white;
-
     position: relative;
   }
 `
