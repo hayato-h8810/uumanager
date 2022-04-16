@@ -1,3 +1,4 @@
+import styled from 'styled-components'
 import { Line } from 'react-chartjs-2'
 import { Chart, registerables, TooltipItem } from 'chart.js'
 import { useHistory } from 'react-router-dom'
@@ -68,9 +69,9 @@ export default function LoginHistory() {
     datasets: [
       {
         data: historyData(),
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        borderColor: 'rgb(255, 99, 132)',
-        borderWidth: 1,
+        backgroundColor: '#00DD23',
+        borderColor: '#00DD23',
+        borderWidth: 2,
         xAxisID: 'x',
       },
     ],
@@ -101,6 +102,32 @@ export default function LoginHistory() {
         },
       },
     },
+    maintainAspectRatio: false,
+    responsive: false,
   }
-  return <Line data={data} options={options} />
+  return (
+    <Item>
+      <Title>活動履歴</Title>
+      <LineContainer>
+        <Line data={data} options={options} height="300px" width="700px" className="lineChart" />
+      </LineContainer>
+    </Item>
+  )
 }
+
+const Item = styled.div`
+  grid-area: loginHistory;
+  margin-left: 10px;
+`
+const Title = styled.h1`
+  padding-left: 70px;
+  font-weight: normal;
+  font-size: 20px;
+`
+const LineContainer = styled.div`
+  position: relative;
+  .lineChart {
+    position: absolute;
+    left: 90px;
+  }
+`

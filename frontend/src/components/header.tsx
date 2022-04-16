@@ -90,6 +90,7 @@ const HeaderContainer = styled.div`
   background: #344460;
   width: 100%;
   height: 75px;
+  min-width: 1440px;
 `
 
 const ModalContainer = styled(Modal)`

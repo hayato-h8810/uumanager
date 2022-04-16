@@ -1,6 +1,6 @@
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -10,11 +10,13 @@ export default function NavTabs() {
   const [value, setValue] = useState(
     /^(\/userHome|\/userHome\/)$/.test(location.pathname) ? 'ListOfFolderAndUrl' : location.pathname.substr(10)
   )
-  console.log(location.pathname.substr(10))
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
     history.push(`/userHome/${newValue}`)
   }
+  useEffect(() => {
+    setValue(location.pathname.substr(10))
+  }, [location.pathname])
   return (
     <TabsContainer>
       <Tabs value={value} onChange={handleChange} centered>
@@ -34,14 +36,15 @@ const TabsContainer = styled.div`
     border-radius: 3px;
   }
   .MuiTabs-root {
+    width: 1440px;
     background: #f6f6f9;
-    .MuiTab-root {
-      height: 55px;
-      min-width: 200px;
-      font-size: 12px;
-    }
-    & .Mui-selected {
+    .Mui-selected {
       color: black;
     }
+  }
+  .MuiTab-root {
+    height: 55px;
+    min-width: 200px;
+    font-size: 12px;
   }
 `
