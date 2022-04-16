@@ -253,6 +253,7 @@ export type UrlInput = {
 
 export type User = {
   __typename?: 'User'
+  createdAt: Scalars['Int']
   email: Scalars['String']
   id: Scalars['ID']
   name: Scalars['String']
@@ -475,7 +476,7 @@ export type CurrentUserQueryVariables = Exact<{ [key: string]: never }>
 
 export type CurrentUserQuery = {
   __typename?: 'Query'
-  currentUser?: { __typename?: 'User'; id: string; name: string; email: string } | null
+  currentUser?: { __typename?: 'User'; id: string; name: string; email: string; createdAt: number } | null
 }
 
 export type FetchBrowsingHistoryQueryVariables = Exact<{ [key: string]: never }>
@@ -1079,6 +1080,7 @@ export const CurrentUserDocument = gql`
       id
       name
       email
+      createdAt
     }
   }
 `

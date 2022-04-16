@@ -14,7 +14,6 @@ export default function BrowsingHistoryDisplay() {
   const { data: { fetchBrowsingHistory = null } = {} } = useFetchBrowsingHistoryQuery({
     fetchPolicy: 'network-only',
     onCompleted: () => {
-      console.log('kk')
       const historys = fetchBrowsingHistory?.map((data) => ({
         id: data.urlId,
         title: identifyUrl(data.urlId)?.title ? (identifyUrl(data.urlId)?.title as string) : 'no title',
