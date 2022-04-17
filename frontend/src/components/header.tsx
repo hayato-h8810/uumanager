@@ -68,7 +68,7 @@ export default function Header() {
             </button>
           </div>
         </ModalContainer>
-        {/^(\/userHome|\/userHome\/)$/.test(location.pathname) && (
+        {!location.pathname.startsWith('/userHome') && (
           <button
             type="button"
             onClick={() => {

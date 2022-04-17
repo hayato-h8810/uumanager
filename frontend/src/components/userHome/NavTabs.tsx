@@ -7,21 +7,29 @@ import styled from 'styled-components'
 export default function NavTabs() {
   const history = useHistory()
   const location = useLocation()
-  const [value, setValue] = useState(
-    /^(\/userHome|\/userHome\/)$/.test(location.pathname) ? 'ListOfFolderAndUrl' : location.pathname.substr(10)
-  )
+  const [value, setValue] = useState('')
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
     history.push(`/userHome/${newValue}`)
   }
+
   useEffect(() => {
-    setValue(location.pathname.substr(10))
+    if (location.pathname.substr(10).startsWith('profile')) {
+      setValue('profile')
+    } else if (location.pathname.substr(10).startsWith('listOfFolderAndUrl')) {
+      setValue('listOfFolderAndUrl')
+    } else if (location.pathname.substr(10).startsWith('calendar')) {
+      setValue('calendar')
+    } else if (location.pathname.substr(10).startsWith('browsingHistory')) {
+      setValue('browsingHistory')
+    }
   }, [location.pathname])
+
   return (
     <TabsContainer>
       <Tabs value={value} onChange={handleChange} centered>
         <Tab label="ユーザープロファイル" value="profile" />
-        <Tab label="Url一覧" value="ListOfFolderAndUrl" />
+        <Tab label="Url一覧" value="listOfFolderAndUrl" />
         <Tab label="通知カレンダー" value="calendar" />
         <Tab label="閲覧履歴カレンダー" value="browsingHistory" />
       </Tabs>
