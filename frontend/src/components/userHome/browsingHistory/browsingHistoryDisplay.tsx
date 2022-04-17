@@ -13,16 +13,21 @@ export default function BrowsingHistoryDisplay() {
   })
   const { data: { fetchBrowsingHistory = null } = {} } = useFetchBrowsingHistoryQuery({
     fetchPolicy: 'network-only',
+    skip: !fetchFolderUrl,
     onCompleted: () => {
-      const historys = fetchBrowsingHistory?.map((data) => ({
-        id: data.urlId,
-        title: identifyUrl(data.urlId)?.title ? (identifyUrl(data.urlId)?.title as string) : 'no title',
-        date: data.date,
-        backgroundColor: 'red',
-        borderColor: 'red',
-        editable: false,
-        extendedProps: { id: data.id },
-      }))
+      console.log(fetchBrowsingHistory)
+      const historys = fetchBrowsingHistory?.map((data) => {
+        console.log(identifyUrl(data.urlId)?.title)
+        return {
+          id: data.urlId,
+          title: identifyUrl(data.urlId)?.title ? (identifyUrl(data.urlId)?.title as string) : 'no title',
+          date: data.date,
+          backgroundColor: 'red',
+          borderColor: 'red',
+          editable: false,
+          extendedProps: { id: data.id },
+        }
+      })
       setCalendarEvents(historys)
     },
   })
