@@ -5,7 +5,7 @@ import interactionPlugin from '@fullcalendar/interaction'
 import { MutableRefObject, useState } from 'react'
 import styled from 'styled-components'
 import { Modal } from '@mui/material'
-import { useDeleteBrowsingHistoryMutation, Url } from '../../../api/graphql'
+import { useDeleteBrowsingHistoryMutation, Url, FetchBrowsingHistoryDocument } from '../../../api/graphql'
 
 interface propType {
   calendarEvents: EventInput[] | undefined
@@ -27,6 +27,13 @@ export default function Calendar({ props }: { props: propType }) {
         setSelectedEvent(undefined)
         setDeleteEventModal(false)
       }
+    },
+    update(cache, { data }) {
+      const newCache = data?.deleteBrowsingHistory
+      cache.writeQuery({
+        query: FetchBrowsingHistoryDocument,
+        data: { fetchBrowsingHistory: newCache },
+      })
     },
   })
 
