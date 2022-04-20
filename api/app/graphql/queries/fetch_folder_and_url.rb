@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Queries
-  class FetchFolderUrl < Queries::BaseQuery
+  class FetchFolderAndUrl < Queries::BaseQuery
     null true
 
     type [ObjectTypes::Folder], null: true

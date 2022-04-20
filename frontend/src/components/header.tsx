@@ -68,7 +68,7 @@ export default function Header() {
             </button>
           </div>
         </ModalContainer>
-        {!location.pathname.startsWith('/userHome') && (
+        {!location.pathname.toLowerCase().startsWith('/userhome') && (
           <button
             type="button"
             onClick={() => {

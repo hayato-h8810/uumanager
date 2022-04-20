@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { format } from 'date-fns'
-import { useCurrentUserQuery, useFetchFolderUrlQuery, useAddLoginHistoryMutation, Url } from '../../../api/graphql'
+import { useCurrentUserQuery, useFetchFolderAndUrlQuery, useAddLoginHistoryMutation, Url } from '../../../api/graphql'
 import FolderListContainer from './folderListContainer'
 import UrlListContainer from './urlListContainer'
 import Notification from './notification'
@@ -21,7 +21,7 @@ export default function ListOfFolderAndUrl() {
       }
     },
   })
-  const { data: { fetchFolderUrl = null } = {} } = useFetchFolderUrlQuery({
+  const { data: { fetchFolderAndUrl = null } = {} } = useFetchFolderAndUrlQuery({
     fetchPolicy: 'network-only',
     nextFetchPolicy: 'cache-first',
     skip: !currentUser,
@@ -33,9 +33,9 @@ export default function ListOfFolderAndUrl() {
   return (
     <Container>
       <h1>user home</h1>
-      <Notification props={{ fetchFolderUrl }} />
-      <FolderListContainer props={{ fetchFolderUrl, setUrls }} />
-      <UrlListContainer props={{ fetchFolderUrl, urls, setUrls }} />
+      <Notification props={{ fetchFolderAndUrl }} />
+      <FolderListContainer props={{ fetchFolderAndUrl, setUrls }} />
+      <UrlListContainer props={{ fetchFolderAndUrl, urls, setUrls }} />
     </Container>
   )
 }

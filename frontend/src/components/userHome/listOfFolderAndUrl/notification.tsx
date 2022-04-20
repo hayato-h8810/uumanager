@@ -3,14 +3,14 @@ import IconButton from '@mui/material/IconButton'
 import { useState } from 'react'
 import styled from 'styled-components'
 import format from 'date-fns/format'
-import { FetchFolderUrlQuery, Url } from '../../../api/graphql'
+import { FetchFolderAndUrlQuery, Url } from '../../../api/graphql'
 
 interface propsType {
-  fetchFolderUrl: FetchFolderUrlQuery['fetchFolderUrl']
+  fetchFolderAndUrl: FetchFolderAndUrlQuery['fetchFolderAndUrl']
 }
 
 export default function Notification({ props }: { props: propsType }) {
-  const { fetchFolderUrl } = props
+  const { fetchFolderAndUrl } = props
   const [notificationOpen, setNotificationOpen] = useState(false)
   const today = () => {
     const tz = (new Date().getTimezoneOffset() + 540) * 60 * 1000
@@ -24,7 +24,7 @@ export default function Notification({ props }: { props: propsType }) {
       </IconButton>
       {(() => {
         const notifyDatasArray: Url[] = []
-        fetchFolderUrl?.map((folderdata) => {
+        fetchFolderAndUrl?.map((folderdata) => {
           const notifyData = folderdata.urls?.filter(
             (urldata) => urldata.notification && urldata.notification <= format(today(), 'yyyy-MM-dd')
           )

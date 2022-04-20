@@ -10,7 +10,7 @@ import jaLocale from 'date-fns/locale/ja'
 import format from 'date-fns/format'
 import styled from 'styled-components'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { useSaveUrlMutation, FetchFolderUrlDocument, FetchFolderUrlQuery, Url } from '../../../api/graphql'
+import { useSaveUrlMutation, FetchFolderAndUrlDocument, FetchFolderAndUrlQuery, Url } from '../../../api/graphql'
 
 type FormInput = {
   folderId: string | null
@@ -22,7 +22,7 @@ type FormInput = {
 }
 
 interface propsType {
-  fetchFolderUrl: FetchFolderUrlQuery['fetchFolderUrl']
+  fetchFolderAndUrl: FetchFolderAndUrlQuery['fetchFolderAndUrl']
   saveUrlModal: boolean
   setSaveUrlModal: (argument: boolean) => void
   urls: Url[] | null | undefined
@@ -30,7 +30,7 @@ interface propsType {
 }
 
 export default function SaveUrlModal({ props }: { props: propsType }) {
-  const { fetchFolderUrl, saveUrlModal, setSaveUrlModal, urls, setUrls } = props
+  const { fetchFolderAndUrl, saveUrlModal, setSaveUrlModal, urls, setUrls } = props
   const [notificationValue, setNotificationValue] = useState<Date | null>(null)
   const {
     register,
@@ -44,22 +44,22 @@ export default function SaveUrlModal({ props }: { props: propsType }) {
   const [saveUrlMutation] = useSaveUrlMutation({
     update(cache, { data }) {
       const newCache = data?.saveUrl
-      const existingCache: FetchFolderUrlQuery | null = cache.readQuery({
-        query: FetchFolderUrlDocument,
+      const existingCache: FetchFolderAndUrlQuery | null = cache.readQuery({
+        query: FetchFolderAndUrlDocument,
       })
       // フォルダが既にある場合
-      if (newCache && existingCache?.fetchFolderUrl) {
+      if (newCache && existingCache?.fetchFolderAndUrl) {
         // 新しいフォルダを作成した場合
-        if (!existingCache.fetchFolderUrl.find((cacheData) => cacheData.id === newCache.id)) {
+        if (!existingCache.fetchFolderAndUrl.find((cacheData) => cacheData.id === newCache.id)) {
           cache.writeQuery({
-            query: FetchFolderUrlDocument,
-            data: { fetchFolderUrl: [...existingCache.fetchFolderUrl, newCache] },
+            query: FetchFolderAndUrlDocument,
+            data: { fetchFolderUrl: [...existingCache.fetchFolderAndUrl, newCache] },
           })
         }
         // 初めてフォルダを作成する場合
       } else if (newCache && !existingCache) {
         cache.writeQuery({
-          query: FetchFolderUrlDocument,
+          query: FetchFolderAndUrlDocument,
           data: { fetchFolderUrl: [newCache] },
         })
       }
@@ -96,8 +96,8 @@ export default function SaveUrlModal({ props }: { props: propsType }) {
           <div>folder:</div>
           <Select {...register('folderId')} defaultValue="new">
             <MenuItem value="new">新しくフォルダーを作成する。</MenuItem>
-            {fetchFolderUrl &&
-              fetchFolderUrl.map((folder) => (
+            {fetchFolderAndUrl &&
+              fetchFolderAndUrl.map((folder) => (
                 <MenuItem value={folder.id} key={folder.id}>
                   {folder.name}
                 </MenuItem>

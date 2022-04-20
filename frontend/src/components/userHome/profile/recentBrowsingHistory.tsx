@@ -1,22 +1,24 @@
 import { useState } from 'react'
 import styled from 'styled-components'
-import { useFetchBrowsingHistoryQuery, useFetchFolderUrlQuery } from '../../../api/graphql'
+import { useFetchBrowsingHistoryQuery, useFetchFolderAndUrlQuery } from '../../../api/graphql'
+import UrlShowModal from '../urlShowModal'
 
 export default function RecentBrowsingHistory() {
   const [selectedId, setSelectedId] = useState('')
+  const [urlShowModalOpen, setUrlShowModalOpen] = useState(false)
   const [hoveredId, setHoveredId] = useState('')
-  const { data: { fetchFolderUrl = null } = {} } = useFetchFolderUrlQuery({
+  const { data: { fetchFolderAndUrl = null } = {} } = useFetchFolderAndUrlQuery({
     fetchPolicy: 'network-only',
   })
   const { data: { fetchBrowsingHistory = null } = {} } = useFetchBrowsingHistoryQuery({
     fetchPolicy: 'network-only',
-    skip: !fetchFolderUrl,
+    skip: !fetchFolderAndUrl,
   })
 
   const recentHistory = () => {
     const histories: { id: string; browsingDate: string; title: string; urlId: string }[] = []
     fetchBrowsingHistory?.forEach((data) => {
-      fetchFolderUrl?.forEach((folder) =>
+      fetchFolderAndUrl?.forEach((folder) =>
         folder.urls.forEach((url) => {
           if (url.id === data.urlId) {
             histories.push({
@@ -59,6 +61,7 @@ export default function RecentBrowsingHistory() {
                   key={`title-${historyData.id}`}
                   onClick={() => {
                     setSelectedId(historyData.urlId)
+                    setUrlShowModalOpen(true)
                   }}
                   className="titleValue"
                 >
@@ -71,8 +74,9 @@ export default function RecentBrowsingHistory() {
         })()}
       </BrowsingHistoryContainer>
       {fetchBrowsingHistory && fetchBrowsingHistory?.length > 6 && (
-        <ShowMoreButton href="/userHome/calendar">もっと見る</ShowMoreButton>
+        <ShowMoreButton href="/userHome/browsingHistory">もっと見る</ShowMoreButton>
       )}
+      <UrlShowModal props={{ selectedId, urlShowModalOpen, setUrlShowModalOpen }} />
     </Item>
   )
 }
@@ -115,15 +119,19 @@ const BrowsingHistoryContainer = styled.div`
   .dateValue {
     position: absolute;
     top: 5px;
-    left: 60px;
+    left: 30px;
     font-size: 12px;
     color: #5f5f5f;
   }
   .titleValue {
     position: absolute;
     top: 30px;
-    left: 90px;
+    left: 60px;
     font-size: 15px;
+    max-width: 280px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     &:hover {
       color: blue;
       text-decoration: underline;

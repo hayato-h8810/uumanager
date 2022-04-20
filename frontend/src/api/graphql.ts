@@ -211,7 +211,7 @@ export type Query = {
   __typename?: 'Query'
   currentUser?: Maybe<User>
   fetchBrowsingHistory?: Maybe<Array<BrowsingHistory>>
-  fetchFolderUrl?: Maybe<Array<Folder>>
+  fetchFolderAndUrl?: Maybe<Array<Folder>>
   fetchLoginHistory: Array<LoginHistory>
 }
 
@@ -234,6 +234,7 @@ export type SaveUrlInput = {
 
 export type Url = {
   __typename?: 'Url'
+  createdAt: Scalars['Int']
   folderId: Scalars['ID']
   id: Scalars['ID']
   importance: Scalars['Int']
@@ -278,6 +279,7 @@ export type AddFolderMutation = {
       url: string
       importance: number
       folderId: string
+      createdAt: number
     }>
   } | null
 }
@@ -329,6 +331,7 @@ export type DeleteFolderMutation = {
       url: string
       importance: number
       folderId: string
+      createdAt: number
     }>
   } | null
 }
@@ -353,6 +356,7 @@ export type DeleteUrlMutation = {
       url: string
       importance: number
       folderId: string
+      createdAt: number
     }>
   } | null
 }
@@ -389,6 +393,7 @@ export type EditFolderMutation = {
       url: string
       importance: number
       folderId: string
+      createdAt: number
     }>
   } | null
 }
@@ -414,6 +419,7 @@ export type EditUrlMutation = {
       url: string
       importance: number
       folderId: string
+      createdAt: number
     }>
   }> | null
 }
@@ -468,6 +474,7 @@ export type SaveUrlMutation = {
       url: string
       importance: number
       folderId: string
+      createdAt: number
     }>
   } | null
 }
@@ -486,11 +493,11 @@ export type FetchBrowsingHistoryQuery = {
   fetchBrowsingHistory?: Array<{ __typename?: 'BrowsingHistory'; id: string; urlId: string; date: string }> | null
 }
 
-export type FetchFolderUrlQueryVariables = Exact<{ [key: string]: never }>
+export type FetchFolderAndUrlQueryVariables = Exact<{ [key: string]: never }>
 
-export type FetchFolderUrlQuery = {
+export type FetchFolderAndUrlQuery = {
   __typename?: 'Query'
-  fetchFolderUrl?: Array<{
+  fetchFolderAndUrl?: Array<{
     __typename?: 'Folder'
     id: string
     name: string
@@ -503,6 +510,7 @@ export type FetchFolderUrlQuery = {
       url: string
       importance: number
       folderId: string
+      createdAt: number
     }>
   }> | null
 }
@@ -527,6 +535,7 @@ export const AddFolderDocument = gql`
         url
         importance
         folderId
+        createdAt
       }
     }
   }
@@ -698,6 +707,7 @@ export const DeleteFolderDocument = gql`
         url
         importance
         folderId
+        createdAt
       }
     }
   }
@@ -746,6 +756,7 @@ export const DeleteUrlDocument = gql`
         url
         importance
         folderId
+        createdAt
       }
     }
   }
@@ -831,6 +842,7 @@ export const EditFolderDocument = gql`
         url
         importance
         folderId
+        createdAt
       }
     }
   }
@@ -877,6 +889,7 @@ export const EditUrlDocument = gql`
         url
         importance
         folderId
+        createdAt
       }
     }
   }
@@ -1040,6 +1053,7 @@ export const SaveUrlDocument = gql`
         url
         importance
         folderId
+        createdAt
       }
     }
   }
@@ -1164,9 +1178,9 @@ export type FetchBrowsingHistoryQueryResult = Apollo.QueryResult<
   FetchBrowsingHistoryQuery,
   FetchBrowsingHistoryQueryVariables
 >
-export const FetchFolderUrlDocument = gql`
-  query fetchFolderUrl {
-    fetchFolderUrl {
+export const FetchFolderAndUrlDocument = gql`
+  query fetchFolderAndUrl {
+    fetchFolderAndUrl {
       id
       name
       urls {
@@ -1177,41 +1191,45 @@ export const FetchFolderUrlDocument = gql`
         url
         importance
         folderId
+        createdAt
       }
     }
   }
 `
 
 /**
- * __useFetchFolderUrlQuery__
+ * __useFetchFolderAndUrlQuery__
  *
- * To run a query within a React component, call `useFetchFolderUrlQuery` and pass it any options that fit your needs.
- * When your component renders, `useFetchFolderUrlQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useFetchFolderAndUrlQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFetchFolderAndUrlQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useFetchFolderUrlQuery({
+ * const { data, loading, error } = useFetchFolderAndUrlQuery({
  *   variables: {
  *   },
  * });
  */
-export function useFetchFolderUrlQuery(
-  baseOptions?: Apollo.QueryHookOptions<FetchFolderUrlQuery, FetchFolderUrlQueryVariables>
+export function useFetchFolderAndUrlQuery(
+  baseOptions?: Apollo.QueryHookOptions<FetchFolderAndUrlQuery, FetchFolderAndUrlQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<FetchFolderUrlQuery, FetchFolderUrlQueryVariables>(FetchFolderUrlDocument, options)
+  return Apollo.useQuery<FetchFolderAndUrlQuery, FetchFolderAndUrlQueryVariables>(FetchFolderAndUrlDocument, options)
 }
-export function useFetchFolderUrlLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<FetchFolderUrlQuery, FetchFolderUrlQueryVariables>
+export function useFetchFolderAndUrlLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<FetchFolderAndUrlQuery, FetchFolderAndUrlQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<FetchFolderUrlQuery, FetchFolderUrlQueryVariables>(FetchFolderUrlDocument, options)
+  return Apollo.useLazyQuery<FetchFolderAndUrlQuery, FetchFolderAndUrlQueryVariables>(
+    FetchFolderAndUrlDocument,
+    options
+  )
 }
-export type FetchFolderUrlQueryHookResult = ReturnType<typeof useFetchFolderUrlQuery>
-export type FetchFolderUrlLazyQueryHookResult = ReturnType<typeof useFetchFolderUrlLazyQuery>
-export type FetchFolderUrlQueryResult = Apollo.QueryResult<FetchFolderUrlQuery, FetchFolderUrlQueryVariables>
+export type FetchFolderAndUrlQueryHookResult = ReturnType<typeof useFetchFolderAndUrlQuery>
+export type FetchFolderAndUrlLazyQueryHookResult = ReturnType<typeof useFetchFolderAndUrlLazyQuery>
+export type FetchFolderAndUrlQueryResult = Apollo.QueryResult<FetchFolderAndUrlQuery, FetchFolderAndUrlQueryVariables>
 export const FetchLoginHistoryDocument = gql`
   query fetchLoginHistory {
     fetchLoginHistory {

@@ -5,18 +5,18 @@ import {
   useDeleteFolderMutation,
   useEditFolderMutation,
   useAddFolderMutation,
-  FetchFolderUrlDocument,
-  FetchFolderUrlQuery,
+  FetchFolderAndUrlDocument,
+  FetchFolderAndUrlQuery,
   Url,
 } from '../../../api/graphql'
 
 interface propsType {
-  fetchFolderUrl: FetchFolderUrlQuery['fetchFolderUrl']
+  fetchFolderAndUrl: FetchFolderAndUrlQuery['fetchFolderAndUrl']
   setUrls: (urls: Url[] | null) => void
 }
 
 export default function FolderListContainer({ props }: { props: propsType }) {
-  const { fetchFolderUrl, setUrls } = props
+  const { fetchFolderAndUrl, setUrls } = props
   const [isShownDeletedFolder, setIsShownDeletedFolder] = useState(false)
   const [deleteFolderModal, setDeleteFolderModal] = useState(false)
   const [editFolderModal, setEditFolderModal] = useState(false)
@@ -27,12 +27,14 @@ export default function FolderListContainer({ props }: { props: propsType }) {
   const [deleteFolderMutation] = useDeleteFolderMutation({
     update(cache, { data }) {
       const newCache = data?.deleteFolder
-      const existingCache: FetchFolderUrlQuery | null = cache.readQuery({
-        query: FetchFolderUrlDocument,
+      const existingCache: FetchFolderAndUrlQuery | null = cache.readQuery({
+        query: FetchFolderAndUrlDocument,
       })
       cache.writeQuery({
-        query: FetchFolderUrlDocument,
-        data: { fetchFolderUrl: existingCache?.fetchFolderUrl?.filter((cacheDate) => cacheDate.id !== newCache?.id) },
+        query: FetchFolderAndUrlDocument,
+        data: {
+          fetchFolderAndUrl: existingCache?.fetchFolderAndUrl?.filter((cacheDate) => cacheDate.id !== newCache?.id),
+        },
       })
     },
     onCompleted: () => {
@@ -49,13 +51,13 @@ export default function FolderListContainer({ props }: { props: propsType }) {
   const [addFolderMutation] = useAddFolderMutation({
     update(cache, { data }) {
       const newCache = data?.addFolder
-      const existingCache: FetchFolderUrlQuery | null = cache.readQuery({
-        query: FetchFolderUrlDocument,
+      const existingCache: FetchFolderAndUrlQuery | null = cache.readQuery({
+        query: FetchFolderAndUrlDocument,
       })
-      if (existingCache?.fetchFolderUrl)
+      if (existingCache?.fetchFolderAndUrl)
         cache.writeQuery({
-          query: FetchFolderUrlDocument,
-          data: { fetchFolderUrl: [...existingCache.fetchFolderUrl, newCache] },
+          query: FetchFolderAndUrlDocument,
+          data: { fetchFolderUrl: [...existingCache.fetchFolderAndUrl, newCache] },
         })
     },
     onCompleted: () => {
@@ -65,8 +67,8 @@ export default function FolderListContainer({ props }: { props: propsType }) {
 
   return (
     <Container>
-      {fetchFolderUrl &&
-        fetchFolderUrl.map((folder) => (
+      {fetchFolderAndUrl &&
+        fetchFolderAndUrl.map((folder) => (
           <div
             key={folder.id}
             onMouseEnter={() => {
