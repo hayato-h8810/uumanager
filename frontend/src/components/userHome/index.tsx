@@ -10,13 +10,13 @@ import PageNotFound from '../../views/pageNotFound'
 export default function UserHomeIndex() {
   const history = useHistory()
   const location = useLocation()
-  if (/^(\/userHome|\/userHome\/)$/.test(location.pathname)) {
+  if (/^(\/userHome|\/userHome\/)$/i.test(location.pathname)) {
     history.push('/userHome/listOfFolderAndUrl')
   }
 
   return (
     <>
-      {/^(profile|listOfFolderAndUrl|calendar|browsingHistory)/.test(location.pathname.substr(10)) && <NavTabs />}
+      {/^(profile|listOfFolderAndUrl|calendar|browsingHistory)/i.test(location.pathname.substr(10)) && <NavTabs />}
       <Container>
         <Switch>
           <Route path="/userHome/profile" component={IndexOfProfile} />

@@ -9,7 +9,7 @@ import DatePicker from '@mui/lab/DatePicker'
 import jaLocale from 'date-fns/locale/ja'
 import format from 'date-fns/format'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { useEditUrlMutation, FetchFolderUrlQuery, Url } from '../../../api/graphql'
+import { useEditUrlMutation, FetchFolderAndUrlQuery, Url } from '../../../api/graphql'
 
 type FormInput = {
   importance: number
@@ -21,7 +21,7 @@ type FormInput = {
 }
 
 interface propsType {
-  fetchFolderUrl: FetchFolderUrlQuery['fetchFolderUrl']
+  fetchFolderAndUrl: FetchFolderAndUrlQuery['fetchFolderAndUrl']
   editUrlModal: boolean
   setEditUrlModal: (argument: boolean) => void
   specifiedUrl: Url | null | undefined
@@ -33,7 +33,7 @@ interface propsType {
 
 export default function EditUrlModal({ props }: { props: propsType }) {
   const {
-    fetchFolderUrl,
+    fetchFolderAndUrl,
     editUrlModal,
     setEditUrlModal,
     specifiedUrl,
@@ -90,7 +90,7 @@ export default function EditUrlModal({ props }: { props: propsType }) {
         <form onSubmit={handleSubmit(onEditUrlSubmit)}>
           <div>folder:</div>
           <Select {...register('folderId')} label="フォルダー" defaultValue={specifiedUrl?.folderId} autoWidth>
-            {fetchFolderUrl?.map((folder) => (
+            {fetchFolderAndUrl?.map((folder) => (
               <MenuItem value={folder.id} key={folder.id}>
                 {folder.name}
               </MenuItem>

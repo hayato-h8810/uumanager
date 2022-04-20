@@ -12,15 +12,15 @@ export default function NavTabs() {
     setValue(newValue)
     history.push(`/userHome/${newValue}`)
   }
-
+ 
   useEffect(() => {
-    if (location.pathname.substr(10).startsWith('profile')) {
+    if (location.pathname.substr(10).toLowerCase().startsWith('profile')) {
       setValue('profile')
-    } else if (location.pathname.substr(10).startsWith('listOfFolderAndUrl')) {
+    } else if (location.pathname.substr(10).toLowerCase().startsWith('listoffolderandurl')) {
       setValue('listOfFolderAndUrl')
-    } else if (location.pathname.substr(10).startsWith('calendar')) {
+    } else if (location.pathname.substr(10).toLowerCase().startsWith('calendar')) {
       setValue('calendar')
-    } else if (location.pathname.substr(10).startsWith('browsingHistory')) {
+    } else if (location.pathname.substr(10).toLowerCase().startsWith('browsinghistory')) {
       setValue('browsingHistory')
     }
   }, [location.pathname])

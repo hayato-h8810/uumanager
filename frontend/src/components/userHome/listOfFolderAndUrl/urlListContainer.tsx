@@ -2,18 +2,23 @@ import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import { useState } from 'react'
 import format from 'date-fns/format'
-import { useDeleteUrlMutation, FetchFolderUrlQuery, useRecordBrowsingHistoryMutation, Url } from '../../../api/graphql'
+import {
+  useDeleteUrlMutation,
+  FetchFolderAndUrlQuery,
+  useRecordBrowsingHistoryMutation,
+  Url,
+} from '../../../api/graphql'
 import SaveUrlModal from './saveUrlModal'
 import EditUrlModal from './editUrlModal'
 
 interface propsType {
-  fetchFolderUrl: FetchFolderUrlQuery['fetchFolderUrl']
+  fetchFolderAndUrl: FetchFolderAndUrlQuery['fetchFolderAndUrl']
   urls: Url[] | null | undefined
   setUrls: (urls: Url[] | null | undefined) => void
 }
 
 export default function UrlListContainer({ props }: { props: propsType }) {
-  const { urls, setUrls, fetchFolderUrl } = props
+  const { urls, setUrls, fetchFolderAndUrl } = props
   const [urlSortRule, setUrlSortRule] = useState('sort')
   const [saveUrlModal, setSaveUrlModal] = useState(false)
   const [editUrlModal, setEditUrlModal] = useState(false)
@@ -36,10 +41,10 @@ export default function UrlListContainer({ props }: { props: propsType }) {
       <button type="button" onClick={() => setSaveUrlModal(true)}>
         url作成モーダルを開く
       </button>
-      <SaveUrlModal props={{ fetchFolderUrl, saveUrlModal, setSaveUrlModal, urls, setUrls }} />
+      <SaveUrlModal props={{ fetchFolderAndUrl, saveUrlModal, setSaveUrlModal, urls, setUrls }} />
       <EditUrlModal
         props={{
-          fetchFolderUrl,
+          fetchFolderAndUrl,
           editUrlModal,
           setEditUrlModal,
           specifiedUrl,

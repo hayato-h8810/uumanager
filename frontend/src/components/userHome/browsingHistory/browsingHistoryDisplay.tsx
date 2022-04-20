@@ -1,19 +1,19 @@
 import FullCalendar, { EventApi, EventInput } from '@fullcalendar/react'
 import { useRef, useState } from 'react'
 import Calendar from './calendar'
-import { Url, useFetchFolderUrlQuery, useFetchBrowsingHistoryQuery } from '../../../api/graphql'
+import { Url, useFetchFolderAndUrlQuery, useFetchBrowsingHistoryQuery } from '../../../api/graphql'
 import List from './list'
 
 export default function BrowsingHistoryDisplay() {
   const [calendarEvents, setCalendarEvents] = useState<EventInput[]>()
   const [currentEvents, setCurrentEvents] = useState<EventApi[]>([])
   const calendarRef = useRef<FullCalendar>(null)
-  const { data: { fetchFolderUrl = null } = {} } = useFetchFolderUrlQuery({
+  const { data: { fetchFolderAndUrl = null } = {} } = useFetchFolderAndUrlQuery({
     fetchPolicy: 'network-only',
   })
   const { data: { fetchBrowsingHistory = null } = {} } = useFetchBrowsingHistoryQuery({
     fetchPolicy: 'network-only',
-    skip: !fetchFolderUrl,
+    skip: !fetchFolderAndUrl,
     onCompleted: () => {
       console.log(fetchBrowsingHistory)
       const historys = fetchBrowsingHistory?.map((data) => {
@@ -33,7 +33,7 @@ export default function BrowsingHistoryDisplay() {
   })
 
   const identifyUrl = (eventId: string): Url | undefined =>
-    fetchFolderUrl?.map((folder) => folder.urls.find((url) => url.id === eventId)).find((url) => url !== undefined)
+    fetchFolderAndUrl?.map((folder) => folder.urls.find((url) => url.id === eventId)).find((url) => url !== undefined)
   return (
     <>
       <Calendar props={{ calendarEvents, identifyUrl, setCurrentEvents, calendarRef }} />

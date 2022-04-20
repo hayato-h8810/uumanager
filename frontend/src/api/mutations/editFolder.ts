@@ -13,6 +13,7 @@ export default gql`
         url
         importance
         folderId
+        createdAt
       }
     }
   }

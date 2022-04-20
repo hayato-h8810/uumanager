@@ -10,7 +10,7 @@ module Types
     # They will be entry points for queries on your schema.
 
     field :current_user, resolver: Queries::CurrentUser
-    field :fetch_folder_url, resolver: Queries::FetchFolderUrl
+    field :fetch_folder_and_url, resolver: Queries::FetchFolderAndUrl
     field :fetch_browsing_history, resolver: Queries::FetchBrowsingHistory
     field :fetch_login_history, resolver: Queries::FetchLoginHistory
   end

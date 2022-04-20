@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  query fetchFolderUrl {
-    fetchFolderUrl {
+  query fetchFolderAndUrl {
+    fetchFolderAndUrl {
       id
       name
       urls {
@@ -13,6 +13,7 @@ export default gql`
         url
         importance
         folderId
+        createdAt
       }
     }
   }
