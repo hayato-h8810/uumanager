@@ -12,7 +12,7 @@ export default function NavTabs() {
     setValue(newValue)
     history.push(`/userHome/${newValue}`)
   }
- 
+
   useEffect(() => {
     if (location.pathname.substr(10).toLowerCase().startsWith('profile')) {
       setValue('profile')

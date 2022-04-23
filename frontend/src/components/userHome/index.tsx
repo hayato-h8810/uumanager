@@ -4,6 +4,7 @@ import IndexOfProfile from './profile/index'
 import IndexOfListOfFolderAndUrl from './listOfFolderAndUrl/index'
 import IndexOfNotificationDisplay from './notificationDisplay/index'
 import IndexOfBrowsingHistoryDisplay from './browsingHistory/index'
+import UrlShow from './urlShow/index'
 import NavTabs from './NavTabs'
 import PageNotFound from '../../views/pageNotFound'
 
@@ -23,6 +24,7 @@ export default function UserHomeIndex() {
           <Route path="/userHome/listOfFolderAndUrl" component={IndexOfListOfFolderAndUrl} />
           <Route path="/userHome/calendar" component={IndexOfNotificationDisplay} />
           <Route path="/userHome/browsingHistory" component={IndexOfBrowsingHistoryDisplay} />
+          <Route path="/userHome/urlShow/:id" component={UrlShow} />
           <Route component={PageNotFound} />
         </Switch>
       </Container>

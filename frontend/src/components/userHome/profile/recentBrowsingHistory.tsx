@@ -1,12 +1,12 @@
 import { useState } from 'react'
+import { useHistory, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { useFetchBrowsingHistoryQuery, useFetchFolderAndUrlQuery } from '../../../api/graphql'
-import UrlShowModal from '../urlShowModal'
 
 export default function RecentBrowsingHistory() {
-  const [selectedId, setSelectedId] = useState('')
-  const [urlShowModalOpen, setUrlShowModalOpen] = useState(false)
   const [hoveredId, setHoveredId] = useState('')
+  const history = useHistory()
+  const location = useLocation()
   const { data: { fetchFolderAndUrl = null } = {} } = useFetchFolderAndUrlQuery({
     fetchPolicy: 'network-only',
   })
@@ -42,28 +42,30 @@ export default function RecentBrowsingHistory() {
   }
 
   return (
-    <Item>
+    <Container>
       <Title>最近の閲覧履歴</Title>
-      <BrowsingHistoryContainer>
+      <Contents>
         {(() => {
           if (recentHistory().length) {
             return recentHistory().map((historyData) => (
               <div
                 key={historyData.id}
-                className={hoveredId === historyData.id ? 'hoveredItem item' : 'item'}
+                className={hoveredId === historyData.id ? 'hovered-item item' : 'item'}
                 onMouseEnter={() => setHoveredId(historyData.id)}
               >
-                <div key={`date-${historyData.id}`} className="dateValue">
+                <div key={`date-${historyData.id}`} className="date-value">
                   {historyData.browsingDate}
                 </div>
                 <button
                   type="button"
                   key={`title-${historyData.id}`}
                   onClick={() => {
-                    setSelectedId(historyData.urlId)
-                    setUrlShowModalOpen(true)
+                    history.push({
+                      pathname: `/userHome/urlShow/${historyData.urlId}`,
+                      state: { prevPathname: location.pathname },
+                    })
                   }}
-                  className="titleValue"
+                  className="title-value"
                 >
                   {historyData.title}
                 </button>
@@ -72,16 +74,15 @@ export default function RecentBrowsingHistory() {
           }
           return <div className="no-browsing-history">閲覧履歴がありません</div>
         })()}
-      </BrowsingHistoryContainer>
+      </Contents>
       {fetchBrowsingHistory && fetchBrowsingHistory?.length > 6 && (
         <ShowMoreButton href="/userHome/browsingHistory">もっと見る</ShowMoreButton>
       )}
-      <UrlShowModal props={{ selectedId, urlShowModalOpen, setUrlShowModalOpen }} />
-    </Item>
+    </Container>
   )
 }
 
-const Item = styled.div`
+const Container = styled.div`
   grid-area: recentBrowsingHistory;
   position: relative;
   &::before {
@@ -96,13 +97,13 @@ const Item = styled.div`
 `
 
 const Title = styled.h1`
-  padding-top: 50px;
+  padding-top: 40px;
   padding-left: 20px;
   font-weight: normal;
   font-size: 20px;
 `
 
-const BrowsingHistoryContainer = styled.div`
+const Contents = styled.div`
   border-top: solid 1px #bab9b9;
   margin-top: 30px;
   margin-left: 50px;
@@ -113,17 +114,17 @@ const BrowsingHistoryContainer = styled.div`
     height: 65px;
     position: relative;
   }
-  .hoveredItem {
+  .hovered-item {
     background: #f8f8f8;
   }
-  .dateValue {
+  .date-value {
     position: absolute;
     top: 5px;
     left: 30px;
     font-size: 12px;
     color: #5f5f5f;
   }
-  .titleValue {
+  .title-value {
     position: absolute;
     top: 30px;
     left: 60px;

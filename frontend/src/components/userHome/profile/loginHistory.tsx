@@ -106,16 +106,16 @@ export default function LoginHistory() {
     responsive: false,
   }
   return (
-    <Item>
+    <Container>
       <Title>活動履歴</Title>
-      <LineContainer>
-        <Line data={data} options={options} height="300px" width="700px" className="lineChart" />
-      </LineContainer>
-    </Item>
+      <LineChartBlock>
+        <Line data={data} options={options} height="300px" width="700px" className="line-chart" />
+      </LineChartBlock>
+    </Container>
   )
 }
 
-const Item = styled.div`
+const Container = styled.div`
   grid-area: loginHistory;
   margin-left: 10px;
 `
@@ -124,9 +124,9 @@ const Title = styled.h1`
   font-weight: normal;
   font-size: 20px;
 `
-const LineContainer = styled.div`
+const LineChartBlock = styled.div`
   position: relative;
-  .lineChart {
+  .line-chart {
     position: absolute;
     left: 90px;
   }
