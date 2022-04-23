@@ -31,10 +31,10 @@ export default function UserDescription() {
   }
 
   return (
-    <Item>
+    <Container>
       <Title>{currentUser?.name}</Title>
-      <DetailContainer>
-        <div className="item oddRow">
+      <Contents>
+        <div className="item odd-row">
           <div className="label">メールアドレス</div>
           <div className="value">{currentUser?.email}</div>
         </div>
@@ -42,16 +42,16 @@ export default function UserDescription() {
           <div className="label">アカウント作成日</div>
           <div className="value">{currentUser && format(new Date(1000 * currentUser.createdAt), 'yyyy-MM-dd')}</div>
         </div>
-        <div className="item oddRow">
+        <div className="item odd-row">
           <div className="label">前回ログイン</div>
           <div className="value">{fetchLoginHistory && lastLogin()}</div>
         </div>
-      </DetailContainer>
-    </Item>
+      </Contents>
+    </Container>
   )
 }
 
-const Item = styled.div`
+const Container = styled.div`
   grid-area: userDiscription;
   margin-left: 10px;
 `
@@ -62,7 +62,7 @@ const Title = styled.h1`
   font-weight: normal;
   font-size: 20px;
 `
-const DetailContainer = styled.div`
+const Contents = styled.div`
   padding-top: 10px;
   padding-left: 110px;
   font-size: 12px;
@@ -81,7 +81,7 @@ const DetailContainer = styled.div`
       left: 300px;
     }
   }
-  .oddRow {
+  .odd-row {
     background: #f4f4f4;
   }
 `
