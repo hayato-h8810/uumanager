@@ -10,6 +10,7 @@ import {
   FetchBrowsingHistoryQuery,
   FetchBrowsingHistoryDocument,
 } from '../../../api/graphql'
+import EditUrlModal from '../../editUrlModal'
 
 interface RouterParams {
   id: string
@@ -19,6 +20,7 @@ export default function UrlDescription() {
   const { id } = useParams<RouterParams>()
   const [selectedUrl, setSelectedUrl] = useState<Url | undefined>()
   const [folderName, setFolderName] = useState<string | null>()
+  const [editUrlModalOpen, setEditUrlModalOpen] = useState(false)
   const { data: { fetchFolderAndUrl = null } = {} } = useFetchFolderAndUrlQuery({
     fetchPolicy: 'network-only',
     onCompleted: () => {
@@ -75,7 +77,7 @@ export default function UrlDescription() {
                 >
                   リンク
                 </Button>
-                <Button>編集</Button>
+                <Button onClick={()=>setEditUrlModalOpen(true)}>編集</Button>
                 <Button>削除</Button>
               </ButtonGroup>
             </ButtonGroupContainer>
@@ -112,6 +114,7 @@ export default function UrlDescription() {
           </Contents>
         </>
       )}
+      <EditUrlModal props={{ editUrlModalOpen, setEditUrlModalOpen, urlId: id }} />
     </Container>
   )
 }

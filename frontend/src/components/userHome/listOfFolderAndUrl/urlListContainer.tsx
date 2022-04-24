@@ -9,7 +9,6 @@ import {
   Url,
 } from '../../../api/graphql'
 import SaveUrlModal from './saveUrlModal'
-import EditUrlModal from './editUrlModal'
 
 interface propsType {
   fetchFolderAndUrl: FetchFolderAndUrlQuery['fetchFolderAndUrl']
@@ -21,10 +20,7 @@ export default function UrlListContainer({ props }: { props: propsType }) {
   const { urls, setUrls, fetchFolderAndUrl } = props
   const [urlSortRule, setUrlSortRule] = useState('sort')
   const [saveUrlModal, setSaveUrlModal] = useState(false)
-  const [editUrlModal, setEditUrlModal] = useState(false)
-  const [specifiedUrl, setSpecifiedUrl] = useState<Url | null>()
   const [filterValueForUrlList, setFilterValueForUrlList] = useState('')
-  const [notificationValue, setNotificationValue] = useState<Date | null>(null)
   const [deleteUrlMutation] = useDeleteUrlMutation({
     onCompleted: ({ deleteUrl }) => {
       if (urls && urls[0]?.folderId === deleteUrl?.id) {
@@ -42,18 +38,7 @@ export default function UrlListContainer({ props }: { props: propsType }) {
         url作成モーダルを開く
       </button>
       <SaveUrlModal props={{ fetchFolderAndUrl, saveUrlModal, setSaveUrlModal, urls, setUrls }} />
-      <EditUrlModal
-        props={{
-          fetchFolderAndUrl,
-          editUrlModal,
-          setEditUrlModal,
-          specifiedUrl,
-          setSpecifiedUrl,
-          setUrls,
-          notificationValue,
-          setNotificationValue,
-        }}
-      />
+      
       <Select
         value={urlSortRule}
         onChange={(e) => {
@@ -104,17 +89,6 @@ export default function UrlListContainer({ props }: { props: propsType }) {
                   link
                 </a>
               </div>
-              <button
-                type="button"
-                key={`editButton${url.id}`}
-                onClick={() => {
-                  setEditUrlModal(true)
-                  setSpecifiedUrl(url)
-                  setNotificationValue(url.notification ? new Date(url.notification) : null)
-                }}
-              >
-                url編集モーダルを開く
-              </button>
               <button
                 type="button"
                 key={`deleteButton${url.id}`}
