@@ -20,7 +20,6 @@ const GlobalStyle = createGlobalStyle`
     background: #E9EEEF;     
     margin: 0 auto;  
     font-family: "Noto Sans JP";
-  }
 `
 
 ReactDOM.render(
