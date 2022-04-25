@@ -2,11 +2,7 @@ import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import { useState } from 'react'
 import format from 'date-fns/format'
-import {
-  useDeleteUrlMutation,
-  useRecordBrowsingHistoryMutation,
-  Url,
-} from '../../../api/graphql'
+import { useDeleteUrlMutation, useRecordBrowsingHistoryMutation, Url } from '../../../api/graphql'
 import CreateUrlModal from '../createUrlModal'
 
 interface propsType {
@@ -15,7 +11,7 @@ interface propsType {
 }
 
 export default function UrlListContainer({ props }: { props: propsType }) {
-  const { urls, setUrls} = props
+  const { urls, setUrls } = props
   const [urlSortRule, setUrlSortRule] = useState('sort')
   const [createUrlModalOpen, setCreateUrlModalOpen] = useState(false)
   const [filterValueForUrlList, setFilterValueForUrlList] = useState('')
