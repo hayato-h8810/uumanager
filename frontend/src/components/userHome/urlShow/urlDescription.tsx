@@ -10,7 +10,7 @@ import {
   FetchBrowsingHistoryQuery,
   FetchBrowsingHistoryDocument,
 } from '../../../api/graphql'
-import EditUrlModal from '../../editUrlModal'
+import EditUrlModal from '../editUrlModal'
 
 interface RouterParams {
   id: string
