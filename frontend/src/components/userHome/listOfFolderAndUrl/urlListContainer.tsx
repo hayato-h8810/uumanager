@@ -4,22 +4,20 @@ import { useState } from 'react'
 import format from 'date-fns/format'
 import {
   useDeleteUrlMutation,
-  FetchFolderAndUrlQuery,
   useRecordBrowsingHistoryMutation,
   Url,
 } from '../../../api/graphql'
-import SaveUrlModal from './saveUrlModal'
+import CreateUrlModal from '../createUrlModal'
 
 interface propsType {
-  fetchFolderAndUrl: FetchFolderAndUrlQuery['fetchFolderAndUrl']
   urls: Url[] | null | undefined
   setUrls: (urls: Url[] | null | undefined) => void
 }
 
 export default function UrlListContainer({ props }: { props: propsType }) {
-  const { urls, setUrls, fetchFolderAndUrl } = props
+  const { urls, setUrls} = props
   const [urlSortRule, setUrlSortRule] = useState('sort')
-  const [saveUrlModal, setSaveUrlModal] = useState(false)
+  const [createUrlModalOpen, setCreateUrlModalOpen] = useState(false)
   const [filterValueForUrlList, setFilterValueForUrlList] = useState('')
   const [deleteUrlMutation] = useDeleteUrlMutation({
     onCompleted: ({ deleteUrl }) => {
@@ -34,11 +32,11 @@ export default function UrlListContainer({ props }: { props: propsType }) {
 
   return (
     <>
-      <button type="button" onClick={() => setSaveUrlModal(true)}>
+      <button type="button" onClick={() => setCreateUrlModalOpen(true)}>
         url作成モーダルを開く
       </button>
-      <SaveUrlModal props={{ fetchFolderAndUrl, saveUrlModal, setSaveUrlModal, urls, setUrls }} />
-      
+      <CreateUrlModal props={{ createUrlModalOpen, setCreateUrlModalOpen }} />
+
       <Select
         value={urlSortRule}
         onChange={(e) => {
