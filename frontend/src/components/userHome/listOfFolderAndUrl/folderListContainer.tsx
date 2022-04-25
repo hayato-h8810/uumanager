@@ -88,7 +88,6 @@ export default function FolderListContainer({ props }: { props: propsType }) {
               type="button"
               key={folder.id}
               onClick={() => {
-                setUrls(folder.urls)
                 setClickedFolderId(folder.id)
               }}
             >

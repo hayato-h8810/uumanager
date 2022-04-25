@@ -70,7 +70,7 @@ export default function EditUrlModal({ props }: { props: propsType }) {
   }, [specificUrl, editUrlModalOpen])
 
   const onEditUrlSubmit: SubmitHandler<FormInput> = (data) => {
-    if (importanceValue) {
+    if (importanceValue || importanceValue === 0) {
       editUrlMutation({
         variables: {
           urlId,
