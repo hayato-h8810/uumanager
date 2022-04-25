@@ -51,14 +51,14 @@ export default function CreateUrlModal({ props }: { props: propsType }) {
         if (!existingCache.fetchFolderAndUrl.find((cacheData) => cacheData.id === newCache.id)) {
           cache.writeQuery({
             query: FetchFolderAndUrlDocument,
-            data: { fetchFolderUrl: [...existingCache.fetchFolderAndUrl, newCache] },
+            data: { fetchFolderAndUrl: [...existingCache.fetchFolderAndUrl, newCache] },
           })
-        } 
+        }
         // 初めてフォルダを作成する場合
       } else if (newCache && !existingCache) {
         cache.writeQuery({
           query: FetchFolderAndUrlDocument,
-          data: { fetchFolderUrl: [newCache] },
+          data: { fetchFolderAndUrl: [newCache] },
         })
       }
     },

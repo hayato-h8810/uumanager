@@ -35,7 +35,7 @@ export default function ListOfFolderAndUrl() {
       <h1>user home</h1>
       <Notification props={{ fetchFolderAndUrl }} />
       <FolderListContainer props={{ fetchFolderAndUrl, setUrls }} />
-      <UrlListContainer props={{  urls, setUrls }} />
+      <UrlListContainer props={{ urls, setUrls }} />
     </Container>
   )
 }

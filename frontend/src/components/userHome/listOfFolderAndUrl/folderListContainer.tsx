@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Modal from '@mui/material/Modal'
 import {
@@ -24,6 +24,7 @@ export default function FolderListContainer({ props }: { props: propsType }) {
   const [deletedFolder, setDeletedFolder] = useState<string | null>()
   const [specifiedFolder, setSpecifiedFolder] = useState<string | null>()
   const [editFolderName, setEditFolderName] = useState('')
+  const [clickedFolderId, setClickedFolderId] = useState('')
   const [deleteFolderMutation] = useDeleteFolderMutation({
     update(cache, { data }) {
       const newCache = data?.deleteFolder
@@ -64,6 +65,12 @@ export default function FolderListContainer({ props }: { props: propsType }) {
       setAddFolderModal(false)
     },
   })
+  useEffect(() => {
+    const clickedUrls = fetchFolderAndUrl?.find((folder) => folder.id === clickedFolderId)?.urls
+    if (clickedUrls) {
+      setUrls(clickedUrls)
+    }
+  }, [clickedFolderId, fetchFolderAndUrl])
 
   return (
     <Container>
@@ -82,6 +89,7 @@ export default function FolderListContainer({ props }: { props: propsType }) {
               key={folder.id}
               onClick={() => {
                 setUrls(folder.urls)
+                setClickedFolderId(folder.id)
               }}
             >
               {folder.name}
