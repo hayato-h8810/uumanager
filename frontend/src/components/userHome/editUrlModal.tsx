@@ -8,7 +8,7 @@ import jaLocale from 'date-fns/locale/ja'
 import format from 'date-fns/format'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { useEffect, useState } from 'react'
-import { useEditUrlMutation, useFetchFolderAndUrlQuery, Url } from '../api/graphql'
+import { useEditUrlMutation, useFetchFolderAndUrlQuery, Url } from '../../api/graphql'
 
 type FormInput = {
   url: string
@@ -165,8 +165,8 @@ export default function EditUrlModal({ props }: { props: propsType }) {
                 variant="outlined"
                 size="small"
               />
-              {errors.url?.type === 'required' && <p>url欄の入力は必須です。</p>}
-              {errors.url?.type === 'pattern' && <p>urlの形式が正しくありません。</p>}
+              {errors.url?.type === 'required' && <ErrorMessage>url欄の入力は必須です。</ErrorMessage>}
+              {errors.url?.type === 'pattern' && <ErrorMessage>urlの形式が正しくありません。</ErrorMessage>}
             </div>
             <div className="item-container folder-item-container">
               <div className="label">フォルダー</div>
@@ -363,9 +363,17 @@ const Contents = styled.div`
   }
 `
 
+const ErrorMessage = styled.div`
+  color: red;
+  font-size: 10px;
+  margin-left: 390px;
+  margin-top: 5px;
+`
+
 const SaveButton = styled.div`
   text-align: center;
   margin-top: 30px;
+  margin-bottom: 10px;
   .MuiButton-root {
     background-color: #20a1ff;
     font-size: 12px;
