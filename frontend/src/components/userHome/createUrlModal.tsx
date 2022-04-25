@@ -7,8 +7,13 @@ import DatePicker from '@mui/lab/DatePicker'
 import jaLocale from 'date-fns/locale/ja'
 import format from 'date-fns/format'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { useEffect, useState } from 'react'
-import { useEditUrlMutation, useFetchFolderAndUrlQuery, Url } from '../../api/graphql'
+import { useState } from 'react'
+import {
+  useSaveUrlMutation,
+  FetchFolderAndUrlDocument,
+  FetchFolderAndUrlQuery,
+  useFetchFolderAndUrlQuery,
+} from '../../api/graphql'
 
 type FormInput = {
   url: string
@@ -16,40 +21,55 @@ type FormInput = {
   memo: string | null
   notification: string | null
   folderId: string | null
+  folderName: string | null
 }
 
 interface propsType {
-  editUrlModalOpen: boolean
-  setEditUrlModalOpen: (boolean: boolean) => void
-  urlId: string
+  createUrlModalOpen: boolean
+  setCreateUrlModalOpen: (boolean: boolean) => void
 }
 
-export default function EditUrlModal({ props }: { props: propsType }) {
-  const { editUrlModalOpen, setEditUrlModalOpen, urlId } = props
-  const [specificUrl, setSpecificUrl] = useState<Url>()
+type ModalContainerProps = {
+  folderNameDisable?: boolean
+}
+
+export default function CreateUrlModal({ props }: { props: propsType }) {
+  const { createUrlModalOpen, setCreateUrlModalOpen } = props
   const [notificationValue, setNotificationValue] = useState<Date | null>(null)
   const [importanceValue, setImportanceValue] = useState<number | undefined | null>(0)
-  const [folderId, setFolderId] = useState('')
-  const { data: { fetchFolderAndUrl = null } = {} } = useFetchFolderAndUrlQuery({
-    onCompleted: (data) => {
-      const detectedUrl = data.fetchFolderAndUrl
-        ?.map((folder) => folder.urls.find((url) => url.id === urlId))
-        .find((url) => url)
-      if (detectedUrl) {
-        setSpecificUrl(detectedUrl)
+  const [folderId, setFolderId] = useState('new')
+  const { data: { fetchFolderAndUrl = null } = {} } = useFetchFolderAndUrlQuery()
+  const [saveUrlMutation] = useSaveUrlMutation({
+    update(cache, { data }) {
+      const newCache = data?.saveUrl
+      const existingCache: FetchFolderAndUrlQuery | null = cache.readQuery({
+        query: FetchFolderAndUrlDocument,
+      })
+      // フォルダが既にある場合
+      if (newCache && existingCache?.fetchFolderAndUrl) {
+        // 新しいフォルダを作成した場合
+        if (!existingCache.fetchFolderAndUrl.find((cacheData) => cacheData.id === newCache.id)) {
+          cache.writeQuery({
+            query: FetchFolderAndUrlDocument,
+            data: { fetchFolderUrl: [...existingCache.fetchFolderAndUrl, newCache] },
+          })
+        } 
+        // 初めてフォルダを作成する場合
+      } else if (newCache && !existingCache) {
+        cache.writeQuery({
+          query: FetchFolderAndUrlDocument,
+          data: { fetchFolderUrl: [newCache] },
+        })
       }
     },
-  })
-  const [editUrlMutation] = useEditUrlMutation({
     onCompleted: () => {
-      setEditUrlModalOpen(false)
+      setCreateUrlModalOpen(false)
       setNotificationValue(null)
+      setFolderId('new')
       setImportanceValue(0)
-      setFolderId('')
       reset()
     },
   })
-
   const {
     register,
     handleSubmit,
@@ -59,22 +79,12 @@ export default function EditUrlModal({ props }: { props: propsType }) {
     reValidateMode: 'onSubmit',
   })
 
-  useEffect(() => {
-    if (specificUrl?.notification) {
-      setNotificationValue(new Date(specificUrl?.notification))
-    }
-    if (specificUrl?.folderId) {
-      setFolderId(specificUrl?.folderId)
-    }
-    setImportanceValue(specificUrl?.importance)
-  }, [specificUrl, editUrlModalOpen])
-
-  const onEditUrlSubmit: SubmitHandler<FormInput> = (data) => {
-    if (importanceValue) {
-      editUrlMutation({
+  const onSaveUrlSubmit: SubmitHandler<FormInput> = (data) => {
+    if (importanceValue || importanceValue === 0)
+      saveUrlMutation({
         variables: {
-          urlId,
-          folderId: data.folderId === specificUrl?.folderId ? null : data.folderId,
+          folderId: data.folderId === 'new' ? null : data.folderId,
+          folderName: data.folderName === '' ? null : data.folderName,
           url: {
             url: data.url,
             importance: importanceValue,
@@ -84,30 +94,18 @@ export default function EditUrlModal({ props }: { props: propsType }) {
           },
         },
       })
-    }
   }
 
   return (
-    <ModalContainer open={editUrlModalOpen}>
+    <ModalContainer open={createUrlModalOpen} folderNameDisable={folderId !== 'new'}>
       <div className="modal-frame">
         <HeadLine>
-          <div className="title">
-            {specificUrl?.title && specificUrl?.title?.length > 15
-              ? `${specificUrl?.title?.substr(0, 15)}...`
-              : specificUrl?.title}
-            の編集
-          </div>
+          <div className="title">新規作成</div>
           <Button
             onClick={() => {
-              if (specificUrl?.folderId) {
-                setFolderId(specificUrl?.folderId)
-              }
-              if (specificUrl?.notification) {
-                setNotificationValue(new Date(specificUrl?.notification))
-              } else {
-                setNotificationValue(null)
-              }
-              setImportanceValue(specificUrl?.importance)
+              setFolderId('new')
+              setNotificationValue(null)
+              setImportanceValue(0)
               reset()
             }}
             variant="outlined"
@@ -117,10 +115,10 @@ export default function EditUrlModal({ props }: { props: propsType }) {
           </Button>
           <IconButton
             onClick={() => {
-              setEditUrlModalOpen(false)
+              setCreateUrlModalOpen(false)
               setNotificationValue(null)
-              setImportanceValue(null)
-              setFolderId('')
+              setImportanceValue(0)
+              setFolderId('new')
               reset()
             }}
           >
@@ -128,7 +126,7 @@ export default function EditUrlModal({ props }: { props: propsType }) {
           </IconButton>
         </HeadLine>
         <Contents>
-          <form onSubmit={handleSubmit(onEditUrlSubmit)}>
+          <form onSubmit={handleSubmit(onSaveUrlSubmit)}>
             <div className="item-container">
               <div className="label">重要度</div>
               <div className="rating">
@@ -145,7 +143,6 @@ export default function EditUrlModal({ props }: { props: propsType }) {
               <div className="label">タイトル</div>
               <TextField
                 {...register('title')}
-                defaultValue={specificUrl?.title}
                 type="text"
                 label="タイトル"
                 variant="outlined"
@@ -161,7 +158,6 @@ export default function EditUrlModal({ props }: { props: propsType }) {
                   required: true,
                   pattern: /https?:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#\u3000-\u30FE\u4E00-\u9FA0\uFF01-\uFFE3]+/g,
                 })}
-                defaultValue={specificUrl?.url}
                 type="text"
                 label="url"
                 variant="outlined"
@@ -176,7 +172,10 @@ export default function EditUrlModal({ props }: { props: propsType }) {
                 <InputLabel>フォルダー</InputLabel>
                 <Select
                   {...register('folderId')}
-                  onChange={(e) => setFolderId(e.target.value)}
+                  onChange={(e) => {
+                    console.log(e.target.value)
+                    setFolderId(e.target.value)
+                  }}
                   value={folderId}
                   label="フォルダー"
                   variant="outlined"
@@ -200,6 +199,7 @@ export default function EditUrlModal({ props }: { props: propsType }) {
                     },
                   }}
                 >
+                  <MenuItem value="new">新しくフォルダーを作成する。</MenuItem>
                   {fetchFolderAndUrl?.map((folder) => (
                     <MenuItem value={folder.id} key={folder.id}>
                       {folder.name}
@@ -207,12 +207,23 @@ export default function EditUrlModal({ props }: { props: propsType }) {
                   ))}
                 </Select>
               </FormControl>
+              {folderId === 'new' && (
+                <div className="folder-name-item">
+                  <TextField
+                    {...register('folderName')}
+                    type="text"
+                    label="フォルダー"
+                    variant="outlined"
+                    size="small"
+                    disabled={folderId !== 'new'}
+                  />
+                </div>
+              )}
             </div>
             <div className="item-container multiline-item-container">
               <div className="label">コメント</div>
               <TextField
                 {...register('memo')}
-                defaultValue={specificUrl?.memo}
                 type="text"
                 label="コメント"
                 variant="outlined"
@@ -250,7 +261,7 @@ export default function EditUrlModal({ props }: { props: propsType }) {
   )
 }
 
-const ModalContainer = styled(Modal)`
+const ModalContainer = styled(Modal)<ModalContainerProps>`
   position: relative;
   .MuiBackdrop-root {
     background: rgba(0, 0, 0, 0.7);
@@ -259,7 +270,7 @@ const ModalContainer = styled(Modal)`
     background: white;
     max-height: 100%;
     max-width: 100%;
-    height: 700px;
+    height: ${(props) => (props.folderNameDisable ? '690px' : '720px')};
     width: 750px;
     position: absolute;
     top: 0;
@@ -372,6 +383,13 @@ const Contents = styled.div`
         min-width: 40px;
       }
     }
+    .folder-name-item {
+      margin-left: 390px;
+      margin-top: 10px;
+      .MuiTextField-root {
+        width: 230px;
+      }
+    }
   }
 `
 
@@ -384,8 +402,8 @@ const ErrorMessage = styled.div`
 
 const SaveButton = styled.div`
   text-align: center;
-  margin-top: 30px;
-  margin-bottom: 10px;
+  margin-top: 25px;
+  margin-bottom: 20px;
   .MuiButton-root {
     background-color: #20a1ff;
     font-size: 12px;
