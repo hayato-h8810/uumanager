@@ -38,7 +38,7 @@ export default function CreateUrlModal({ props }: { props: propsType }) {
   const [notificationValue, setNotificationValue] = useState<Date | null>(null)
   const [importanceValue, setImportanceValue] = useState<number | undefined | null>(0)
   const [folderId, setFolderId] = useState('new')
-  const { data: { fetchFolderAndUrl = null } = {} } = useFetchFolderAndUrlQuery()
+  const { data: { fetchFolderAndUrl = null } = {} } = useFetchFolderAndUrlQuery({ fetchPolicy: 'network-only' })
   const [saveUrlMutation] = useSaveUrlMutation({
     update(cache, { data }) {
       const newCache = data?.saveUrl
@@ -134,7 +134,6 @@ export default function CreateUrlModal({ props }: { props: propsType }) {
                   value={importanceValue}
                   onChange={(_, newValue) => {
                     setImportanceValue(newValue)
-                    console.log(newValue)
                   }}
                 />
               </div>
@@ -173,7 +172,6 @@ export default function CreateUrlModal({ props }: { props: propsType }) {
                 <Select
                   {...register('folderId')}
                   onChange={(e) => {
-                    console.log(e.target.value)
                     setFolderId(e.target.value)
                   }}
                   value={folderId}

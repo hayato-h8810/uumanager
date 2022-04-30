@@ -31,14 +31,7 @@ export default function EditUrlModal({ props }: { props: propsType }) {
   const [importanceValue, setImportanceValue] = useState<number | undefined | null>(0)
   const [folderId, setFolderId] = useState('')
   const { data: { fetchFolderAndUrl = null } = {} } = useFetchFolderAndUrlQuery({
-    onCompleted: (data) => {
-      const detectedUrl = data.fetchFolderAndUrl
-        ?.map((folder) => folder.urls.find((url) => url.id === urlId))
-        .find((url) => url)
-      if (detectedUrl) {
-        setSpecificUrl(detectedUrl)
-      }
-    },
+    fetchPolicy: 'network-only',
   })
   const [editUrlMutation] = useEditUrlMutation({
     onCompleted: () => {
@@ -60,14 +53,20 @@ export default function EditUrlModal({ props }: { props: propsType }) {
   })
 
   useEffect(() => {
-    if (specificUrl?.notification) {
-      setNotificationValue(new Date(specificUrl?.notification))
+    const detectedUrl = fetchFolderAndUrl
+      ?.map((folder) => folder.urls.find((url) => url.id === urlId))
+      .find((url) => url)
+    if (detectedUrl) {
+      setSpecificUrl(detectedUrl)
+      setImportanceValue(detectedUrl.importance)
+      if (detectedUrl.notification) {
+        setNotificationValue(new Date(detectedUrl.notification))
+      }
+      if (detectedUrl.folderId) {
+        setFolderId(detectedUrl.folderId)
+      }
     }
-    if (specificUrl?.folderId) {
-      setFolderId(specificUrl?.folderId)
-    }
-    setImportanceValue(specificUrl?.importance)
-  }, [specificUrl, editUrlModalOpen])
+  }, [urlId, fetchFolderAndUrl])
 
   const onEditUrlSubmit: SubmitHandler<FormInput> = (data) => {
     if (importanceValue || importanceValue === 0) {
@@ -136,7 +135,6 @@ export default function EditUrlModal({ props }: { props: propsType }) {
                   value={importanceValue}
                   onChange={(_, newValue) => {
                     setImportanceValue(newValue)
-                    console.log(newValue)
                   }}
                 />
               </div>

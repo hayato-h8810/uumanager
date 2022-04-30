@@ -28,6 +28,7 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/no-floating-promises': 'off',
     'no-console': 'off',
+    'jsx-a11y/click-events-have-key-events': 'off',
     'react/jsx-props-no-spreading': 'off',
     'react/prop-types': 'off',
     'import/prefer-default-export': 'off',
