@@ -16,6 +16,7 @@ export default function LoginHistory() {
     },
   })
   const { data: { fetchLoginHistory = null } = {} } = useFetchLoginHistoryQuery({
+    fetchPolicy: 'network-only',
     skip: !currentUser,
   })
 
