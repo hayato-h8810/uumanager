@@ -56,9 +56,15 @@ export default function TransferList({ props }: { props: propTypes }) {
             PaperProps: {
               sx: {
                 maxWidth: '230px',
-                overflow: 'hidden',
+                maxHeight: '385px',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
+                overflowY: 'auto',
+                msOverflowStyle: 'none',
+                scrollbarWidth: 'none',
+                '&::-webkit-scrollbar': {
+                  display: 'none',
+                },
                 '& .MuiMenuItem-root': {
                   fontSize: '12px',
                   overflow: 'auto',
