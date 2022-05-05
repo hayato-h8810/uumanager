@@ -182,9 +182,15 @@ export default function EditUrlModal({ props }: { props: propsType }) {
                     PaperProps: {
                       sx: {
                         maxWidth: '230px',
-                        overflow: 'hidden',
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap',
+                        maxHeight: '385px',
+                        overflowY: 'auto',
+                        msOverflowStyle: 'none',
+                        scrollbarWidth: 'none',
+                        '&::-webkit-scrollbar': {
+                          display: 'none',
+                        },
                         '& .MuiMenuItem-root': {
                           fontSize: '12px',
                           overflow: 'auto',
