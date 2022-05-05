@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  mutation deleteUrl($urlId: String!, $folderId: String!) {
-    deleteUrl(input: { urlId: $urlId, folderId: $folderId }) {
+  mutation deleteUrl($urlId: String!) {
+    deleteUrl(input: { urlId: $urlId }) {
       id
       name
       urls {

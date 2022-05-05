@@ -72,7 +72,6 @@ export type DeleteFolderInput = {
 export type DeleteUrlInput = {
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: InputMaybe<Scalars['String']>
-  folderId: Scalars['String']
   urlId: Scalars['String']
 }
 
@@ -355,7 +354,6 @@ export type DeleteFolderMutation = {
 
 export type DeleteUrlMutationVariables = Exact<{
   urlId: Scalars['String']
-  folderId: Scalars['String']
 }>
 
 export type DeleteUrlMutation = {
@@ -785,8 +783,8 @@ export type DeleteFolderMutationOptions = Apollo.BaseMutationOptions<
   DeleteFolderMutationVariables
 >
 export const DeleteUrlDocument = gql`
-  mutation deleteUrl($urlId: String!, $folderId: String!) {
-    deleteUrl(input: { urlId: $urlId, folderId: $folderId }) {
+  mutation deleteUrl($urlId: String!) {
+    deleteUrl(input: { urlId: $urlId }) {
       id
       name
       urls {
@@ -818,7 +816,6 @@ export type DeleteUrlMutationFn = Apollo.MutationFunction<DeleteUrlMutation, Del
  * const [deleteUrlMutation, { data, loading, error }] = useDeleteUrlMutation({
  *   variables: {
  *      urlId: // value for 'urlId'
- *      folderId: // value for 'folderId'
  *   },
  * });
  */
