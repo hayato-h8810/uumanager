@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { TextField, Button, Select, MenuItem, ClickAwayListener } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
@@ -24,6 +25,7 @@ export default function ShowFolderList({ props }: { props: propsType }) {
   const [displayFolders, setDisplayFolders] = useState<Folder[] | null>(null)
   const [addFormInputtable, setAddFormInputtable] = useState(false)
   const [addFormValue, setAddFormValue] = useState('')
+  const history = useHistory()
   const { data: { fetchFolderAndUrl = null } = {} } = useFetchFolderAndUrlQuery({
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
@@ -39,11 +41,17 @@ export default function ShowFolderList({ props }: { props: propsType }) {
       const existingCache: FetchFolderAndUrlQuery | null = cache.readQuery({
         query: FetchFolderAndUrlDocument,
       })
-      if (existingCache?.fetchFolderAndUrl)
+      if (existingCache?.fetchFolderAndUrl) {
         cache.writeQuery({
           query: FetchFolderAndUrlDocument,
           data: { fetchFolderAndUrl: [...existingCache.fetchFolderAndUrl, newCache] },
         })
+      } else {
+        cache.writeQuery({
+          query: FetchFolderAndUrlDocument,
+          data: { fetchFolderAndUrl: [newCache] },
+        })
+      }
     },
     onCompleted: () => {
       setAddFormInputtable(false)
@@ -79,7 +87,9 @@ export default function ShowFolderList({ props }: { props: propsType }) {
     <Container>
       <Title>フォルダー</Title>
       <EditButton>
-        <Button variant="text">編集</Button>
+        <Button onClick={() => history.push('/userHome/editFolder')} variant="text">
+          編集
+        </Button>
       </EditButton>
       <Filter>
         <TextField
@@ -272,7 +282,7 @@ const Contents = styled.div`
     border-radius: 5px;
   }
   .item-container {
-    width: 165px;
+    min-width: 165px;
     padding-left: 60px;
     height: 45px;
     font-size: 14px;

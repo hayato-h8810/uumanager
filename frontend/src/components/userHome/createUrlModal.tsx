@@ -55,7 +55,7 @@ export default function CreateUrlModal({ props }: { props: propsType }) {
           })
         }
         // 初めてフォルダを作成する場合
-      } else if (newCache && !existingCache) {
+      } else {
         cache.writeQuery({
           query: FetchFolderAndUrlDocument,
           data: { fetchFolderAndUrl: [newCache] },

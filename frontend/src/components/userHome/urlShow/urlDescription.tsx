@@ -77,7 +77,7 @@ export default function UrlDescription() {
                 >
                   リンク
                 </Button>
-                <Button onClick={()=>setEditUrlModalOpen(true)}>編集</Button>
+                <Button onClick={() => setEditUrlModalOpen(true)}>編集</Button>
                 <Button>削除</Button>
               </ButtonGroup>
             </ButtonGroupContainer>
@@ -192,6 +192,11 @@ const Contents = styled.div`
       padding-top: 23px;
       overflow: auto;
       white-space: nowrap;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      &::-webkit-scrollbar {
+        display: none;
+      }
       color: #5c5c5c;
       &::before {
         content: '';

@@ -7,6 +7,7 @@ import IndexOfNotificationDisplay from './notificationDisplay/index'
 import IndexOfBrowsingHistoryDisplay from './browsingHistory/index'
 import UrlShow from './urlShow/index'
 import NavTabs from './NavTabs'
+import EditFolder from './editFolder/index'
 import PageNotFound from '../../views/pageNotFound'
 import { useAddLoginHistoryMutation, useCurrentUserQuery } from '../../api/graphql'
 
@@ -40,6 +41,7 @@ export default function UserHomeIndex() {
           <Route path="/userHome/calendar" component={IndexOfNotificationDisplay} />
           <Route path="/userHome/browsingHistory" component={IndexOfBrowsingHistoryDisplay} />
           <Route path="/userHome/urlShow/:id" component={UrlShow} />
+          <Route path="/userHome/editFolder" component={EditFolder} />
           <Route component={PageNotFound} />
         </Switch>
       </Container>
