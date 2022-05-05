@@ -66,7 +66,7 @@ export default function EditUrlModal({ props }: { props: propsType }) {
         setFolderId(detectedUrl.folderId)
       }
     }
-  }, [urlId, fetchFolderAndUrl])
+  }, [editUrlModalOpen])
 
   const onEditUrlSubmit: SubmitHandler<FormInput> = (data) => {
     if (importanceValue || importanceValue === 0) {
