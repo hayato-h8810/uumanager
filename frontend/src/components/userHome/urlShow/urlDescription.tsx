@@ -1,8 +1,8 @@
 import { Rating, Button, ButtonGroup } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import format from 'date-fns/format'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import {
   Url,
   useFetchFolderAndUrlQuery,
@@ -11,6 +11,7 @@ import {
   FetchBrowsingHistoryDocument,
 } from '../../../api/graphql'
 import EditUrlModal from '../editUrlModal'
+import DeleteUrlDialog from '../deleteUrlDialog'
 
 interface RouterParams {
   id: string
@@ -21,6 +22,9 @@ export default function UrlDescription() {
   const [selectedUrl, setSelectedUrl] = useState<Url | undefined>()
   const [folderName, setFolderName] = useState<string | null>()
   const [editUrlModalOpen, setEditUrlModalOpen] = useState(false)
+  const [deleteUrlDialogOpen, setDeleteUrlDialogOpen] = useState(false)
+  const [isDeleted, setIsDeleted] = useState(false)
+  const history = useHistory()
   const { data: { fetchFolderAndUrl = null } = {} } = useFetchFolderAndUrlQuery({
     fetchPolicy: 'network-only',
     onCompleted: () => {
@@ -58,64 +62,80 @@ export default function UrlDescription() {
       }
     },
   })
+  useEffect(() => {
+    if (isDeleted) {
+      setIsDeleted(false)
+      history.push('/userHome')
+    }
+  }, [isDeleted])
 
   return (
-    <Container>
-      {selectedUrl && (
-        <>
-          <Headline>
-            <div>登録情報</div>
-            <ButtonGroupContainer>
-              <ButtonGroup variant="outlined" size="small">
-                <Button
-                  onClick={() => {
-                    recordBrowsingHistoryMutation({
-                      variables: { urlId: selectedUrl.id, date: format(new Date(), 'yyyy-MM-dd') },
-                    })
-                    window.open(selectedUrl.url, '_blank', 'noreferrer')
-                  }}
-                >
-                  リンク
-                </Button>
-                <Button onClick={() => setEditUrlModalOpen(true)}>編集</Button>
-                <Button>削除</Button>
-              </ButtonGroup>
-            </ButtonGroupContainer>
-          </Headline>
-          <Contents>
-            <div className="item-container">
-              <div className="label">タイトル</div>
-              <div className="item">{selectedUrl.title ? selectedUrl.title : '記入なし。'}</div>
-            </div>
-            <div className="item-container">
-              <div className="label">コメント</div>
-              <div className="item">{selectedUrl.memo ? selectedUrl.memo : '記入なし。'}</div>
-            </div>
-            <div className="item-container">
-              <div className="label">重要度</div>
-              <Rating value={selectedUrl.importance} readOnly />
-            </div>
-            <div className="item-container">
-              <div className="label">登録日</div>
-              <div className="item">{format(new Date(selectedUrl.createdAt * 1000), 'yyyy-MM-dd')}</div>
-            </div>
-            <div className="item-container">
-              <div className="label">通知日</div>
-              <div className="item">{selectedUrl.notification ? selectedUrl.notification : '通知なし。'}</div>
-            </div>
-            <div className="item-container">
-              <div className="label">フォルダー</div>
-              <div className="item">{folderName}</div>
-            </div>
-            <div className="item-container">
-              <div className="label">url</div>
-              <div className="url-item">{selectedUrl.url}</div>
-            </div>
-          </Contents>
-        </>
-      )}
+    <>
+      <Container>
+        {selectedUrl && (
+          <>
+            <Headline>
+              <div>登録情報</div>
+              <ButtonGroupContainer>
+                <ButtonGroup variant="outlined" size="small">
+                  <Button
+                    onClick={() => {
+                      recordBrowsingHistoryMutation({
+                        variables: { urlId: selectedUrl.id, date: format(new Date(), 'yyyy-MM-dd') },
+                      })
+                      window.open(selectedUrl.url, '_blank', 'noreferrer')
+                    }}
+                  >
+                    リンク
+                  </Button>
+                  <Button onClick={() => setEditUrlModalOpen(true)}>編集</Button>
+                  <Button onClick={() => setDeleteUrlDialogOpen(true)}>削除</Button>
+                </ButtonGroup>
+              </ButtonGroupContainer>
+            </Headline>
+            <Contents>
+              <div className="item-container">
+                <div className="label">タイトル</div>
+                <div className="item">{selectedUrl.title ? selectedUrl.title : '記入なし。'}</div>
+              </div>
+              <div className="item-container">
+                <div className="label">コメント</div>
+                <div className="item">{selectedUrl.memo ? selectedUrl.memo : '記入なし。'}</div>
+              </div>
+              <div className="item-container">
+                <div className="label">重要度</div>
+                <Rating value={selectedUrl.importance} readOnly />
+              </div>
+              <div className="item-container">
+                <div className="label">登録日</div>
+                <div className="item">{format(new Date(selectedUrl.createdAt * 1000), 'yyyy-MM-dd')}</div>
+              </div>
+              <div className="item-container">
+                <div className="label">通知日</div>
+                <div className="item">{selectedUrl.notification ? selectedUrl.notification : '通知なし。'}</div>
+              </div>
+              <div className="item-container">
+                <div className="label">フォルダー</div>
+                <div className="item">{folderName}</div>
+              </div>
+              <div className="item-container">
+                <div className="label">url</div>
+                <div className="url-item">{selectedUrl.url}</div>
+              </div>
+            </Contents>
+          </>
+        )}
+      </Container>
       <EditUrlModal props={{ editUrlModalOpen, setEditUrlModalOpen, urlId: id }} />
-    </Container>
+      <DeleteUrlDialog
+        props={{
+          deleteUrlDialogOpen,
+          setDeleteUrlDialogOpen,
+          deleteUrlId: selectedUrl?.id,
+          setIsDeleted,
+        }}
+      />
+    </>
   )
 }
 

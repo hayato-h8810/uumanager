@@ -1,26 +1,13 @@
 import { useHistory } from 'react-router-dom'
-import {
-  Checkbox,
-  Select,
-  MenuItem,
-  ListItemText,
-  TextField,
-  Button,
-  ButtonGroup,
-  Rating,
-  Dialog,
-  DialogContentText,
-  DialogContent,
-  DialogActions,
-  DialogTitle,
-} from '@mui/material'
+import { Checkbox, Select, MenuItem, ListItemText, TextField, Button, ButtonGroup, Rating } from '@mui/material'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import { useEffect, useState } from 'react'
 import format from 'date-fns/format'
 import styled from 'styled-components'
-import { useDeleteUrlMutation, useRecordBrowsingHistoryMutation, useEditUrlMutation, Url } from '../../../api/graphql'
+import { useRecordBrowsingHistoryMutation, useEditUrlMutation, Url } from '../../../api/graphql'
 import CreateUrlModal from '../createUrlModal'
 import EditUrlModal from '../editUrlModal'
+import DeleteUrlDialog from '../deleteUrlDialog'
 
 interface propsType {
   displayUrlArray: Url[] | null | undefined
@@ -36,17 +23,11 @@ export default function UrlList({ props }: { props: propsType }) {
   const [filterValue, setFilterValue] = useState('')
   const [modifiedDisplayUrlArray, setModifiedDisplayUrlArray] = useState<Url[]>([])
   const [deleteUrlDialogOpen, setDeleteUrlDialogOpen] = useState(false)
-  const [deleteUrlId, setDeleteUrlId] = useState<{ urlId: string; folderId: string }>()
+  const [deleteUrlId, setDeleteUrlId] = useState('')
+  const [isDeleted, setIsDeleted] = useState(false)
   const history = useHistory()
-  const [deleteUrlMutation] = useDeleteUrlMutation({
-    onCompleted: () => {
-      setDeleteUrlDialogOpen(false)
-      setDeleteUrlId(undefined)
-    },
-  })
   const [recordBrowsingHistoryMutation] = useRecordBrowsingHistoryMutation()
   const [editUrlMutation] = useEditUrlMutation()
-
   useEffect(() => {
     if (displayUrlArray) {
       const sortedArray = [...displayUrlArray]
@@ -115,6 +96,12 @@ export default function UrlList({ props }: { props: propsType }) {
       setEditUrlId('')
     }
   }, [editUrlModalOpen])
+  useEffect(() => {
+    if (isDeleted) {
+      setIsDeleted(false)
+      setDeleteUrlId('')
+    }
+  }, [isDeleted])
 
   return (
     <>
@@ -240,7 +227,7 @@ export default function UrlList({ props }: { props: propsType }) {
                 <div
                   onClick={() => {
                     setDeleteUrlDialogOpen(true)
-                    setDeleteUrlId({ urlId: url.id, folderId: url.folderId })
+                    setDeleteUrlId(url.id)
                   }}
                   className="item-delete-button"
                   role="button"
@@ -296,24 +283,7 @@ export default function UrlList({ props }: { props: propsType }) {
       </Container>
       <CreateUrlModal props={{ createUrlModalOpen, setCreateUrlModalOpen }} />
       <EditUrlModal props={{ editUrlModalOpen, setEditUrlModalOpen, urlId: editUrlId }} />
-      <DialogContainer open={deleteUrlDialogOpen}>
-        <DialogTitle>urlの削除</DialogTitle>
-        <DialogContent>
-          <DialogContentText>一度削除したurlを復元することは出来ません。本当に削除しますか?</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteUrlDialogOpen(false)}>削除しない</Button>
-          <Button
-            onClick={() => {
-              if (deleteUrlId)
-                deleteUrlMutation({ variables: { urlId: deleteUrlId?.urlId, folderId: deleteUrlId?.folderId } })
-            }}
-            autoFocus
-          >
-            削除する
-          </Button>
-        </DialogActions>
-      </DialogContainer>
+      <DeleteUrlDialog props={{ deleteUrlDialogOpen, setDeleteUrlDialogOpen, deleteUrlId, setIsDeleted }} />
     </>
   )
 }
@@ -517,16 +487,6 @@ const Contents = styled.div`
     .MuiButton-root {
       font-size: 10px;
       padding: 4px 0;
-    }
-  }
-`
-
-const DialogContainer = styled(Dialog)`
-  & .MuiPaper-root {
-    background: #2f2f2f;
-    color: white;
-    & .MuiDialogContentText-root {
-      color: white;
     }
   }
 `
