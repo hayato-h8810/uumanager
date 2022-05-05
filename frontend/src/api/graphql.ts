@@ -103,6 +103,7 @@ export type EditUrlInput = {
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: InputMaybe<Scalars['String']>
   folderId?: InputMaybe<Scalars['String']>
+  newFolderName?: InputMaybe<Scalars['String']>
   url: UrlInput
   urlId: Scalars['String']
 }
@@ -417,6 +418,7 @@ export type EditUrlMutationVariables = Exact<{
   url: UrlInput
   folderId?: InputMaybe<Scalars['String']>
   urlId: Scalars['String']
+  newFolderName?: InputMaybe<Scalars['String']>
 }>
 
 export type EditUrlMutation = {
@@ -915,8 +917,8 @@ export type EditFolderMutationHookResult = ReturnType<typeof useEditFolderMutati
 export type EditFolderMutationResult = Apollo.MutationResult<EditFolderMutation>
 export type EditFolderMutationOptions = Apollo.BaseMutationOptions<EditFolderMutation, EditFolderMutationVariables>
 export const EditUrlDocument = gql`
-  mutation editUrl($url: UrlInput!, $folderId: String, $urlId: String!) {
-    editUrl(input: { url: $url, folderId: $folderId, urlId: $urlId }) {
+  mutation editUrl($url: UrlInput!, $folderId: String, $urlId: String!, $newFolderName: String) {
+    editUrl(input: { url: $url, folderId: $folderId, urlId: $urlId, newFolderName: $newFolderName }) {
       id
       name
       urls {
@@ -950,6 +952,7 @@ export type EditUrlMutationFn = Apollo.MutationFunction<EditUrlMutation, EditUrl
  *      url: // value for 'url'
  *      folderId: // value for 'folderId'
  *      urlId: // value for 'urlId'
+ *      newFolderName: // value for 'newFolderName'
  *   },
  * });
  */

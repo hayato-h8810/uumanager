@@ -16,6 +16,7 @@ type FormInput = {
   memo: string | null
   notification: string | null
   folderId: string | null
+  newFolderName: string | null
 }
 
 interface propsType {
@@ -24,12 +25,16 @@ interface propsType {
   urlId: string
 }
 
+type ModalContainerProps = {
+  folderNameDisable?: boolean
+}
+
 export default function EditUrlModal({ props }: { props: propsType }) {
   const { editUrlModalOpen, setEditUrlModalOpen, urlId } = props
   const [specificUrl, setSpecificUrl] = useState<Url>()
   const [notificationValue, setNotificationValue] = useState<Date | null>(null)
   const [importanceValue, setImportanceValue] = useState<number | undefined | null>(0)
-  const [folderId, setFolderId] = useState('')
+  const [folderId, setFolderId] = useState('new')
   const { data: { fetchFolderAndUrl = null } = {} } = useFetchFolderAndUrlQuery({
     fetchPolicy: 'network-only',
   })
@@ -73,7 +78,8 @@ export default function EditUrlModal({ props }: { props: propsType }) {
       editUrlMutation({
         variables: {
           urlId,
-          folderId: data.folderId === specificUrl?.folderId ? null : data.folderId,
+          folderId: data.folderId === specificUrl?.folderId || data.folderId === 'new' ? null : data.folderId,
+          newFolderName: data.newFolderName ? data.newFolderName : null,
           url: {
             url: data.url,
             importance: importanceValue,
@@ -87,7 +93,7 @@ export default function EditUrlModal({ props }: { props: propsType }) {
   }
 
   return (
-    <ModalContainer open={editUrlModalOpen}>
+    <ModalContainer open={editUrlModalOpen} folderNameDisable={folderId !== 'new'}>
       <div className="modal-frame">
         <HeadLine>
           <div className="title">
@@ -204,6 +210,7 @@ export default function EditUrlModal({ props }: { props: propsType }) {
                     },
                   }}
                 >
+                  <MenuItem value="new">新しくフォルダーを作成する。</MenuItem>
                   {fetchFolderAndUrl?.map((folder) => (
                     <MenuItem value={folder.id} key={folder.id}>
                       {folder.name}
@@ -211,6 +218,18 @@ export default function EditUrlModal({ props }: { props: propsType }) {
                   ))}
                 </Select>
               </FormControl>
+              {folderId === 'new' && (
+                <div className="folder-name-item">
+                  <TextField
+                    {...register('newFolderName')}
+                    type="text"
+                    label="フォルダー"
+                    variant="outlined"
+                    size="small"
+                    disabled={folderId !== 'new'}
+                  />
+                </div>
+              )}
             </div>
             <div className="item-container multiline-item-container">
               <div className="label">コメント</div>
@@ -254,7 +273,7 @@ export default function EditUrlModal({ props }: { props: propsType }) {
   )
 }
 
-const ModalContainer = styled(Modal)`
+const ModalContainer = styled(Modal)<ModalContainerProps>`
   position: relative;
   .MuiBackdrop-root {
     background: rgba(0, 0, 0, 0.7);
@@ -263,7 +282,7 @@ const ModalContainer = styled(Modal)`
     background: white;
     max-height: 100%;
     max-width: 100%;
-    height: 700px;
+    height: ${(props) => (props.folderNameDisable ? '690px' : '720px')};
     width: 750px;
     position: absolute;
     top: 0;
@@ -374,6 +393,13 @@ const Contents = styled.div`
         padding: 7px 10px;
         padding-right: 32px;
         min-width: 40px;
+      }
+    }
+    .folder-name-item {
+      margin-left: 390px;
+      margin-top: 10px;
+      .MuiTextField-root {
+        width: 230px;
       }
     }
   }
