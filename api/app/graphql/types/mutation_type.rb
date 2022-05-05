@@ -15,5 +15,6 @@ module Types
     field :record_browsing_history, mutation: Mutations::RecordBrowsingHistory
     field :delete_browsing_history, mutation: Mutations::DeleteBrowsingHistory
     field :add_login_history, mutation: Mutations::AddLoginHistory
+    field :transfer_multiple_urls, mutation: Mutations::TransferMultipleUrls
   end
 end
