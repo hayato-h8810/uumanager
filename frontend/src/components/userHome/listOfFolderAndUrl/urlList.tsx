@@ -222,7 +222,7 @@ export default function UrlList({ props }: { props: propsType }) {
                   tabIndex={0}
                   key={url.id}
                 >
-                  {url.title ? url.title : 'no title'}
+                  {url.title}
                 </div>
                 <div
                   onClick={() => {

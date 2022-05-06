@@ -2,7 +2,7 @@
 
 module InputTypes
   class UrlInput < Types::BaseInputObject
-    argument :title, String, required: false
+    argument :title, String, required: true
     argument :memo, String, required: false
     argument :url, String, required: true
     argument :notification, String, required: false
