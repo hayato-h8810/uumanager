@@ -28,7 +28,6 @@ ActiveRecord::Schema.define(version: 20_220_407_015_141) do
 
   create_table 'folders', force: :cascade do |t|
     t.string 'name'
-    t.string 'origin'
     t.integer 'user_id'
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
