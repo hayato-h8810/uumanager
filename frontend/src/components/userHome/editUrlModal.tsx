@@ -53,6 +53,7 @@ export default function EditUrlModal({ props }: { props: propsType }) {
     handleSubmit,
     formState: { errors },
     reset,
+    clearErrors,
   } = useForm<FormInput>({
     reValidateMode: 'onSubmit',
   })
@@ -180,7 +181,10 @@ export default function EditUrlModal({ props }: { props: propsType }) {
                 <InputLabel>フォルダー</InputLabel>
                 <Select
                   {...register('folderId')}
-                  onChange={(e) => setFolderId(e.target.value)}
+                  onChange={(e) => {
+                    setFolderId(e.target.value)
+                    clearErrors('newFolderName')
+                  }}
                   value={folderId}
                   label="フォルダー"
                   variant="outlined"
@@ -221,7 +225,7 @@ export default function EditUrlModal({ props }: { props: propsType }) {
               {folderId === 'new' && (
                 <div className="folder-name-item">
                   <TextField
-                    {...register('newFolderName')}
+                    {...register('newFolderName', { validate: (value) => !(value === '' && folderId === 'new') })}
                     type="text"
                     label="フォルダー"
                     variant="outlined"
@@ -230,6 +234,7 @@ export default function EditUrlModal({ props }: { props: propsType }) {
                   />
                 </div>
               )}
+              {errors.newFolderName && <ErrorMessage>フォルダー名を入力して下さい。</ErrorMessage>}
             </div>
             <div className="item-container multiline-item-container">
               <div className="label">コメント</div>
@@ -282,7 +287,7 @@ const ModalContainer = styled(Modal)<ModalContainerProps>`
     background: white;
     max-height: 100%;
     max-width: 100%;
-    height: ${(props) => (props.folderNameDisable ? '690px' : '720px')};
+    height: ${(props) => (props.folderNameDisable ? '690px' : '730px')};
     width: 750px;
     position: absolute;
     top: 0;

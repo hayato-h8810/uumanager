@@ -75,6 +75,7 @@ export default function CreateUrlModal({ props }: { props: propsType }) {
     handleSubmit,
     formState: { errors },
     reset,
+    clearErrors,
   } = useForm<FormInput>({
     reValidateMode: 'onSubmit',
   })
@@ -173,6 +174,7 @@ export default function CreateUrlModal({ props }: { props: propsType }) {
                   {...register('folderId')}
                   onChange={(e) => {
                     setFolderId(e.target.value)
+                    clearErrors('folderName')
                   }}
                   value={folderId}
                   label="フォルダー"
@@ -214,7 +216,7 @@ export default function CreateUrlModal({ props }: { props: propsType }) {
               {folderId === 'new' && (
                 <div className="folder-name-item">
                   <TextField
-                    {...register('folderName')}
+                    {...register('folderName', { validate: (value) => !(value === '' && folderId === 'new') })}
                     type="text"
                     label="フォルダー"
                     variant="outlined"
@@ -223,6 +225,7 @@ export default function CreateUrlModal({ props }: { props: propsType }) {
                   />
                 </div>
               )}
+              {errors.folderName && <ErrorMessage>フォルダー名を入力して下さい。</ErrorMessage>}
             </div>
             <div className="item-container multiline-item-container">
               <div className="label">コメント</div>
@@ -274,7 +277,7 @@ const ModalContainer = styled(Modal)<ModalContainerProps>`
     background: white;
     max-height: 100%;
     max-width: 100%;
-    height: ${(props) => (props.folderNameDisable ? '690px' : '720px')};
+    height: ${(props) => (props.folderNameDisable ? '690px' : '730px')};
     width: 750px;
     position: absolute;
     top: 0;
