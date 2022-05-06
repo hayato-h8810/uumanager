@@ -257,7 +257,7 @@ export type Url = {
   importance: Scalars['Int']
   memo?: Maybe<Scalars['String']>
   notification?: Maybe<Scalars['String']>
-  title?: Maybe<Scalars['String']>
+  title: Scalars['String']
   url: Scalars['String']
 }
 
@@ -265,7 +265,7 @@ export type UrlInput = {
   importance: Scalars['Int']
   memo?: InputMaybe<Scalars['String']>
   notification?: InputMaybe<Scalars['String']>
-  title?: InputMaybe<Scalars['String']>
+  title: Scalars['String']
   url: Scalars['String']
 }
 
@@ -290,7 +290,7 @@ export type AddFolderMutation = {
     urls: Array<{
       __typename?: 'Url'
       id: string
-      title?: string | null
+      title: string
       memo?: string | null
       notification?: string | null
       url: string
@@ -342,7 +342,7 @@ export type DeleteFolderMutation = {
     urls: Array<{
       __typename?: 'Url'
       id: string
-      title?: string | null
+      title: string
       memo?: string | null
       notification?: string | null
       url: string
@@ -366,7 +366,7 @@ export type DeleteUrlMutation = {
     urls: Array<{
       __typename?: 'Url'
       id: string
-      title?: string | null
+      title: string
       memo?: string | null
       notification?: string | null
       url: string
@@ -403,7 +403,7 @@ export type EditFolderMutation = {
     urls: Array<{
       __typename?: 'Url'
       id: string
-      title?: string | null
+      title: string
       memo?: string | null
       notification?: string | null
       url: string
@@ -430,7 +430,7 @@ export type EditUrlMutation = {
     urls: Array<{
       __typename?: 'Url'
       id: string
-      title?: string | null
+      title: string
       memo?: string | null
       notification?: string | null
       url: string
@@ -485,7 +485,7 @@ export type SaveUrlMutation = {
     urls: Array<{
       __typename?: 'Url'
       id: string
-      title?: string | null
+      title: string
       memo?: string | null
       notification?: string | null
       url: string
@@ -509,7 +509,7 @@ export type TransferMultipleUrlsMutation = {
     urls: Array<{
       __typename?: 'Url'
       id: string
-      title?: string | null
+      title: string
       memo?: string | null
       notification?: string | null
       url: string
@@ -545,7 +545,7 @@ export type FetchFolderAndUrlQuery = {
     urls: Array<{
       __typename?: 'Url'
       id: string
-      title?: string | null
+      title: string
       memo?: string | null
       notification?: string | null
       url: string

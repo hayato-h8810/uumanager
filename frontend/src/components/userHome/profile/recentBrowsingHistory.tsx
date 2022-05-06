@@ -24,7 +24,7 @@ export default function RecentBrowsingHistory() {
             histories.push({
               id: data.id,
               browsingDate: data.date,
-              title: url.title ? url.title : 'no title',
+              title: url.title,
               urlId: data.urlId,
             })
           }

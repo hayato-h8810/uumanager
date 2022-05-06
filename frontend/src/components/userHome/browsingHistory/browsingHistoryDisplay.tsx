@@ -20,7 +20,7 @@ export default function BrowsingHistoryDisplay() {
         console.log(identifyUrl(data.urlId)?.title)
         return {
           id: data.urlId,
-          title: identifyUrl(data.urlId)?.title ? (identifyUrl(data.urlId)?.title as string) : 'no title',
+          title: identifyUrl(data.urlId)?.title,
           date: data.date,
           backgroundColor: 'red',
           borderColor: 'red',

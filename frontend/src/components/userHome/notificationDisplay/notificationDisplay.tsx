@@ -18,7 +18,7 @@ export default function NotificationDisplay() {
             url.notification &&
             INITIAL_EVENTS.push({
               id: url.id,
-              title: url.title ? url.title : 'no title',
+              title: url.title,
               date: url.notification,
             })
         )

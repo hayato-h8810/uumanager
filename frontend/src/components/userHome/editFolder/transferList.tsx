@@ -144,7 +144,7 @@ export default function TransferList({ props }: { props: propTypes }) {
                   <CheckBoxOutlineBlankIcon />
                 )}
                 <div className="title-item" key={url.id}>
-                  {url.title || 'no title'}
+                  {url.title}
                 </div>
               </div>
             ))}

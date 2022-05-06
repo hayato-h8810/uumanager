@@ -12,7 +12,7 @@ import { useEditUrlMutation, useFetchFolderAndUrlQuery, Url } from '../../api/gr
 
 type FormInput = {
   url: string
-  title: string | null
+  title: string
   memo: string | null
   notification: string | null
   folderId: string | null
@@ -84,7 +84,7 @@ export default function EditUrlModal({ props }: { props: propsType }) {
           url: {
             url: data.url,
             importance: importanceValue,
-            title: data.title === '' ? null : data.title,
+            title: data.title,
             memo: data.memo === '' ? null : data.memo,
             notification: notificationValue ? format(notificationValue, 'yyyy-MM-dd') : null,
           },
@@ -149,7 +149,7 @@ export default function EditUrlModal({ props }: { props: propsType }) {
             <div className="item-container multiline-item-container">
               <div className="label">タイトル</div>
               <TextField
-                {...register('title')}
+                {...register('title', { required: true })}
                 defaultValue={specificUrl?.title}
                 type="text"
                 label="タイトル"
@@ -158,6 +158,7 @@ export default function EditUrlModal({ props }: { props: propsType }) {
                 size="small"
                 rows={4}
               />
+              {errors.title && <ErrorMessage>タイトルは必須項目です。</ErrorMessage>}
             </div>
             <div className="item-container oneline-item-container url-item-container">
               <div className="label">url</div>

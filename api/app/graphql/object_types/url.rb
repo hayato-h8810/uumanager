@@ -3,7 +3,7 @@
 module ObjectTypes
   class Url < Types::BaseObject
     field :id, ID, null: false
-    field :title, String, null: true
+    field :title, String, null: false
     field :memo, String, null: true
     field :notification, String, null: true
     field :url, String, null: false
