@@ -1,5 +1,15 @@
 import { useHistory } from 'react-router-dom'
-import { Checkbox, Select, MenuItem, ListItemText, TextField, Button, ButtonGroup, Rating } from '@mui/material'
+import {
+  Checkbox,
+  Select,
+  MenuItem,
+  ListItemText,
+  TextField,
+  Button,
+  ButtonGroup,
+  Rating,
+  Pagination,
+} from '@mui/material'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import { useEffect, useState } from 'react'
 import format from 'date-fns/format'
@@ -10,33 +20,39 @@ import EditUrlModal from '../editUrlModal'
 import DeleteUrlDialog from '../deleteUrlDialog'
 
 interface propsType {
-  displayUrlArray: Url[] | null | undefined
+  selectUrlArray: Url[] | null | undefined
 }
 
 export default function UrlList({ props }: { props: propsType }) {
-  const { displayUrlArray } = props
+  const { selectUrlArray } = props
   const [sortRule, setSortRule] = useState('new')
   const [createUrlModalOpen, setCreateUrlModalOpen] = useState(false)
   const [editUrlModalOpen, setEditUrlModalOpen] = useState(false)
   const [editUrlId, setEditUrlId] = useState('')
   const [filterRule, setFilterRule] = useState<string[]>([])
   const [filterValue, setFilterValue] = useState('')
-  const [modifiedDisplayUrlArray, setModifiedDisplayUrlArray] = useState<Url[]>([])
+  const [displayUrlArray, setDisplayUrlArray] = useState<Url[]>([])
   const [deleteUrlDialogOpen, setDeleteUrlDialogOpen] = useState(false)
   const [deleteUrlId, setDeleteUrlId] = useState('')
   const [isDeleted, setIsDeleted] = useState(false)
+  const [urlFullLength, setUrlFullLength] = useState(0)
+  const [page, setPage] = useState(1)
   const history = useHistory()
   const [recordBrowsingHistoryMutation] = useRecordBrowsingHistoryMutation()
   const [editUrlMutation] = useEditUrlMutation()
   useEffect(() => {
-    if (displayUrlArray) {
-      const sortedArray = [...displayUrlArray]
-      setModifiedDisplayUrlArray(sortedArray.sort((a, b) => Number(b.id) - Number(a.id)))
+    if (selectUrlArray) {
+      const sortedArray = [...selectUrlArray]
+      setUrlFullLength(sortedArray.length)
+      setDisplayUrlArray(
+        sortedArray.sort((a, b) => Number(b.id) - Number(a.id)).slice((page - 1) * 4, (page - 1) * 4 + 4)
+      )
     }
-  }, [displayUrlArray])
+  }, [selectUrlArray])
   useEffect(() => {
-    if (displayUrlArray) {
-      const sortedArray = [...displayUrlArray]
+    if (selectUrlArray) {
+      const sortedArray = [...selectUrlArray]
+      let filterdArray: Url[] | null = []
       if (sortRule === 'new') {
         sortedArray.sort((a, b) => Number(b.id) - Number(a.id))
       } else if (sortRule === 'old') {
@@ -46,45 +62,37 @@ export default function UrlList({ props }: { props: propsType }) {
       }
       if (filterValue) {
         if (filterRule.length === 3) {
-          setModifiedDisplayUrlArray(
-            sortedArray.filter(
-              (url) => url.url.match(filterValue) || url.title?.match(filterValue) || url.memo?.match(filterValue)
-            )
+          filterdArray = sortedArray.filter(
+            (url) => url.url.match(filterValue) || url.title?.match(filterValue) || url.memo?.match(filterValue)
           )
         } else if (filterRule.length === 2) {
           if (filterRule.find((rule) => rule === 'title') && filterRule.find((rule) => rule === 'memo')) {
-            setModifiedDisplayUrlArray(
-              sortedArray.filter((url) => url.title?.match(filterValue) || url.memo?.match(filterValue))
-            )
+            filterdArray = sortedArray.filter((url) => url.title?.match(filterValue) || url.memo?.match(filterValue))
           } else if (filterRule.find((rule) => rule === 'title') && filterRule.find((rule) => rule === 'url')) {
-            setModifiedDisplayUrlArray(
-              sortedArray.filter((url) => url.title?.match(filterValue) || url.url?.match(filterValue))
-            )
+            filterdArray = sortedArray.filter((url) => url.title?.match(filterValue) || url.url?.match(filterValue))
           } else if (filterRule.find((rule) => rule === 'memo') && filterRule.find((rule) => rule === 'url')) {
-            setModifiedDisplayUrlArray(
-              sortedArray.filter((url) => url.memo?.match(filterValue) || url.url?.match(filterValue))
-            )
+            filterdArray = sortedArray.filter((url) => url.memo?.match(filterValue) || url.url?.match(filterValue))
           }
         } else if (filterRule.length === 1) {
           if (filterRule.find((rule) => rule === 'title')) {
-            setModifiedDisplayUrlArray(sortedArray.filter((url) => url.title?.match(filterValue)))
+            filterdArray = sortedArray.filter((url) => url.title?.match(filterValue))
           } else if (filterRule.find((rule) => rule === 'memo')) {
-            setModifiedDisplayUrlArray(sortedArray.filter((url) => url.memo?.match(filterValue)))
+            filterdArray = sortedArray.filter((url) => url.memo?.match(filterValue))
           } else if (filterRule.find((rule) => rule === 'url')) {
-            setModifiedDisplayUrlArray(sortedArray.filter((url) => url.url?.match(filterValue)))
+            filterdArray = sortedArray.filter((url) => url.url?.match(filterValue))
           }
         } else {
-          setModifiedDisplayUrlArray(
-            sortedArray.filter(
-              (url) => url.url.match(filterValue) || url.title?.match(filterValue) || url.memo?.match(filterValue)
-            )
+          filterdArray = sortedArray.filter(
+            (url) => url.url.match(filterValue) || url.title?.match(filterValue) || url.memo?.match(filterValue)
           )
         }
       } else {
-        setModifiedDisplayUrlArray(sortedArray)
+        filterdArray = sortedArray
       }
+      setUrlFullLength(filterdArray.length)
+      setDisplayUrlArray(filterdArray.slice((page - 1) * 4, (page - 1) * 4 + 4))
     }
-  }, [filterRule, filterValue, sortRule])
+  }, [filterRule, filterValue, sortRule, page])
 
   useEffect(() => {
     if (editUrlId) {
@@ -102,6 +110,11 @@ export default function UrlList({ props }: { props: propsType }) {
       setDeleteUrlId('')
     }
   }, [isDeleted])
+  useEffect(() => {
+    if (page > Math.ceil(urlFullLength / 4)) {
+      setPage(1)
+    }
+  }, [urlFullLength])
 
   return (
     <>
@@ -208,12 +221,9 @@ export default function UrlList({ props }: { props: propsType }) {
           </AddButton>
         </HeadLine>
         <Contents>
-          {modifiedDisplayUrlArray.length ? (
-            modifiedDisplayUrlArray.map((url, i) => (
-              <div
-                className={modifiedDisplayUrlArray.length - 1 === i ? 'last-item-container' : 'item-container'}
-                key={url.id}
-              >
+          {displayUrlArray.length ? (
+            displayUrlArray.map((url, i) => (
+              <div className={displayUrlArray.length - 1 === i ? 'last-item-container' : 'item-container'} key={url.id}>
                 <div className="item-created-at">作成日 {format(new Date(1000 * url.createdAt), 'yyyy-MM-dd')}</div>
                 <div
                   onClick={() => history.push(`/userHome/urlShow/${url.id}`)}
@@ -280,6 +290,17 @@ export default function UrlList({ props }: { props: propsType }) {
             <div className="no-item-container">urlがありません。</div>
           )}
         </Contents>
+        <PaginationContainer>
+          {urlFullLength > 4 && (
+            <Pagination
+              count={Math.ceil(urlFullLength / 4)}
+              onChange={(_, Currentpage) => {
+                setPage(Currentpage)
+              }}
+              page={page}
+            />
+          )}
+        </PaginationContainer>
       </Container>
       <CreateUrlModal props={{ createUrlModalOpen, setCreateUrlModalOpen }} />
       <EditUrlModal props={{ editUrlModalOpen, setEditUrlModalOpen, urlId: editUrlId }} />
@@ -290,6 +311,7 @@ export default function UrlList({ props }: { props: propsType }) {
 
 const Container = styled.div`
   grid-area: urlList;
+  position: relative;
 `
 
 const HeadLine = styled.div`
@@ -396,20 +418,7 @@ const Contents = styled.div`
   margin-left: 80px;
   position: relative;
   width: 810px;
-  max-height: 403px;
   border-bottom: 1px solid #b4b4b4;
-  overflow: auto;
-  &::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-  &::-webkit-scrollbar-track {
-    background: #f2f2f2;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: #bdbdbd;
-    border-radius: 5px;
-  }
   .item-container {
     height: 100px;
     position: relative;
@@ -489,4 +498,10 @@ const Contents = styled.div`
       padding: 4px 0;
     }
   }
+`
+
+const PaginationContainer = styled.div`
+  position: absolute;
+  top: 550px;
+  left: 400px;
 `

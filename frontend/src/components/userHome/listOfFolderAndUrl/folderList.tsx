@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
-import { TextField, Button, Select, MenuItem, ClickAwayListener } from '@mui/material'
+import { TextField, Button, Select, MenuItem, ClickAwayListener, Pagination } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import {
   useFetchFolderAndUrlQuery,
@@ -13,23 +13,25 @@ import {
 } from '../../../api/graphql'
 
 interface propsType {
-  displayUrlArray: Url[] | null | undefined
-  setDisplayUrlArray: (urls: Url[] | null) => void
+  selectUrlArray: Url[] | null | undefined
+  setSelectUrlArray: (urls: Url[] | null) => void
 }
 
 export default function ShowFolderList({ props }: { props: propsType }) {
-  const { displayUrlArray, setDisplayUrlArray } = props
+  const { selectUrlArray, setSelectUrlArray } = props
   const [selectedFolderId, setSelectedFolderId] = useState('')
   const [filterValue, setFilterValue] = useState('')
   const [sortRule, setSortRule] = useState('new')
   const [displayFolders, setDisplayFolders] = useState<Folder[] | null>(null)
   const [addFormInputtable, setAddFormInputtable] = useState(false)
   const [addFormValue, setAddFormValue] = useState('')
+  const [page, setPage] = useState(1)
+  const [folderFullLength, setFolderFullLength] = useState(0)
   const history = useHistory()
   const { data: { fetchFolderAndUrl = null } = {} } = useFetchFolderAndUrlQuery({
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      if (data.fetchFolderAndUrl && !displayUrlArray) {
+      if (data.fetchFolderAndUrl && !selectUrlArray) {
         const folders = [...data.fetchFolderAndUrl]
         setSelectedFolderId(folders.sort((a, b) => Number(b.id) - Number(a.id))[0].id)
       }
@@ -61,13 +63,14 @@ export default function ShowFolderList({ props }: { props: propsType }) {
   useEffect(() => {
     const selectedUrls = fetchFolderAndUrl?.find((folder) => folder.id === selectedFolderId)?.urls
     if (selectedUrls) {
-      setDisplayUrlArray(selectedUrls)
+      setSelectUrlArray(selectedUrls)
     }
   }, [selectedFolderId, fetchFolderAndUrl])
 
   useEffect(() => {
     if (fetchFolderAndUrl) {
       const sortedArray = [...fetchFolderAndUrl]
+      let filterdArray: Folder[] | null = []
       if (sortRule === 'new') {
         sortedArray.sort((a, b) => Number(b.id) - Number(a.id))
       } else if (sortRule === 'old') {
@@ -76,12 +79,19 @@ export default function ShowFolderList({ props }: { props: propsType }) {
         sortedArray.sort((a, b) => (a.name > b.name ? 1 : -1))
       }
       if (filterValue) {
-        setDisplayFolders(sortedArray.filter((folder) => folder.name.match(filterValue)))
+        filterdArray = sortedArray.filter((folder) => folder.name.match(filterValue))
       } else {
-        setDisplayFolders(sortedArray)
+        filterdArray = sortedArray
       }
+      setFolderFullLength(filterdArray.length)
+      setDisplayFolders(filterdArray.slice((page - 1) * 7, (page - 1) * 7 + 7))
     }
-  }, [fetchFolderAndUrl, filterValue, sortRule])
+  }, [fetchFolderAndUrl, filterValue, sortRule, page])
+  useEffect(() => {
+    if (page > Math.ceil(folderFullLength / 7)) {
+      setPage(1)
+    }
+  }, [folderFullLength])
 
   return (
     <Container>
@@ -197,6 +207,17 @@ export default function ShowFolderList({ props }: { props: propsType }) {
           </div>
         )}
       </AddFolderForm>
+      <PaginationContainer>
+        {folderFullLength > 7 && (
+          <Pagination
+            count={Math.ceil(folderFullLength / 7)}
+            onChange={(_, Currentpage) => {
+              setPage(Currentpage)
+            }}
+            page={page}
+          />
+        )}
+      </PaginationContainer>
     </Container>
   )
 }
@@ -265,22 +286,9 @@ const Sort = styled.div`
 `
 
 const Contents = styled.div`
-  max-height: 360px;
   margin-top: 11px;
   margin-left: 90px;
   width: 233px;
-  overflow: auto;
-  &::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-  &::-webkit-scrollbar-track {
-    background: #f2f2f2;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: #bdbdbd;
-    border-radius: 5px;
-  }
   .item-container {
     min-width: 165px;
     padding-left: 60px;
@@ -398,4 +406,10 @@ const AddFolderForm = styled.div`
     top: -10px;
     left: 12px;
   }
+`
+
+const PaginationContainer = styled.div`
+  position: absolute;
+  top: 550px;
+  left: 120px;
 `

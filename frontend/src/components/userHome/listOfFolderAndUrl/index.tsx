@@ -5,12 +5,12 @@ import FolderList from './folderList'
 import UrlList from './urlList'
 
 export default function Index() {
-  const [displayUrlArray, setDisplayUrlArray] = useState<Url[] | null>()
+  const [selectUrlArray, setSelectUrlArray] = useState<Url[] | null>()
 
   return (
     <Container>
-      <FolderList props={{ displayUrlArray, setDisplayUrlArray }} />
-      <UrlList props={{ displayUrlArray }} />
+      <FolderList props={{ selectUrlArray, setSelectUrlArray }} />
+      <UrlList props={{ selectUrlArray }} />
     </Container>
   )
 }
