@@ -61,30 +61,50 @@ export default function UrlList({ props }: { props: propsType }) {
         sortedArray.sort((a, b) => b.importance - a.importance)
       }
       if (filterValue) {
-        if (filterRule.length === 3) {
-          filterdArray = sortedArray.filter(
-            (url) => url.url.match(filterValue) || url.title?.match(filterValue) || url.memo?.match(filterValue)
-          )
-        } else if (filterRule.length === 2) {
+        if (filterRule.length === 2) {
           if (filterRule.find((rule) => rule === 'title') && filterRule.find((rule) => rule === 'memo')) {
-            filterdArray = sortedArray.filter((url) => url.title?.match(filterValue) || url.memo?.match(filterValue))
+            filterdArray = sortedArray.filter((url) => {
+              if (url.memo) {
+                return url.title.indexOf(filterValue) !== -1 || url.memo.indexOf(filterValue) !== -1
+              }
+              return url.title.indexOf(filterValue) !== -1
+            })
           } else if (filterRule.find((rule) => rule === 'title') && filterRule.find((rule) => rule === 'url')) {
-            filterdArray = sortedArray.filter((url) => url.title?.match(filterValue) || url.url?.match(filterValue))
+            filterdArray = sortedArray.filter(
+              (url) => url.title.indexOf(filterValue) !== -1 || url.url.indexOf(filterValue) !== -1
+            )
           } else if (filterRule.find((rule) => rule === 'memo') && filterRule.find((rule) => rule === 'url')) {
-            filterdArray = sortedArray.filter((url) => url.memo?.match(filterValue) || url.url?.match(filterValue))
+            filterdArray = sortedArray.filter((url) => {
+              if (url.memo) {
+                return url.memo.indexOf(filterValue) !== -1 || url.url.indexOf(filterValue) !== -1
+              }
+              return url.url.indexOf(filterValue) !== -1
+            })
           }
         } else if (filterRule.length === 1) {
           if (filterRule.find((rule) => rule === 'title')) {
-            filterdArray = sortedArray.filter((url) => url.title?.match(filterValue))
+            filterdArray = sortedArray.filter((url) => url.title.indexOf(filterValue) !== -1)
           } else if (filterRule.find((rule) => rule === 'memo')) {
-            filterdArray = sortedArray.filter((url) => url.memo?.match(filterValue))
+            filterdArray = sortedArray.filter((url) => {
+              if (url.memo) {
+                return url.memo.indexOf(filterValue) !== -1
+              }
+              return false
+            })
           } else if (filterRule.find((rule) => rule === 'url')) {
-            filterdArray = sortedArray.filter((url) => url.url?.match(filterValue))
+            filterdArray = sortedArray.filter((url) => url.url.indexOf(filterValue) !== -1)
           }
         } else {
-          filterdArray = sortedArray.filter(
-            (url) => url.url.match(filterValue) || url.title?.match(filterValue) || url.memo?.match(filterValue)
-          )
+          filterdArray = sortedArray.filter((url) => {
+            if (url.memo) {
+              return (
+                url.url.indexOf(filterValue) !== -1 ||
+                url.title.indexOf(filterValue) !== -1 ||
+                url.memo.indexOf(filterValue) !== -1
+              )
+            }
+            return url.url.indexOf(filterValue) !== -1 || url.title.indexOf(filterValue) !== -1
+          })
         }
       } else {
         filterdArray = sortedArray
@@ -94,16 +114,6 @@ export default function UrlList({ props }: { props: propsType }) {
     }
   }, [filterRule, filterValue, sortRule, page])
 
-  useEffect(() => {
-    if (editUrlId) {
-      setEditUrlModalOpen(true)
-    }
-  }, [editUrlId])
-  useEffect(() => {
-    if (!editUrlModalOpen) {
-      setEditUrlId('')
-    }
-  }, [editUrlModalOpen])
   useEffect(() => {
     if (isDeleted) {
       setIsDeleted(false)
@@ -280,7 +290,13 @@ export default function UrlList({ props }: { props: propsType }) {
                   <Button onClick={() => history.push(`/userHome/urlShow/${url.id}`)} key={`show-${url.id}`}>
                     詳細
                   </Button>
-                  <Button onClick={() => setEditUrlId(url.id)} key={`edit-${url.id}`}>
+                  <Button
+                    onClick={() => {
+                      setEditUrlId(url.id)
+                      setEditUrlModalOpen(true)
+                    }}
+                    key={`edit-${url.id}`}
+                  >
                     編集
                   </Button>
                 </ButtonGroup>

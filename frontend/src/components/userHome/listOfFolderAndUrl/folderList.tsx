@@ -79,7 +79,7 @@ export default function ShowFolderList({ props }: { props: propsType }) {
         sortedArray.sort((a, b) => (a.name > b.name ? 1 : -1))
       }
       if (filterValue) {
-        filterdArray = sortedArray.filter((folder) => folder.name.match(filterValue))
+        filterdArray = sortedArray.filter((folder) => folder.name.indexOf(filterValue) !== -1)
       } else {
         filterdArray = sortedArray
       }

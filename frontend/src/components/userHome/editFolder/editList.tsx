@@ -82,9 +82,11 @@ export default function EditList() {
       }
       if (filterValue) {
         setDisplayFolder(
-          sortedArray.filter((folder) => folder.name.match(filterValue)).slice((page - 1) * 7, (page - 1) * 7 + 7)
+          sortedArray
+            .filter((folder) => folder.name.indexOf(filterValue) !== -1)
+            .slice((page - 1) * 7, (page - 1) * 7 + 7)
         )
-        setFolderFullLength(sortedArray.filter((folder) => folder.name.match(filterValue)).length)
+        setFolderFullLength(sortedArray.filter((folder) => folder.name.indexOf(filterValue) !== -1).length)
       } else {
         setDisplayFolder(sortedArray.slice((page - 1) * 7, (page - 1) * 7 + 7))
         setFolderFullLength(sortedArray.length)
