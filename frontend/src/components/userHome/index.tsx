@@ -8,8 +8,8 @@ import IndexOfBrowsingHistoryDisplay from './browsingHistory/index'
 import UrlShow from './urlShow/index'
 import NavTabs from './NavTabs'
 import EditFolder from './editFolder/index'
-import PageNotFound from '../../views/pageNotFound'
 import { useAddLoginHistoryMutation, useCurrentUserQuery } from '../../api/graphql'
+import PageNotFound from '../../views/pageNotFound'
 
 export default function UserHomeIndex() {
   const history = useHistory()
