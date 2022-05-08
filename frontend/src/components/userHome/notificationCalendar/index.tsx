@@ -1,12 +1,14 @@
-import FullCalendar, { EventApi, EventInput } from '@fullcalendar/react'
+import FullCalendar, { EventInput } from '@fullcalendar/react'
 import { useRef, useState } from 'react'
+import styled from 'styled-components'
 import Calendar from './calendar'
 import { Url, useFetchFolderAndUrlQuery } from '../../../api/graphql'
-import List from './list'
+import EventList from './eventList'
 
-export default function NotificationDisplay() {
+export default function Index() {
   const [calendarEvents, setCalendarEvents] = useState<EventInput[]>()
-  const [currentEvents, setCurrentEvents] = useState<EventApi[]>([])
+  const [selectedId, setSelectedId] = useState<string | null>()
+  const [eventClick, setEventClick] = useState(true)
   const calendarRef = useRef<FullCalendar>(null)
   const { data: { fetchFolderAndUrl = null } = {} } = useFetchFolderAndUrlQuery({
     fetchPolicy: 'network-only',
@@ -26,13 +28,20 @@ export default function NotificationDisplay() {
       setCalendarEvents(INITIAL_EVENTS)
     },
   })
-
   const identifyUrl = (eventId: string): Url | undefined =>
     fetchFolderAndUrl?.map((folder) => folder.urls.find((url) => url.id === eventId)).find((url) => url !== undefined)
+
   return (
-    <>
-      <Calendar props={{ calendarEvents, identifyUrl, setCurrentEvents, calendarRef }} />
-      <List props={{ calendarEvents, currentEvents, identifyUrl, calendarRef }} />
-    </>
+    <Container>
+      <Calendar props={{ calendarEvents, identifyUrl, calendarRef, setSelectedId, eventClick, setEventClick }} />
+      <EventList props={{ calendarEvents, calendarRef, selectedId, setSelectedId, eventClick }} />
+    </Container>
   )
 }
+
+const Container = styled.div`
+  display: grid;
+  grid-template-rows: 604px;
+  grid-template-columns: 600px 840px;
+  grid-template-areas: 'eventList calendar';
+`

@@ -30,7 +30,7 @@ export default function Navigation() {
       <br />
       <button
         type="button"
-        onClick={() => history.push({ pathname: '/userHome/calendar', state: { prevPathname: id } })}
+        onClick={() => history.push({ pathname: '/userHome/notificationCalendar', state: { prevPathname: id } })}
       >
         <ArrowBackIosNewIcon />
         通知カレンダー
@@ -38,7 +38,7 @@ export default function Navigation() {
       <br />
       <button
         type="button"
-        onClick={() => history.push({ pathname: '/userHome/browsingHistory', state: { prevPathname: id } })}
+        onClick={() => history.push({ pathname: '/userHome/browsingHistoryCalendar', state: { prevPathname: id } })}
       >
         <ArrowBackIosNewIcon />
         閲覧履歴カレンダー
