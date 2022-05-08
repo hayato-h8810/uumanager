@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { format } from 'date-fns'
 import IndexOfProfile from './profile/index'
 import IndexOfListOfFolderAndUrl from './listOfFolderAndUrl/index'
-import IndexOfNotificationDisplay from './notificationDisplay/index'
+import IndexOfNotificationDisplay from './notificationCalendar/index'
 import IndexOfBrowsingHistoryDisplay from './browsingHistory/index'
 import UrlShow from './urlShow/index'
 import NavTabs from './NavTabs'
@@ -33,13 +33,15 @@ export default function UserHomeIndex() {
 
   return (
     <>
-      {/^(profile|listOfFolderAndUrl|calendar|browsingHistory)/i.test(location.pathname.substr(10)) && <NavTabs />}
+      {/^(profile|listOfFolderAndUrl|notificationCalendar|browsingHistoryCalendar)/i.test(
+        location.pathname.substr(10)
+      ) && <NavTabs />}
       <Container>
         <Switch>
           <Route path="/userHome/profile" component={IndexOfProfile} />
           <Route path="/userHome/listOfFolderAndUrl" component={IndexOfListOfFolderAndUrl} />
-          <Route path="/userHome/calendar" component={IndexOfNotificationDisplay} />
-          <Route path="/userHome/browsingHistory" component={IndexOfBrowsingHistoryDisplay} />
+          <Route path="/userHome/notificationCalendar" component={IndexOfNotificationDisplay} />
+          <Route path="/userHome/browsingHistoryCalendar" component={IndexOfBrowsingHistoryDisplay} />
           <Route path="/userHome/urlShow/:id" component={UrlShow} />
           <Route path="/userHome/editFolder" component={EditFolder} />
           <Route component={PageNotFound} />

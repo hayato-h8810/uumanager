@@ -18,10 +18,10 @@ export default function NavTabs() {
       setValue('profile')
     } else if (location.pathname.substr(10).toLowerCase().startsWith('listoffolderandurl')) {
       setValue('listOfFolderAndUrl')
-    } else if (location.pathname.substr(10).toLowerCase().startsWith('calendar')) {
-      setValue('calendar')
-    } else if (location.pathname.substr(10).toLowerCase().startsWith('browsinghistory')) {
-      setValue('browsingHistory')
+    } else if (location.pathname.substr(10).toLowerCase().startsWith('notificationcalendar')) {
+      setValue('notificationCalendar')
+    } else if (location.pathname.substr(10).toLowerCase().startsWith('browsinghistorycalendar')) {
+      setValue('browsinghistoryCalendar')
     }
   }, [location.pathname])
 
@@ -30,8 +30,8 @@ export default function NavTabs() {
       <Tabs value={value} onChange={handleChange} centered>
         <Tab label="ユーザープロファイル" value="profile" />
         <Tab label="Url一覧" value="listOfFolderAndUrl" />
-        <Tab label="通知カレンダー" value="calendar" />
-        <Tab label="閲覧履歴カレンダー" value="browsingHistory" />
+        <Tab label="通知カレンダー" value="notificationCalendar" />
+        <Tab label="閲覧履歴カレンダー" value="browsinghistoryCalendar" />
       </Tabs>
     </TabsContainer>
   )
