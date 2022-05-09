@@ -1,4 +1,4 @@
-import FullCalendar, { EventApi, EventClickArg, EventInput } from '@fullcalendar/react'
+import FullCalendar, { EventClickArg, EventInput } from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import allLocales from '@fullcalendar/core/locales-all'
 import interactionPlugin from '@fullcalendar/interaction'
@@ -18,6 +18,7 @@ interface propType {
 
 export default function Calendar({ props }: { props: propType }) {
   const { calendarEvents, identifyUrl, calendarRef, setSelectedId, eventClick, setEventClick } = props
+  const [calendarCurrent, setCalendarCurrent] = useState<Date>()
   const [deleteEvent, setDeleteEvent] = useState<EventClickArg | undefined>()
   const [deleteBrowsingHistoryMutation] = useDeleteBrowsingHistoryMutation({
     onCompleted: () => {
@@ -57,9 +58,12 @@ export default function Calendar({ props }: { props: propType }) {
           buttonText={{
             today: 'today',
           }}
+          datesSet={(datesSetArg) => {
+            setCalendarCurrent(datesSetArg.view.calendar.getDate())
+          }}
         />
       </CalendarContainer>
-      <MonthsAndYearsList props={{ calendarRef }} />
+      <MonthsAndYearsList props={{ calendarRef, calendarCurrent }} />
     </Container>
   )
 }
