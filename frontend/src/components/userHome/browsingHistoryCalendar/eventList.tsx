@@ -115,45 +115,51 @@ export default function EventList({ props }: { props: propType }) {
         </Select>
       </Sort>
       <List ref={eventListRef}>
-        {sortedEvents?.map((event, i) => (
-          <div
-            onClick={() => {
-              if (event.date) calendarRef.current?.getApi().gotoDate(new Date(event.date.toString()))
-              setSelectedId(event.extendedProps?.id as string)
-              setIsListClick(true)
-            }}
-            className={(() => {
-              if (selectedId === event.extendedProps?.id) {
-                if (sortedEvents.length === i + 1) {
-                  return 'last-item-container selected-item-container item-container'
-                }
-                return 'selected-item-container item-container'
-              }
-              return 'item-container'
-            })()}
-            key={event.extendedProps?.id as string}
-            role="button"
-            tabIndex={0}
-          >
-            <div className="date-item" key={event.id && `date-${event.extendedProps?.id as string}`}>
-              {event.date &&
-                `${event.date.toString().substr(0, 4)}年${event.date.toString().substr(5, 2)}月${event.date
-                  .toString()
-                  .substr(8, 2)}日`}
-            </div>
+        {sortedEvents ? (
+          sortedEvents.map((event, i) => (
             <div
               onClick={() => {
-                if (event.id) history.push(`/userHome/urlShow/${event.id}`)
+                if (event.date) calendarRef.current?.getApi().gotoDate(new Date(event.date.toString()))
+                setSelectedId(event.extendedProps?.id as string)
+                setIsListClick(true)
               }}
-              className="title-item"
-              key={event.id && `title-${event.extendedProps?.id as string}`}
+              className={(() => {
+                if (selectedId === event.extendedProps?.id) {
+                  if (sortedEvents.length === i + 1) {
+                    return 'last-item-container selected-item-container item-container'
+                  }
+                  return 'selected-item-container item-container'
+                }
+                return 'item-container'
+              })()}
+              key={event.extendedProps?.id as string}
               role="button"
               tabIndex={0}
             >
-              {event.title}
+              <div className="date-item" key={event.id && `date-${event.extendedProps?.id as string}`}>
+                {event.date &&
+                  `${event.date.toString().substr(0, 4)}年${event.date.toString().substr(5, 2)}月${event.date
+                    .toString()
+                    .substr(8, 2)}日`}
+              </div>
+              <div
+                onClick={() => {
+                  if (event.id) history.push(`/userHome/urlShow/${event.id}`)
+                }}
+                className="title-item"
+                key={event.id && `title-${event.extendedProps?.id as string}`}
+                role="button"
+                tabIndex={0}
+              >
+                {event.title}
+              </div>
             </div>
+          ))
+        ) : (
+          <div className="no-item-container">
+            <div className="no-item">閲覧履歴がありません。</div>
           </div>
-        ))}
+        )}
       </List>
     </Container>
   )
@@ -244,6 +250,15 @@ const List = styled.div`
   }
   .last-item-container {
     border-bottom: none;
+  }
+  .no-item-container {
+    height: 80px;
+    color: #8a8a8a;
+    text-align: center;
+    font-size: 14px;
+    .no-item {
+      padding-top: 30px;
+    }
   }
   &::-webkit-scrollbar {
     width: 7px;
