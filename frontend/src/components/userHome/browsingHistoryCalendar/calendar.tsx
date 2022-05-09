@@ -1,11 +1,10 @@
-import FullCalendar, { EventClickArg, EventDropArg, EventInput } from '@fullcalendar/react'
+import FullCalendar, { EventApi, EventClickArg, EventInput } from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import allLocales from '@fullcalendar/core/locales-all'
 import interactionPlugin from '@fullcalendar/interaction'
-import { MutableRefObject } from 'react'
+import { MutableRefObject, useState } from 'react'
 import styled from 'styled-components'
-import format from 'date-fns/format'
-import { useEditUrlMutation, Url } from '../../../api/graphql'
+import { useDeleteBrowsingHistoryMutation, Url, FetchBrowsingHistoryDocument } from '../../../api/graphql'
 import MonthsAndYearsList from '../monthsAndYearsrList'
 
 interface propType {
@@ -19,26 +18,26 @@ interface propType {
 
 export default function Calendar({ props }: { props: propType }) {
   const { calendarEvents, identifyUrl, calendarRef, setSelectedId, eventClick, setEventClick } = props
-  const [editUrlMutation] = useEditUrlMutation()
-  const handleEventClick = (clickInfo: EventClickArg) => {
-    setSelectedId(clickInfo.event.id)
-    setEventClick(!eventClick)
-  }
-  const handleEventDrop = (eventDropInfo: EventDropArg) => {
-    const editNotificationUrl = identifyUrl(eventDropInfo.event.id)
-    if (editNotificationUrl)
-      editUrlMutation({
-        variables: {
-          urlId: editNotificationUrl.id,
-          url: {
-            title: editNotificationUrl.title,
-            memo: editNotificationUrl.memo,
-            notification: eventDropInfo.event.startStr,
-            importance: editNotificationUrl.importance,
-            url: editNotificationUrl.url,
-          },
-        },
+  const [deleteEvent, setDeleteEvent] = useState<EventClickArg | undefined>()
+  const [deleteBrowsingHistoryMutation] = useDeleteBrowsingHistoryMutation({
+    onCompleted: () => {
+      if (deleteEvent) {
+        deleteEvent?.event.remove()
+        setDeleteEvent(undefined)
+      }
+    },
+    update(cache, { data }) {
+      const newCache = data?.deleteBrowsingHistory
+      cache.writeQuery({
+        query: FetchBrowsingHistoryDocument,
+        data: { fetchBrowsingHistory: newCache },
       })
+    },
+  })
+
+  const handleEventClick = (clickInfo: EventClickArg) => {
+    setSelectedId(clickInfo.event.extendedProps.id as string)
+    setEventClick(!eventClick)
   }
 
   return (
@@ -53,11 +52,8 @@ export default function Calendar({ props }: { props: propType }) {
           locale="ja"
           eventClick={handleEventClick}
           dayMaxEventRows={2}
-          droppable
           height={530}
-          eventDrop={handleEventDrop}
           ref={calendarRef}
-          eventAllow={(dropInfo) => format(dropInfo.start, 'yyyy-MM-dd') >= format(new Date(), 'yyyy-MM-dd')}
           buttonText={{
             today: 'today',
           }}
