@@ -1,5 +1,6 @@
 import { Modal, TextField, MenuItem, Button, IconButton, Rating, Select, FormControl, InputLabel } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import styled from 'styled-components'
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
@@ -62,7 +63,7 @@ export default function EditUrlModal({ props }: { props: propsType }) {
     const detectedUrl = fetchFolderAndUrl
       ?.map((folder) => folder.urls.find((url) => url.id === urlId))
       .find((url) => url)
-    if (detectedUrl) {
+    if (detectedUrl && editUrlModalOpen) {
       setSpecificUrl(detectedUrl)
       setImportanceValue(detectedUrl.importance)
       if (detectedUrl.notification) {
@@ -266,6 +267,11 @@ export default function EditUrlModal({ props }: { props: propsType }) {
                   minDate={new Date()}
                 />
               </LocalizationProvider>
+              <div className="clear-button">
+                <IconButton onClick={() => setNotificationValue(null)}>
+                  <RemoveCircleOutlineIcon />
+                </IconButton>
+              </div>
             </div>
             <SaveButton>
               <Button type="submit" variant="contained">
@@ -390,6 +396,14 @@ const Contents = styled.div`
     }
     .MuiInputLabel-shrink {
       top: 0;
+    }
+    .clear-button {
+      position: absolute;
+      top: -4px;
+      left: 535px;
+      .MuiButtonBase-root {
+        color: #bababa;
+      }
     }
   }
   .folder-item-container {
