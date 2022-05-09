@@ -1,13 +1,63 @@
 import FullCalendar from '@fullcalendar/react'
-import { MutableRefObject } from 'react'
+import { MutableRefObject, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 interface propType {
   calendarRef: MutableRefObject<FullCalendar | null>
+  calendarCurrent: Date | undefined
 }
 
 export default function MonthsAndYearsList({ props }: { props: propType }) {
-  const { calendarRef } = props
+  const { calendarRef, calendarCurrent } = props
+  const [listArray, setListArray] = useState<JSX.Element[]>([])
+
+  useEffect(() => {
+    const monthsAndYearsList = []
+    for (let i = 1; i < 13; i += 1) {
+      const displayYear = new Date().getFullYear() - 6 + i
+      monthsAndYearsList.push(
+        <tr key={i}>
+          <td
+            onClick={() => {
+              const month = calendarRef.current?.getApi().getDate().getMonth()
+              if (month) {
+                const currentMonth = `0${month + 1}`.slice(-2)
+                calendarRef.current?.getApi().gotoDate(new Date(`${displayYear}-${currentMonth}`))
+              }
+            }}
+            className={
+              calendarRef.current && calendarRef.current.getApi().getDate().getFullYear() === displayYear
+                ? 'current-cell'
+                : ''
+            }
+            key={`year-${i}`}
+            role="gridcell"
+            tabIndex={0}
+          >
+            {displayYear}
+          </td>
+          <td
+            onClick={() => {
+              const currentYear = calendarRef.current?.getApi().getDate().getFullYear()
+              if (currentYear) {
+                const month = `0${i}`.slice(-2)
+                calendarRef.current?.getApi().gotoDate(new Date(`${currentYear}-0${month}`))
+              }
+            }}
+            className={
+              calendarRef.current && calendarRef.current.getApi().getDate().getMonth() + 1 === i ? 'current-cell' : ''
+            }
+            key={`month-${i}`}
+            role="gridcell"
+            tabIndex={0}
+          >
+            {i}
+          </td>
+        </tr>
+      )
+    }
+    setListArray(monthsAndYearsList)
+  }, [calendarCurrent])
 
   return (
     <Container>
@@ -18,58 +68,7 @@ export default function MonthsAndYearsList({ props }: { props: propType }) {
             <th>月</th>
           </tr>
         </thead>
-        <tbody>
-          {(() => {
-            const monthsAndYearsList = []
-            for (let i = 1; i < 13; i += 1) {
-              const displayYear = new Date().getFullYear() - 6 + i
-              monthsAndYearsList.push(
-                <tr key={i}>
-                  <td
-                    onClick={() => {
-                      const month = calendarRef.current?.getApi().getDate().getMonth()
-                      if (month) {
-                        const currentMonth = `0${month + 1}`.slice(-2)
-                        calendarRef.current?.getApi().gotoDate(new Date(`${displayYear}-${currentMonth}`))
-                      }
-                    }}
-                    className={
-                      calendarRef.current && calendarRef.current.getApi().getDate().getFullYear() === displayYear
-                        ? 'current-cell'
-                        : ''
-                    }
-                    key={`year-${i}`}
-                    role="gridcell"
-                    tabIndex={0}
-                  >
-                    {displayYear}
-                  </td>
-                  <td
-                    onClick={() => {
-                      const currentYear = calendarRef.current?.getApi().getDate().getFullYear()
-                      if (currentYear) {
-                        const month = `0${i}`.slice(-2)
-                        calendarRef.current?.getApi().gotoDate(new Date(`${currentYear}-0${month}`))
-                      }
-                    }}
-                    className={
-                      calendarRef.current && calendarRef.current.getApi().getDate().getMonth() + 1 === i
-                        ? 'current-cell'
-                        : ''
-                    }
-                    key={`month-${i}`}
-                    role="gridcell"
-                    tabIndex={0}
-                  >
-                    {i}
-                  </td>
-                </tr>
-              )
-            }
-
-            return monthsAndYearsList
-          })()}
-        </tbody>
+        <tbody>{listArray}</tbody>
       </table>
     </Container>
   )

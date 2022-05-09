@@ -2,7 +2,7 @@ import FullCalendar, { EventClickArg, EventDropArg, EventInput } from '@fullcale
 import dayGridPlugin from '@fullcalendar/daygrid'
 import allLocales from '@fullcalendar/core/locales-all'
 import interactionPlugin from '@fullcalendar/interaction'
-import { MutableRefObject } from 'react'
+import { MutableRefObject, useState } from 'react'
 import styled from 'styled-components'
 import format from 'date-fns/format'
 import { useEditUrlMutation, Url } from '../../../api/graphql'
@@ -19,6 +19,7 @@ interface propType {
 
 export default function Calendar({ props }: { props: propType }) {
   const { calendarEvents, identifyUrl, calendarRef, setSelectedId, eventClick, setEventClick } = props
+  const [calendarCurrent, setCalendarCurrent] = useState<Date>()
   const [editUrlMutation] = useEditUrlMutation()
   const handleEventClick = (clickInfo: EventClickArg) => {
     setSelectedId(clickInfo.event.id)
@@ -61,9 +62,12 @@ export default function Calendar({ props }: { props: propType }) {
           buttonText={{
             today: 'today',
           }}
+          datesSet={(datesSetArg) => {
+            setCalendarCurrent(datesSetArg.view.calendar.getDate())
+          }}
         />
       </CalendarContainer>
-      <MonthsAndYearsList props={{ calendarRef }} />
+      <MonthsAndYearsList props={{ calendarRef, calendarCurrent }} />
     </Container>
   )
 }

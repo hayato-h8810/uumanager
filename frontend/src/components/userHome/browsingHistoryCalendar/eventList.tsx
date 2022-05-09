@@ -80,7 +80,7 @@ export default function EventList({ props }: { props: propType }) {
 
   return (
     <Container>
-      <Title>通知一覧</Title>
+      <Title>閲覧履歴一覧</Title>
       <Sort>
         <Select
           value={sort}
@@ -184,7 +184,7 @@ const Title = styled.div`
 
 const Sort = styled.div`
   display: inline-block;
-  margin-left: 115px;
+  margin-left: 75px;
   margin-top: 10px;
   .MuiInputBase-root .MuiSelect-select {
     font-size: 14px;
