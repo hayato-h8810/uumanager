@@ -1,5 +1,6 @@
 import { Modal, TextField, MenuItem, Button, IconButton, Rating, Select, FormControl, InputLabel } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import styled from 'styled-components'
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
@@ -256,6 +257,11 @@ export default function CreateUrlModal({ props }: { props: propsType }) {
                   minDate={new Date()}
                 />
               </LocalizationProvider>
+              <div className="clear-button">
+                <IconButton onClick={() => setNotificationValue(null)}>
+                  <RemoveCircleOutlineIcon />
+                </IconButton>
+              </div>
             </div>
             <SaveButton>
               <Button type="submit" variant="contained">
@@ -380,6 +386,14 @@ const Contents = styled.div`
     }
     .MuiInputLabel-shrink {
       top: 0;
+    }
+    .clear-button {
+      position: absolute;
+      top: -4px;
+      left: 535px;
+      .MuiButtonBase-root {
+        color: #bababa;
+      }
     }
   }
   .folder-item-container {
