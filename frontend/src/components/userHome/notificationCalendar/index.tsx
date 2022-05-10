@@ -33,8 +33,8 @@ export default function Index() {
 
   return (
     <Container>
-      <Calendar props={{ calendarEvents, identifyUrl, calendarRef, setSelectedId, eventClick, setEventClick }} />
-      <EventList props={{ calendarEvents, calendarRef, selectedId, setSelectedId, eventClick }} />
+      <Calendar props={{ calendarEvents, identifyUrl, calendarRef, selectedId, setSelectedId, setEventClick }} />
+      <EventList props={{ calendarEvents, calendarRef, selectedId, setSelectedId, eventClick, setEventClick }} />
     </Container>
   )
 }

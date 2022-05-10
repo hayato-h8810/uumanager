@@ -3,7 +3,6 @@ import { Select, MenuItem } from '@mui/material'
 import { MutableRefObject, useState, useEffect, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
-import { useDeleteBrowsingHistoryMutation, FetchBrowsingHistoryDocument } from '../../../api/graphql'
 
 interface propType {
   calendarEvents: EventInput[] | undefined
@@ -11,28 +10,15 @@ interface propType {
   selectedId: string | null | undefined
   setSelectedId: (id: string | null | undefined) => void
   eventClick: boolean
+  setEventClick: (boolean: boolean) => void
 }
 
 export default function EventList({ props }: { props: propType }) {
-  const { calendarEvents, calendarRef, selectedId, setSelectedId, eventClick } = props
-  const [isListClick, setIsListClick] = useState(false)
+  const { calendarEvents, calendarRef, selectedId, setSelectedId, eventClick, setEventClick } = props
   const [sortedEvents, setSortedEvents] = useState<EventInput[] | undefined>()
   const [sort, setSort] = useState('new')
   const eventListRef = useRef<HTMLDivElement>(null)
   const history = useHistory()
-  const [deleteBrowsingHistoryMutation] = useDeleteBrowsingHistoryMutation({
-    onCompleted: () => {
-      setSelectedId(null)
-    },
-    update(cache, { data }) {
-      const newCache = data?.deleteBrowsingHistory
-      cache.writeQuery({
-        query: FetchBrowsingHistoryDocument,
-        data: { fetchBrowsingHistory: newCache },
-      })
-    },
-  })
-
   useEffect(() => {
     if (calendarEvents) {
       const copyArray = [...calendarEvents]
@@ -71,11 +57,11 @@ export default function EventList({ props }: { props: propType }) {
     }
   }, [calendarEvents])
   useEffect(() => {
-    if (!isListClick && sortedEvents) {
+    if (eventClick && sortedEvents) {
       const selectedItemLocation = sortedEvents.findIndex((event) => event.extendedProps?.id === selectedId)
       eventListRef.current?.scrollTo(0, (selectedItemLocation - 2) * 80 + selectedItemLocation - 2)
+      setEventClick(false)
     }
-    setIsListClick(false)
   }, [selectedId, sortedEvents, eventClick])
 
   return (
@@ -121,7 +107,6 @@ export default function EventList({ props }: { props: propType }) {
               onClick={() => {
                 if (event.date) calendarRef.current?.getApi().gotoDate(new Date(event.date.toString()))
                 setSelectedId(event.extendedProps?.id as string)
-                setIsListClick(true)
               }}
               className={(() => {
                 if (selectedId === event.extendedProps?.id) {

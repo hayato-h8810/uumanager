@@ -4,6 +4,8 @@ import allLocales from '@fullcalendar/core/locales-all'
 import interactionPlugin from '@fullcalendar/interaction'
 import { MutableRefObject, useState } from 'react'
 import styled from 'styled-components'
+import { Button, Popover } from '@mui/material'
+import { useHistory } from 'react-router-dom'
 import { useDeleteBrowsingHistoryMutation, Url, FetchBrowsingHistoryDocument } from '../../../api/graphql'
 import MonthsAndYearsList from '../monthsAndYearsrList'
 
@@ -11,22 +13,18 @@ interface propType {
   calendarEvents: EventInput[] | undefined
   identifyUrl: (eventId: string) => Url | undefined
   calendarRef: MutableRefObject<FullCalendar | null>
+  selectedId: string | null | undefined
   setSelectedId: (id: string | null | undefined) => void
-  eventClick: boolean
   setEventClick: (boolean: boolean) => void
 }
 
 export default function Calendar({ props }: { props: propType }) {
-  const { calendarEvents, identifyUrl, calendarRef, setSelectedId, eventClick, setEventClick } = props
+  const { calendarEvents, calendarRef, selectedId, setSelectedId, setEventClick } = props
   const [calendarCurrent, setCalendarCurrent] = useState<Date>()
-  const [deleteEvent, setDeleteEvent] = useState<EventClickArg | undefined>()
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
+  const history = useHistory()
+  const open = Boolean(anchorEl)
   const [deleteBrowsingHistoryMutation] = useDeleteBrowsingHistoryMutation({
-    onCompleted: () => {
-      if (deleteEvent) {
-        deleteEvent?.event.remove()
-        setDeleteEvent(undefined)
-      }
-    },
     update(cache, { data }) {
       const newCache = data?.deleteBrowsingHistory
       cache.writeQuery({
@@ -35,11 +33,13 @@ export default function Calendar({ props }: { props: propType }) {
       })
     },
   })
-
   const handleEventClick = (clickInfo: EventClickArg) => {
     setSelectedId(clickInfo.event.extendedProps.id as string)
-    setEventClick(!eventClick)
+    setEventClick(true)
+    setAnchorEl(clickInfo.el)
   }
+  const detectUrlFromBrowsingHistoryId = (events: EventInput[] | undefined, browsingHistoryId: string) =>
+    events?.find((event) => event.extendedProps?.id === browsingHistoryId)
 
   return (
     <Container>
@@ -62,6 +62,45 @@ export default function Calendar({ props }: { props: propType }) {
             setCalendarCurrent(datesSetArg.view.calendar.getDate())
           }}
         />
+        <PopoverContainer
+          open={open}
+          anchorEl={anchorEl}
+          onClose={() => setAnchorEl(null)}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+        >
+          {selectedId && (
+            <div className="item-container">
+              <div className="title-item">{detectUrlFromBrowsingHistoryId(calendarEvents, selectedId)?.title}</div>
+              <div className="notification-item">{`閲覧日 : ${
+                detectUrlFromBrowsingHistoryId(calendarEvents, selectedId)?.date as string
+              }`}</div>
+              <Button
+                onClick={() =>
+                  history.push(
+                    `/userHome/urlShow/${detectUrlFromBrowsingHistoryId(calendarEvents, selectedId)?.id as string}`
+                  )
+                }
+              >
+                詳細ページへ
+              </Button>
+              <Button
+                onClick={() => {
+                  deleteBrowsingHistoryMutation({
+                    variables: {
+                      id: selectedId,
+                    },
+                  })
+                  setAnchorEl(null)
+                }}
+              >
+                履歴を削除
+              </Button>
+            </div>
+          )}
+        </PopoverContainer>
       </CalendarContainer>
       <MonthsAndYearsList props={{ calendarRef, calendarCurrent }} />
     </Container>
@@ -126,6 +165,32 @@ const CalendarContainer = styled.div`
         text-overflow: ellipsis;
         white-space: nowrap;
       }
+    }
+  }
+`
+
+const PopoverContainer = styled(Popover)`
+  .item-container {
+    height: 200px;
+    width: 250px;
+    background: #f4f9ff;
+    font-size: 14px;
+    text-align: center;
+    .title-item {
+      font-size: 20px;
+      max-width: 180px;
+      margin: auto;
+      padding-top: 30px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .notification-item {
+      color: #626262;
+      padding-top: 20px;
+    }
+    .MuiButton-root {
+      margin-top: 40px;
     }
   }
 `

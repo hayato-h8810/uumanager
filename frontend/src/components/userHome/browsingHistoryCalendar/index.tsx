@@ -34,8 +34,8 @@ export default function Index() {
     fetchFolderAndUrl?.map((folder) => folder.urls.find((url) => url.id === eventId)).find((url) => url !== undefined)
   return (
     <Container>
-      <Calendar props={{ calendarEvents, identifyUrl, calendarRef, setSelectedId, eventClick, setEventClick }} />
-      <EventList props={{ calendarEvents, calendarRef, selectedId, setSelectedId, eventClick }} />
+      <Calendar props={{ calendarEvents, identifyUrl, calendarRef, selectedId, setSelectedId, setEventClick }} />
+      <EventList props={{ calendarEvents, calendarRef, selectedId, setSelectedId, eventClick, setEventClick }} />
     </Container>
   )
 }

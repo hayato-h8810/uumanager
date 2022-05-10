@@ -10,11 +10,11 @@ interface propType {
   selectedId: string | null | undefined
   setSelectedId: (id: string | null | undefined) => void
   eventClick: boolean
+  setEventClick: (boolean: boolean) => void
 }
 
 export default function EventList({ props }: { props: propType }) {
-  const { calendarEvents, calendarRef, selectedId, setSelectedId, eventClick } = props
-  const [isListClick, setIsListClick] = useState(false)
+  const { calendarEvents, calendarRef, selectedId, setSelectedId, eventClick, setEventClick } = props
   const [sortedEvents, setSortedEvents] = useState<EventInput[] | undefined>()
   const [sort, setSort] = useState('new')
   const eventListRef = useRef<HTMLDivElement>(null)
@@ -56,7 +56,7 @@ export default function EventList({ props }: { props: propType }) {
           })
           .find((event) => {
             if (event.date) {
-              return new Date(event.date?.toString()) >= new Date()
+              return new Date(event.date?.toString()).getDate() >= new Date().getDate()
             }
             return false
           })?.id
@@ -64,11 +64,11 @@ export default function EventList({ props }: { props: propType }) {
     }
   }, [calendarEvents])
   useEffect(() => {
-    if (!isListClick && sortedEvents) {
+    if (eventClick && sortedEvents) {
       const selectedItemLocation = sortedEvents.findIndex((event) => event.id === selectedId)
       eventListRef.current?.scrollTo(0, (selectedItemLocation - 2) * 80 + selectedItemLocation - 2)
+      setEventClick(false)
     }
-    setIsListClick(false)
   }, [selectedId, sortedEvents, eventClick])
 
   return (
@@ -114,7 +114,6 @@ export default function EventList({ props }: { props: propType }) {
               onClick={() => {
                 if (event.date) calendarRef.current?.getApi().gotoDate(new Date(event.date.toString()))
                 setSelectedId(event.id)
-                setIsListClick(true)
               }}
               className={(() => {
                 if (selectedId === event.id) {
