@@ -334,14 +334,6 @@ const HeadLine = styled.div`
   margin-top: 60px;
   margin-left: 80px;
   position: relative;
-  &::before {
-    position: absolute;
-    content: '';
-    width: 810px;
-    height: 1px;
-    background: #b4b4b4;
-    top: 48px;
-  }
 `
 
 const FilterSelect = styled.div`
@@ -352,7 +344,7 @@ const FilterSelect = styled.div`
     border-radius: 4px 0 0 4px;
     border-right: solid 0 red;
     .MuiSelect-select {
-      font-size: 10px;
+      font-size: 14px;
       padding: 2px;
       padding-left: 10px;
       color: black;
@@ -390,7 +382,7 @@ const FilterInput = styled.div`
     }
     .MuiInputBase-input {
       width: 300px;
-      font-size: 10px;
+      font-size: 14px;
       padding: 6px 10px;
       height: 15px;
     }
@@ -403,9 +395,10 @@ const SortSelect = styled.div`
   margin-left: 30px;
   .MuiInputBase-root {
     .MuiSelect-select {
-      font-size: 10px;
+      font-size: 14px;
       padding: 2px;
       padding-left: 10px;
+      color: #8a8a8a;
     }
   }
 `
@@ -414,11 +407,11 @@ const AddButton = styled.div`
   display: inline-block;
   vertical-align: bottom;
   position: absolute;
-  left: 750px;
-  top: 1px;
+  left: 740px;
+  top: 0;
   .MuiButton-root {
-    font-size: 10px;
-    padding: 5px;
+    font-size: 14px;
+    padding: 1px 12px;
     background: #20a1ff;
     box-shadow: none;
     min-width: 47px;
@@ -434,6 +427,7 @@ const Contents = styled.div`
   margin-left: 80px;
   position: relative;
   width: 810px;
+  border-top: 1px solid #b4b4b4;
   border-bottom: 1px solid #b4b4b4;
   .item-container {
     height: 100px;
@@ -458,7 +452,7 @@ const Contents = styled.div`
     color: #848484;
   }
   .item-created-at {
-    font-size: 10px;
+    font-size: 14px;
     color: #b4b4b4;
     padding-top: 5px;
     padding-left: 45px;
@@ -469,11 +463,12 @@ const Contents = styled.div`
     vertical-align: top;
     margin-left: 70px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 14px;
     max-width: 460px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    margin-top: 3px;
     &:hover {
       color: #2b40ff;
       text-decoration: underline;
@@ -503,15 +498,16 @@ const Contents = styled.div`
     }
   }
   .MuiRating-root {
-    vertical-align: middle;
-    margin-left: 70px;
+    vertical-align: top;
+    margin-top: 12px;
+    margin-left: 67px;
   }
   .MuiButtonGroup-root {
-    margin-left: 430px;
-    margin-top: 15px;
+    margin-left: 433px;
+    margin-top: 7px;
     .MuiButton-root {
-      font-size: 10px;
-      padding: 4px 0;
+      font-size: 14px;
+      padding: 2px 10px;
     }
   }
 `

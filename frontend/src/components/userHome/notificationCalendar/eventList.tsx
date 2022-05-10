@@ -122,6 +122,9 @@ export default function EventList({ props }: { props: propType }) {
                   }
                   return 'selected-item-container item-container'
                 }
+                if (sortedEvents.length === i + 1) {
+                  return 'last-item-container item-container'
+                }
                 return 'item-container'
               })()}
               key={event.id}
