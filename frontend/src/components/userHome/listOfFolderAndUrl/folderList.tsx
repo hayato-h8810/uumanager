@@ -230,7 +230,7 @@ const Container = styled.div`
     width: 1px;
     height: 530px;
     position: absolute;
-    background: #b7b7b7;
+    background: #ddd;
     top: 40px;
     left: 460px;
   }

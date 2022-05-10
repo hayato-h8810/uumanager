@@ -86,7 +86,7 @@ const Container = styled.div`
   grid-area: recentBrowsingHistory;
   position: relative;
   &::before {
-    background: #bdbdbd;
+    background: #ddd;
     content: '';
     position: absolute;
     width: 1px;
@@ -119,17 +119,17 @@ const Contents = styled.div`
   }
   .date-value {
     position: absolute;
-    top: 5px;
+    top: 4px;
     left: 30px;
-    font-size: 12px;
+    font-size: 14px;
     color: #5f5f5f;
   }
   .title-value {
     position: absolute;
-    top: 30px;
+    top: 28px;
     left: 60px;
-    font-size: 15px;
-    max-width: 280px;
+    font-size: 14px;
+    max-width: 260px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -139,7 +139,7 @@ const Contents = styled.div`
     }
   }
   .no-browsing-history {
-    font-size: 11px;
+    font-size: 12px;
     color: #5f5f5f;
     margin-top: 15px;
     margin-left: 20px;
@@ -158,7 +158,7 @@ const ShowMoreButton = styled.a`
   margin-left: 50px;
   text-decoration: none;
   color: inherit;
-  font-size: 11px;
+  font-size: 14px;
   color: #5f5f5f;
   &:hover {
     color: blue;

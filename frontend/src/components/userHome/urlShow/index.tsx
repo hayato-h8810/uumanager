@@ -41,6 +41,6 @@ export default function Index() {
 const Container = styled.div`
   display: grid;
   grid-template-rows: auto;
-  grid-template-columns: 250px 820px 370px;
+  grid-template-columns: 250px 870px 320px;
   grid-template-areas: 'navigation urlDescription browsingHistory';
 `

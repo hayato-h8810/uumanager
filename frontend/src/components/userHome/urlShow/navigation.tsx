@@ -57,7 +57,7 @@ const Container = styled.div`
     width: 210px;
     height: 1px;
     position: absolute;
-    top: 270px;
+    top: 280px;
     left: 20px;
   }
   button {
@@ -67,18 +67,20 @@ const Container = styled.div`
     outline: none;
     padding: 0;
     appearance: none;
-    font-size: 12px;
+    font-size: 14px;
     position: relative;
-    margin-left: 70px;
+    margin-left: 60px;
     margin-top: 40px;
+    color: #5c5c5c;
     &:hover {
       color: #30a8ff;
     }
     .MuiSvgIcon-root {
       position: absolute;
       top: 3px;
-      left: -30px;
-      font-size: 12px;
+      left: -40px;
+      font-size: 14px;
+      color: #5c5c5c;
     }
   }
 `

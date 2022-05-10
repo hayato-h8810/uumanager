@@ -252,7 +252,7 @@ const Container = styled.div`
     width: 1px;
     height: 550px;
     position: absolute;
-    background: #b7b7b7;
+    background: #ddd;
     top: 60px;
     left: 460px;
   }
@@ -392,6 +392,7 @@ const Contents = styled.div`
     width: 138px;
     padding-top: 15px;
     overflow: auto;
+    white-space: nowrap;
     -ms-overflow-style: none;
     scrollbar-width: none;
     font-size: 14px;

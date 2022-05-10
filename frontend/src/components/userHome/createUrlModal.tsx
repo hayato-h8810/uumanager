@@ -314,7 +314,8 @@ const HeadLine = styled.div`
   .MuiButton-root {
     margin-top: 10px;
     margin-left: 140px;
-    font-size: 10px;
+    font-size: 14px;
+    padding: 0px 8px;
   }
   .MuiIconButton-root {
     position: absolute;
@@ -428,8 +429,8 @@ const SaveButton = styled.div`
   margin-bottom: 20px;
   .MuiButton-root {
     background-color: #20a1ff;
-    font-size: 12px;
-    padding: 6px 6px;
+    font-size: 14px;
+    padding: 2px 8px;
     &:hover {
       background-color: #178fe7;
     }

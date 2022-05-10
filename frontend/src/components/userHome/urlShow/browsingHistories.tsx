@@ -33,7 +33,7 @@ export default function BrowsingHistories() {
   return (
     <Container>
       <Title>閲覧履歴</Title>
-      {histories ? (
+      {histories.length ? (
         <Contents>
           {(() => {
             const itemsArray = []
@@ -69,7 +69,7 @@ export default function BrowsingHistories() {
       <LinkButton
         type="button"
         onClick={() => {
-          history.push('/userHome/browsingHistory')
+          history.push('/userHome/browsingHistoryCalendar')
         }}
       >
         全ての履歴を見る
@@ -83,7 +83,7 @@ const Container = styled.div`
   position: relative;
   &::before {
     content: '';
-    background: #c2c2c2;
+    background: #ddd;
     width: 1px;
     height: 570px;
     position: absolute;
@@ -93,7 +93,7 @@ const Container = styled.div`
 `
 
 const Title = styled.div`
-  font-size: 23px;
+  font-size: 20px;
   margin-top: 60px;
 `
 const Contents = styled.div`
@@ -120,6 +120,8 @@ const Contents = styled.div`
   }
   .just-one-item {
     border-radius: 5px;
+    padding: 30px 0px;
+    text-align: center;
   }
 `
 
@@ -130,11 +132,10 @@ const LinkButton = styled.button`
   outline: none;
   padding: 0;
   appearance: none;
-  font-size: 12px;
+  font-size: 14px;
   margin-top: 20px;
   margin-left: 30px;
   color: #5f5f5f;
-  font-size: 12px;
   &:hover {
     color: #66c8ff;
     text-decoration: underline;
