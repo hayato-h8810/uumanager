@@ -118,7 +118,8 @@ export default function LoginHistory() {
 
 const Container = styled.div`
   grid-area: loginHistory;
-  margin-left: 10px;
+  margin-top: 25px;
+  margin-left: 30px;
 `
 const Title = styled.h1`
   padding-left: 70px;

@@ -142,22 +142,23 @@ export default function UrlDescription() {
 const Container = styled.div`
   grid-area: urlDescription;
   min-height: 659px;
+  margin-left: 5px;
 `
 
 const Headline = styled.div`
   position: relative;
   margin-top: 40px;
   margin-left: 140px;
-  font-size: 23px;
+  font-size: 20px;
 `
 
 const ButtonGroupContainer = styled.div`
   position: absolute;
-  left: 350px;
-  bottom: -10px;
+  left: 385px;
+  bottom: -15px;
   .MuiButton-root {
-    font-size: 10px;
-    padding: 4px 11px;
+    font-size: 14px;
+    padding: 2px 10px;
     color: #39b8ff;
     &:hover {
       color: #39b8ff;
@@ -173,14 +174,14 @@ const Contents = styled.div`
   &::before {
     content: '';
     height: 1px;
-    width: 600px;
+    width: 640px;
     background: #b7b7b7;
     position: absolute;
     left: -60px;
     top: 25px;
   }
   .item-container {
-    font-size: 13px;
+    font-size: 14px;
     position: relative;
     &::before {
       content: '';
@@ -195,20 +196,21 @@ const Contents = styled.div`
       position: absolute;
       top: 23px;
       left: 55px;
+      color: #222;
     }
     .item {
       display: inline-block;
-      max-width: 200px;
-      margin-left: 280px;
+      max-width: 240px;
+      margin-left: 300px;
       padding-top: 23px;
       padding-bottom: 23px;
       overflow-wrap: break-word;
-      color: #5c5c5c;
+      color: #222;
     }
     .url-item {
       display: inline-block;
-      max-width: 200px;
-      margin-left: 280px;
+      max-width: 240px;
+      margin-left: 300px;
       padding-top: 23px;
       overflow: auto;
       white-space: nowrap;
@@ -221,7 +223,7 @@ const Contents = styled.div`
       &::before {
         content: '';
         height: 1px;
-        width: 600px;
+        width: 640px;
         background: #b7b7b7;
         position: absolute;
         left: -60px;
@@ -231,7 +233,7 @@ const Contents = styled.div`
     .MuiRating-root {
       margin-top: 21px;
       margin-bottom: 21px;
-      margin-left: 280px;
+      margin-left: 300px;
     }
   }
 `

@@ -53,11 +53,11 @@ export default function UserDescription() {
 
 const Container = styled.div`
   grid-area: userDiscription;
-  margin-left: 10px;
+  margin-left: 30px;
 `
 
 const Title = styled.h1`
-  padding-top: 20px;
+  padding-top: 5px;
   padding-left: 70px;
   font-weight: normal;
   font-size: 20px;
@@ -65,20 +65,25 @@ const Title = styled.h1`
 const Contents = styled.div`
   padding-top: 10px;
   padding-left: 110px;
-  font-size: 12px;
+  font-size: 14px;
   .item {
     position: relative;
-    height: 35px;
+    height: 43px;
     width: 670px;
     .label {
       position: absolute;
-      top: 8px;
-      left: 20px;
+      top: 11px;
+      left: 50px;
     }
     .value {
       position: absolute;
-      top: 8px;
-      left: 300px;
+      top: 11px;
+      left: 320px;
+      max-width: 300px;
+      overflow: auto;
+      white-space: nowrap;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
   }
   .odd-row {
