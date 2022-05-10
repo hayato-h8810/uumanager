@@ -232,31 +232,23 @@ const Container = styled.div`
     position: absolute;
     background: #b7b7b7;
     top: 40px;
-    left: 370px;
+    left: 460px;
   }
 `
 
 const Title = styled.div`
-  margin-top: 40px;
-  margin-left: 90px;
+  margin-top: 50px;
+  margin-left: 110px;
   font-size: 20px;
-  position: relative;
-  &::before {
-    content: '';
-    width: 233px;
-    height: 1px;
-    position: absolute;
-    background: #b7b7b7;
-    top: 75px;
-  }
+  margin-bottom: 10px;
 `
 
 const EditButton = styled.div`
-  top: 45px;
-  left: 260px;
+  top: 55px;
+  left: 334px;
   position: absolute;
   .MuiButton-root {
-    font-size: 12px;
+    font-size: 14px;
     padding: 4px 10px;
   }
 `
@@ -264,34 +256,36 @@ const EditButton = styled.div`
 const Filter = styled.div`
   display: inline-block;
   margin-left: 90px;
-  margin-top: 7px;
-  .MuiInputBase-root {
-    margin-top: 2px;
-    .MuiInputBase-input {
-      width: 120px;
-      font-size: 10px;
-      padding: 6px 10px;
-    }
+  .MuiInputBase-root .MuiInputBase-input {
+    width: 180px;
+    font-size: 14px;
+    padding: 6px 10px;
   }
 `
 
 const Sort = styled.div`
   display: inline-block;
   margin-left: 10px;
-  .MuiInputBase-root .MuiSelect-select {
-    font-size: 10px;
-    padding: 2px;
-    padding-left: 10px;
+  vertical-align: top;
+  .MuiInputBase-root {
+    height: 32px;
+    .MuiSelect-select {
+      font-size: 14px;
+      padding: 4px;
+      padding-left: 10px;
+      color: #8a8a8a;
+    }
   }
 `
 
 const Contents = styled.div`
   margin-top: 11px;
   margin-left: 90px;
-  width: 233px;
+  border-top: 1px solid #b7b7b7;
+  border-bottom: 1px solid #b7b7b7;
+  width: 308px;
   .item-container {
-    min-width: 165px;
-    padding-left: 60px;
+    padding-left: 70px;
     height: 45px;
     font-size: 14px;
     cursor: pointer;
@@ -304,7 +298,7 @@ const Contents = styled.div`
     position: relative;
     &::before {
       content: '';
-      width: 10px;
+      width: 7px;
       height: 45px;
       position: absolute;
       background: #38ff4c;
@@ -313,9 +307,10 @@ const Contents = styled.div`
   }
   .folder-item {
     text-align: left;
-    width: 130px;
+    width: 180px;
     padding-top: 11px;
     overflow: auto;
+    white-space: nowrap;
     -ms-overflow-style: none;
     scrollbar-width: none;
     &::-webkit-scrollbar {
@@ -323,69 +318,75 @@ const Contents = styled.div`
     }
   }
   .no-item-container {
-    width: 165px;
-    padding-left: 50px;
-    height: 45px;
-    font-size: 10px;
+    text-align: center;
+    height: 75px;
+    font-size: 12px;
     .no-item {
-      width: 150px;
-      padding-top: 15px;
+      padding-top: 28px;
       color: #848484;
     }
   }
 `
 
 const AddFolderForm = styled.div`
-  position: relative;
   margin-left: 78px;
   margin-top: 10px;
   .add-form-button {
-    margin-left: 10px;
+    margin-left: 11px;
     border: 1px solid #d4d4d4;
     background: #f8f8f8;
     border-radius: 4px;
-    width: 233px;
-    height: 30px;
-    vertical-align: middle;
+    width: 308px;
+    height: 40px;
+    cursor: pointer;
     .add-icon-container {
       display: inline-block;
-      position: relative;
+      vertical-align: top;
+      margin-top: 8px;
+      margin-left: 33px;
       .MuiSvgIcon-root {
-        position: absolute;
-        top: -17px;
-        left: 20px;
         color: #5c5c5c;
       }
     }
     .value {
       display: inline-block;
-      margin-left: 57px;
-      margin-top: 6px;
-      font-size: 12px;
+      margin-left: 30px;
+      margin-top: 10px;
+      font-size: 14px;
       color: #b3b3b3;
+    }
+    &:hover {
+      background: #f2f2f2;
     }
   }
   .add-form-input {
     .MuiInputBase-root {
-      margin-left: 10px;
+      margin-left: 12px;
       margin-bottom: 5px;
       .MuiInputBase-input {
-        font-size: 12px;
+        font-size: 14px;
         padding: 7px 10px;
-        width: 213px;
+        width: 288px;
       }
     }
     .MuiButton-root {
-      font-size: 10px;
-      padding: 6px 31.5px;
-      margin-left: 10px;
+      font-size: 14px;
+      padding: 3px;
+      margin-left: 12px;
+      width: 148px;
     }
     .add-button {
       background: #2db3ff;
       border: 1px solid #2db3ff;
+      box-shadow: none;
       &:disabled {
         background: #a3deff;
         color: white;
+      }
+      &:hover {
+        box-shadow: none;
+        background: #209df8;
+        border-color: #209df8;
       }
     }
     .cancel-button {
@@ -397,19 +398,10 @@ const AddFolderForm = styled.div`
       }
     }
   }
-  &::before {
-    content: '';
-    width: 233px;
-    height: 1px;
-    position: absolute;
-    background: #b7b7b7;
-    top: -10px;
-    left: 12px;
-  }
 `
 
 const PaginationContainer = styled.div`
   position: absolute;
   top: 550px;
-  left: 120px;
+  left: 167px;
 `

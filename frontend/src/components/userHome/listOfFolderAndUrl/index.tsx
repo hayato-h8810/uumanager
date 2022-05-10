@@ -18,6 +18,6 @@ export default function Index() {
 const Container = styled.div`
   display: grid;
   grid-template-rows: 604px;
-  grid-template-columns: 400px 1040px;
+  grid-template-columns: 450px 990px;
   grid-template-areas: 'folderList urlList';
 `
