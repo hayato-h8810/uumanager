@@ -9,5 +9,5 @@ class User < ApplicationRecord
   has_many :loginHistories, dependent: :destroy
 
   validates :name, presence: true
-  validates :email, presence: true, uniqueness: true
+  validates :email, uniqueness: true, allow_blank: true
 end

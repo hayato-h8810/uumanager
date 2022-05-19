@@ -1,10 +1,9 @@
-import { useHistory } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import LoadingButton from '@mui/lab/LoadingButton'
 import TextField from '@mui/material/TextField'
-import { useCreateUserMutation } from '../../api/graphql'
+import { useConfirmationForCreateUserMutation } from '../../api/graphql'
 import Icons from '../icons'
 
 type FormInput = {
@@ -14,11 +13,15 @@ type FormInput = {
   confirmPassword: string
 }
 
-export default function Form() {
+interface propTypes {
+  setIsConfirmationMailSend: (boolean: boolean) => void
+}
+
+export default function Form({ props }: { props: propTypes }) {
+  const { setIsConfirmationMailSend } = props
   const [emailServerError, setEmailServerError] = useState('')
   const [sessionServerError, setSessionServerError] = useState('')
   const [loadingButton, setLoadingButton] = useState(false)
-  const history = useHistory()
   const {
     register,
     handleSubmit,
@@ -29,10 +32,10 @@ export default function Form() {
     reValidateMode: 'onSubmit',
   })
 
-  const [createUser, { loading }] = useCreateUserMutation({
+  const [confirmationForCreateUser, { loading }] = useConfirmationForCreateUserMutation({
     onCompleted: (data) => {
-      if (data.createUser?.id) {
-        history.push('/userHome')
+      if (data.confirmationForCreateUser?.id) {
+        setIsConfirmationMailSend(true)
       }
     },
     onError: (error) => {
@@ -53,11 +56,14 @@ export default function Form() {
   }, [loading])
 
   const onSubmit: SubmitHandler<FormInput> = (data) => {
-    createUser({ variables: { name: data.name, credentials: { password: data.password, email: data.email } } })
+    confirmationForCreateUser({
+      variables: { name: data.name, credentials: { password: data.password, email: data.email } },
+    })
   }
 
   return (
     <>
+      <Title>ユーザー新規作成</Title>
       <Icons props={{ reset }} />
       <form onSubmit={handleSubmit(onSubmit)}>
         <InputContainer>
@@ -190,6 +196,12 @@ export default function Form() {
     </>
   )
 }
+
+const Title = styled.div`
+  padding-top: 70px;
+  font-size: 30px;
+  text-align: center;
+`
 
 const InputContainer = styled.div`
   position: relative;

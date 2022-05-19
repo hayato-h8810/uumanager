@@ -2,29 +2,28 @@
 
 module Mutations
   class CreateUser < BaseMutation
-    # often we will need input types for specific mutation
-    # in those cases we can define those input types in the mutation class itself
-    class AuthProviderSignupData < Types::BaseInputObject
-      argument :credentials, InputTypes::AuthProviderCredentialsInput, required: false
-    end
-
-    argument :name, String, required: true
-    argument :auth_provider, AuthProviderSignupData, required: false
+    argument :confirmation_token, String, required: false
 
     type ObjectTypes::User
 
-    def resolve(name: nil, auth_provider: nil)
-      raise GraphQL::ExecutionError, 'SESSION_ERROR' unless context[:session][:user_id].blank?
+    def resolve(confirmation_token:)
+      raise GraphQL::ExecutionError, 'INVALID_URL_ERROR' unless email = confirmation_token.match(/^\d+-(.+)$/).to_a[1]
 
-      raise GraphQL::ExecutionError, 'EMAIL_ERROR' if User.find_by(email: auth_provider&.[](:credentials)&.[](:email))
+      unless confirmation_sent_at_token = confirmation_token.match(/^(\d+)/).to_a[1]
+        raise GraphQL::ExecutionError,
+              'INVALID_URL_ERROR'
+      end
 
-      user = User.create!(
-        name: name,
-        email: auth_provider&.[](:credentials)&.[](:email),
-        password: auth_provider&.[](:credentials)&.[](:password)
-      )
+      confirmation_sent_at = Time.zone.at(confirmation_sent_at_token.to_i)
+      confirmation_sent_at_range = confirmation_sent_at..confirmation_sent_at + 1
 
-      ConfirmationMailer.send_confirmation_mail(user).deliver
+      raise GraphQL::ExecutionError, 'INVALID_URL_ERROR' unless user = User.find_by(confirmation_email: email,
+                                                                                    confirmation_sent_at: confirmation_sent_at_range)
+      raise GraphQL::ExecutionError, 'EMAIL_ERROR' if User.find_by(email: email)
+      raise GraphQL::ExecutionError, 'TIMEOUT_ERROR' if (Time.zone.now - confirmation_sent_at).floor / 3600 >= 1
+
+      user.update(email: email, confirmation_sent_at: nil, confirmation_email: nil)
+
       context[:session][:user_id] = user.id
       user
     end

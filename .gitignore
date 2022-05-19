@@ -20,6 +20,8 @@
 # Ignore master key for decrypting credentials and more.
 /api/config/master.key
 
+/api/.env
+
 # dependencies
 /frontend/node_modules
 /frontend/.pnp

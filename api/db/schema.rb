@@ -56,6 +56,8 @@ ActiveRecord::Schema.define(version: 20_220_407_015_141) do
     t.string 'name'
     t.string 'email'
     t.string 'password_digest'
+    t.string 'confirmation_email'
+    t.datetime 'confirmation_sent_at'
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
   end

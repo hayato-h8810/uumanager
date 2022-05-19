@@ -1,3 +1,9 @@
-<%= @user.name %>
+<%= @user.confirmation_email %>様
 
-登録完了
+URL管理アプリにご登録いただき、ありがとうございます。このメールは、ご登録いただいたメールアドレスが正しいか確認するためのメールです。
+
+下記のリンクをクリックしていただくと、メール認証が完了します。
+
+<%= link_to "http://localhost:8000/confirmation/#{@user.confirmation_sent_at.to_i}-#{@user.confirmation_email}", "http://localhost:8000/confirmation/#{@user.confirmation_sent_at.to_i}-#{@user.confirmation_email}" %>
+
+このURLの有効期限は<%= Time.at(@user.confirmation_sent_at.to_i + 3600).strftime("%y/%m/%d %T") %>です。このメールに心当たりがない方は、お手数ですがこのメールは破棄してください。
