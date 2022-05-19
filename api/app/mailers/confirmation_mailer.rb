@@ -3,6 +3,6 @@
 class ConfirmationMailer < ApplicationMailer
   def send_confirmation_mail(user)
     @user = user
-    mail to: @user.email, subject: 'title is here'
+    mail to: @user.confirmation_email, subject: 'ユーザー新規作成認証メール'
   end
 end

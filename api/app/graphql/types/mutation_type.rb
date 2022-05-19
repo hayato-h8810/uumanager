@@ -2,6 +2,7 @@
 
 module Types
   class MutationType < Types::BaseObject
+    field :confirmation_for_create_user, mutation: Mutations::ConfirmationForCreateUser
     field :create_user, mutation: Mutations::CreateUser
     field :login, mutation: Mutations::Login
     field :logout, mutation: Mutations::Logout
