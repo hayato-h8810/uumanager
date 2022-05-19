@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class ConfirmationMailer < ApplicationMailer
-  def send_confirmation_mail(user)
+  def send_confirmation_mail(user,email)
     @user = user
-    mail to: @user.confirmation_email, subject: 'ユーザー新規作成認証メール'
+    @email = email
+    mail to: email, subject: 'ユーザー新規作成認証メール'
   end
 end
