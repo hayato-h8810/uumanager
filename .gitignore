@@ -1,5 +1,6 @@
 # Ignore bundler config.
 /api/.bundle
+/api/vendor
 
 # Ignore all logfiles and tempfiles.
 /api/log/*
