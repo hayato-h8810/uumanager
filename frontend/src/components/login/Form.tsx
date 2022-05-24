@@ -1,11 +1,12 @@
 import LoadingButton from '@mui/lab/LoadingButton'
-import TextField from '@mui/material/TextField'
+import { Button, TextField } from '@mui/material'
 import styled from 'styled-components'
 import { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { useLoginMutation } from '../../api/graphql'
 import Icons from '../icons'
+import EmailFormModalForResetPassword from './emailFormModalForResetPassword'
 
 type FormInput = {
   email: string
@@ -17,6 +18,7 @@ export default function Form() {
   const [passwordServerError, setPasswordServerError] = useState('')
   const [sessionServerError, setSessionServerError] = useState('')
   const [loadingButton, setLoadingButton] = useState(false)
+  const [emailFormModalForResetPasswordOpen, setEmailFormModalForResetPasswordOpen] = useState(false)
   const history = useHistory()
   const {
     register,
@@ -56,6 +58,14 @@ export default function Form() {
   return (
     <>
       <Icons props={{ reset }} />
+      <ResetPasswordButtonContainer>
+        <Button onClick={() => setEmailFormModalForResetPasswordOpen(true)} variant="text">
+          パスワードをお忘れの方
+        </Button>
+      </ResetPasswordButtonContainer>
+      <EmailFormModalForResetPassword
+        props={{ emailFormModalForResetPasswordOpen, setEmailFormModalForResetPasswordOpen }}
+      />
       <form onSubmit={handleSubmit(onSubmit)}>
         <InputContainer>
           <InputField>
@@ -142,9 +152,13 @@ export default function Form() {
   )
 }
 
+const ResetPasswordButtonContainer = styled.div`
+  margin-left: 400px;
+`
+
 const InputContainer = styled.div`
   position: relative;
-  padding-top: 80px;
+  padding-top: 70px;
   margin-left: auto;
   margin-right: auto;
   width: 470px;
@@ -159,7 +173,7 @@ const InputField = styled.div`
     display: inline-block;
     position: absolute;
     right: 65%;
-    font-size: 13px;
+    font-size: 14px;
     z-index: 2;
   }
   .MuiTextField-root {
@@ -167,16 +181,19 @@ const InputField = styled.div`
     position: absolute;
     right: 10%;
     z-index: 2;
+    .MuiInputLabel-shrink {
+      top: 0;
+    }
   }
   .MuiTextField-root label {
-    font-size: 0.7rem;
-    top: -7px;
+    font-size: 14px;
+    top: -10px;
   }
   .MuiTextField-root input {
-    height: 0.01rem;
-    font-size: 0.8rem;
+    font-size: 14px;
     font-weight: normal;
     background-color: #ffffff;
+    padding: 6px 10px;
   }
 `
 
@@ -185,7 +202,7 @@ const EmailErrorContainer = styled.div`
   height: 30px;
   width: 100%;
   position: absolute;
-  top: 30%;
+  top: 28%;
   z-index: 1;
 `
 
@@ -203,10 +220,10 @@ const ErrorField = styled.div`
   height: 37px;
   position: relative;
   .errorValue {
-    font-size: 5px;
+    font-size: 12px;
     position: absolute;
     left: 40%;
-    top: 32%;
+    top: 7%;
     color: red;
   }
 `
@@ -215,9 +232,9 @@ const ServerErrorContainer = styled.div`
   height: 30px;
   width: 100%;
   position: absolute;
-  top: 83.5%;
+  top: 81.5%;
   .errorValue {
-    font-size: 5px;
+    font-size: 12px;
     color: red;
     text-align: center;
   }

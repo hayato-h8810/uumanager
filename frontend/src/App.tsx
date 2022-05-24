@@ -8,6 +8,7 @@ import PageNotFound from './views/pageNotFound'
 import Header from './components/header'
 import Footer from './components/footer'
 import Confirmation from './views/confirmation'
+import ResetPassword from './views/resetPassword'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/login" component={Login} />
         <Route path="/userHome" component={UserHome} />
         <Route path="/confirmation/:confirmationToken" component={Confirmation} />
+        <Route path="/resetPassword/:resetPasswordToken" component={ResetPassword} />
         <Route component={PageNotFound} />
       </Switch>
       <Footer />

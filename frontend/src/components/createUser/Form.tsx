@@ -199,8 +199,9 @@ export default function Form({ props }: { props: propTypes }) {
 
 const Title = styled.div`
   padding-top: 70px;
-  font-size: 30px;
+  font-size: 25px;
   text-align: center;
+  margin-bottom: 15px;
 `
 
 const InputContainer = styled.div`
@@ -221,7 +222,7 @@ const InputField = styled.div`
     display: inline-block;
     position: absolute;
     right: 65%;
-    font-size: 13px;
+    font-size: 14px;
     z-index: 2;
   }
   .MuiTextField-root {
@@ -231,12 +232,12 @@ const InputField = styled.div`
     z-index: 2;
   }
   .MuiTextField-root label {
-    font-size: 0.7rem;
+    font-size: 14px;
     top: -2px;
   }
   .MuiTextField-root input {
-    height: 1em;
-    font-size: 0.8rem;
+    padding: 6px 10px;
+    font-size: 14px;
     font-weight: normal;
     background-color: #ffffff;
   }
@@ -283,10 +284,10 @@ const ErrorField = styled.div`
   height: 37px;
   position: relative;
   .errorValue {
-    font-size: 5px;
+    font-size: 12px;
     position: absolute;
     left: 40%;
-    top: 30%;
+    top: 7%;
     color: red;
   }
 `
@@ -295,9 +296,9 @@ const ServerErrorContainer = styled.div`
   height: 30px;
   width: 100%;
   position: absolute;
-  top: 83.5%;
+  top: 80.5%;
   .errorValue {
-    font-size: 5px;
+    font-size: 12px;
     color: red;
     text-align: center;
   }
