@@ -21,8 +21,9 @@ const Container = styled.div`
   margin-right: auto;
   > h1 {
     padding-top: 70px;
-    font-size: 30px;
+    font-size: 25px;
     text-align: center;
+    margin-bottom: 0;
   }
   .MuiLoadingButton-root {
     position: absolute;

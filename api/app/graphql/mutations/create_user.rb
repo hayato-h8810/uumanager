@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'digest'
 
 module Mutations
@@ -18,8 +19,11 @@ module Mutations
       confirmation_sent_at = Time.zone.at(confirmation_sent_at_token.to_i)
       confirmation_sent_at_range = confirmation_sent_at..confirmation_sent_at + 1
 
-      raise GraphQL::ExecutionError, 'INVALID_URL_ERROR' unless user = User.find_by(confirmation_email: Digest::SHA256.hexdigest(email),
-                                                                                    confirmation_sent_at: confirmation_sent_at_range)
+      unless user = User.find_by(confirmation_email: Digest::SHA256.hexdigest(email),
+                                 confirmation_sent_at: confirmation_sent_at_range)
+        raise GraphQL::ExecutionError,
+              'INVALID_URL_ERROR'
+      end
       raise GraphQL::ExecutionError, 'EMAIL_ERROR' if User.find_by(email: email)
       raise GraphQL::ExecutionError, 'TIMEOUT_ERROR' if (Time.zone.now - confirmation_sent_at).floor / 3600 >= 1
 

@@ -2,25 +2,23 @@ import { useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import Modal from '@mui/material/Modal'
-import { useCurrentUserQuery, useLogoutMutation, useDeleteUserMutation } from '../api/graphql'
+import { useCurrentUserQuery, useDeleteUserMutation } from '../api/graphql'
+import ResetPasswordDialog from './resetPasswordDialog'
+import UserSettingBalloon from './userSettingBalloon'
 
 export default function Header() {
   const [serverError, setServerError] = useState('')
   const [passwordValue, setPasswordValue] = useState('')
-  const [modalOpen, setModalOpen] = useState(false)
+  const [userDeletemodalOpen, setUserDeleteModalOpen] = useState(false)
+  const [resetPasswordDialogOpen, setResetPasswordDialogOpen] = useState(false)
+  const [resetPasswordInformation, setResetPasswordInformation] = useState('')
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const history = useHistory()
   const location = useLocation()
   const { data: { currentUser = null } = {}, refetch } = useCurrentUserQuery({
     fetchPolicy: 'network-only',
   })
-  const [logoutMutation] = useLogoutMutation({
-    onCompleted: (data) => {
-      if (!data?.logout?.id) {
-        history.push('/')
-        refetch()
-      }
-    },
-  })
+
   const [deleteUserMutation] = useDeleteUserMutation({
     onCompleted: (data) => {
       if (data?.deleteUser?.user?.id) {
@@ -38,15 +36,41 @@ export default function Header() {
   if (currentUser) {
     return (
       <HeaderContainer>
-        <button type="button" onClick={() => logoutMutation()} data-cy="logoutButton">
-          ログアウト
-        </button>
-        <button type="button" onClick={() => setModalOpen(true)} data-cy="openModal">
-          ユーザー削除モーダル
-        </button>
-        <ModalContainer open={modalOpen} onBackdropClick={() => setModalOpen(false)}>
+        <UserSettingButton
+          onClick={(e) => {
+            setAnchorEl(e.currentTarget)
+          }}
+          className="header-item-user-setting"
+          role="button"
+          tabIndex={0}
+        >
+          ユーザー設定
+        </UserSettingButton>
+        {anchorEl && (
+          <UserSettingBalloon
+            props={{
+              setResetPasswordDialogOpen,
+              setResetPasswordInformation,
+              setUserDeleteModalOpen,
+              anchorEl,
+              setAnchorEl,
+              currentUser,
+              refetch,
+            }}
+          />
+        )}
+        <ResetPasswordDialog
+          props={{
+            resetPasswordDialogOpen,
+            setResetPasswordDialogOpen,
+            setResetPasswordInformation,
+            resetPasswordInformation,
+            currentUser,
+          }}
+        />
+        <ModalContainer open={userDeletemodalOpen} onBackdropClick={() => setUserDeleteModalOpen(false)}>
           <div className="modalFrame">
-            <button type="button" onClick={() => setModalOpen(false)}>
+            <button type="button" onClick={() => setUserDeleteModalOpen(false)}>
               閉じる
             </button>
             <div className="inputValue">パスワード</div>
@@ -91,6 +115,19 @@ const HeaderContainer = styled.div`
   width: 100%;
   height: 75px;
   min-width: 1440px;
+  .header-item-user-setting {
+    display: inline-block;
+  }
+`
+
+const UserSettingButton = styled.div`
+  color: white;
+  cursor: pointer;
+  margin-top: 20px;
+  margin-left: 100px;
+  &:hover {
+    color: #c8c8c8;
+  }
 `
 
 const ModalContainer = styled(Modal)`
