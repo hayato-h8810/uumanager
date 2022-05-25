@@ -19,5 +19,6 @@ module Types
     field :transfer_multiple_urls, mutation: Mutations::TransferMultipleUrls
     field :send_reset_password_mail, mutation: Mutations::SendResetPasswordMail
     field :reset_password, mutation: Mutations::ResetPassword
+    field :edit_user_name, mutation: Mutations::EditUserName
   end
 end
