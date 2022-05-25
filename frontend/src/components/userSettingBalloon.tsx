@@ -1,6 +1,9 @@
+import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { useLogoutMutation, User } from '../api/graphql'
+import ResetPasswordDialog from './resetPasswordDialog'
+import DeleteUserDialog from './deleteUserDialog'
 
 type CustomProps = {
   anchorElLeft: number | undefined
@@ -8,9 +11,6 @@ type CustomProps = {
 }
 
 interface propsType {
-  setResetPasswordDialogOpen: (boolean: boolean) => void
-  setResetPasswordInformation: (information: string) => void
-  setUserDeleteModalOpen: (boolean: boolean) => void
   anchorEl: HTMLElement | null
   setAnchorEl: (element: HTMLElement | null) => void
   currentUser: User | null
@@ -18,15 +18,10 @@ interface propsType {
 }
 
 export default function UserSettingBalloon({ props }: { props: propsType }) {
-  const {
-    setResetPasswordDialogOpen,
-    setResetPasswordInformation,
-    setUserDeleteModalOpen,
-    anchorEl,
-    setAnchorEl,
-    currentUser,
-    refetch,
-  } = props
+  const { anchorEl, setAnchorEl, currentUser, refetch } = props
+  const [resetPasswordDialogOpen, setResetPasswordDialogOpen] = useState(false)
+  const [resetPasswordInformation, setResetPasswordInformation] = useState('')
+  const [deleteUserDialogOpen, setDeleteUserDialogOpen] = useState(false)
   const history = useHistory()
   const [logoutMutation] = useLogoutMutation({
     onCompleted: (data) => {
@@ -38,56 +33,68 @@ export default function UserSettingBalloon({ props }: { props: propsType }) {
   })
 
   return (
-    <BackdropContainer
-      onClick={() => {
-        setAnchorEl(null)
-      }}
-    >
-      <BalloonContainer
-        anchorElLeft={anchorEl?.getBoundingClientRect().left}
-        anchorElTop={anchorEl?.getBoundingClientRect().bottom}
-        onClick={(e) => e.stopPropagation()}
+    <>
+      <BackdropContainer
+        onClick={() => {
+          setAnchorEl(null)
+        }}
       >
-        <div className="balloon-item-frame">
-          <Header>
-            <div className="header-item-label">ログインユーザー</div>
-            <div className="header-item-user-name">{currentUser?.name}</div>
-          </Header>
-          <Options>
-            <div
-              onClick={() => {
-                setResetPasswordDialogOpen(true)
-                setResetPasswordInformation('')
-              }}
-              className="options-item-option"
-              role="button"
-              tabIndex={0}
-            >
-              パスワード変更
-            </div>
-            <div
-              onClick={() => {
-                setAnchorEl(null)
-                logoutMutation()
-              }}
-              className="options-item-option"
-              role="button"
-              tabIndex={0}
-            >
-              ログアウト
-            </div>
-            <div
-              onClick={() => setUserDeleteModalOpen(true)}
-              className="options-item-option"
-              role="button"
-              tabIndex={0}
-            >
-              ユーザー削除
-            </div>
-          </Options>
-        </div>
-      </BalloonContainer>
-    </BackdropContainer>
+        <BalloonContainer
+          anchorElLeft={anchorEl?.getBoundingClientRect().left}
+          anchorElTop={anchorEl?.getBoundingClientRect().bottom}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="balloon-item-frame">
+            <Header>
+              <div className="header-item-label">ログインユーザー</div>
+              <div className="header-item-user-name">{currentUser?.name}</div>
+            </Header>
+            <Options>
+              <div
+                onClick={() => {
+                  setResetPasswordDialogOpen(true)
+                  setResetPasswordInformation('')
+                }}
+                className="options-item-option"
+                role="button"
+                tabIndex={0}
+              >
+                パスワード変更
+              </div>
+              <div
+                onClick={() => {
+                  setAnchorEl(null)
+                  logoutMutation()
+                }}
+                className="options-item-option"
+                role="button"
+                tabIndex={0}
+              >
+                ログアウト
+              </div>
+              <div
+                onClick={() => setDeleteUserDialogOpen(true)}
+                className="options-item-option"
+                role="button"
+                tabIndex={0}
+              >
+                ユーザー削除
+              </div>
+            </Options>
+          </div>
+        </BalloonContainer>
+      </BackdropContainer>
+      <ResetPasswordDialog
+        props={{
+          resetPasswordDialogOpen,
+          setResetPasswordDialogOpen,
+          setResetPasswordInformation,
+          resetPasswordInformation,
+          currentUser,
+        }}
+      />
+      <DeleteUserDialog props={{ deleteUserDialogOpen, setDeleteUserDialogOpen, refetch }} />
+    </>
   )
 }
 
