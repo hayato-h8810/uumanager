@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { useLogoutMutation, User } from '../api/graphql'
 import ResetPasswordDialog from './resetPasswordDialog'
 import DeleteUserDialog from './deleteUserDialog'
+import EditUserNameDialog from './editUserNameDialog'
 
 type CustomProps = {
   anchorElLeft: number | undefined
@@ -22,6 +23,7 @@ export default function UserSettingBalloon({ props }: { props: propsType }) {
   const [resetPasswordDialogOpen, setResetPasswordDialogOpen] = useState(false)
   const [resetPasswordInformation, setResetPasswordInformation] = useState('')
   const [deleteUserDialogOpen, setDeleteUserDialogOpen] = useState(false)
+  const [editUserNameDialogOpen, setEditUserNameDialogOpen] = useState(false)
   const history = useHistory()
   const [logoutMutation] = useLogoutMutation({
     onCompleted: (data) => {
@@ -50,6 +52,14 @@ export default function UserSettingBalloon({ props }: { props: propsType }) {
               <div className="header-item-user-name">{currentUser?.name}</div>
             </Header>
             <Options>
+              <div
+                onClick={() => setEditUserNameDialogOpen(true)}
+                className="options-item-option"
+                role="button"
+                tabIndex={0}
+              >
+                ユーザー名変更
+              </div>
               <div
                 onClick={() => {
                   setResetPasswordDialogOpen(true)
@@ -94,6 +104,7 @@ export default function UserSettingBalloon({ props }: { props: propsType }) {
         }}
       />
       <DeleteUserDialog props={{ deleteUserDialogOpen, setDeleteUserDialogOpen, refetch }} />
+      <EditUserNameDialog props={{ editUserNameDialogOpen, setEditUserNameDialogOpen }} />
     </>
   )
 }
