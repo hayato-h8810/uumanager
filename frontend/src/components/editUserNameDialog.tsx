@@ -17,8 +17,6 @@ export default function EditUserNameDialog({ props }: { props: propsType }) {
   const [editUserNameMutation, { loading }] = useEditUserNameMutation({
     onCompleted: () => {
       setEditUserNameDialogOpen(false)
-      setUserNameValue('')
-      setPasswordValue('')
     },
     onError: (error) => {
       if (error?.message === 'PASSWORD_ERROR') {

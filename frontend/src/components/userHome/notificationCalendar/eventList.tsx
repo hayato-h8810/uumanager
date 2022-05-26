@@ -108,7 +108,7 @@ export default function EventList({ props }: { props: propType }) {
         </Select>
       </Sort>
       <List ref={eventListRef}>
-        {sortedEvents?.length ? (
+        {sortedEvents ? (
           sortedEvents.map((event, i) => (
             <div
               onClick={() => {
