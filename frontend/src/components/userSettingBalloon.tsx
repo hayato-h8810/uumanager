@@ -5,6 +5,7 @@ import { useLogoutMutation, User } from '../api/graphql'
 import ResetPasswordDialog from './resetPasswordDialog'
 import DeleteUserDialog from './deleteUserDialog'
 import EditUserNameDialog from './editUserNameDialog'
+import EditEmailDialog from './editEmailDialog'
 
 type CustomProps = {
   anchorElLeft: number | undefined
@@ -24,6 +25,7 @@ export default function UserSettingBalloon({ props }: { props: propsType }) {
   const [resetPasswordInformation, setResetPasswordInformation] = useState('')
   const [deleteUserDialogOpen, setDeleteUserDialogOpen] = useState(false)
   const [editUserNameDialogOpen, setEditUserNameDialogOpen] = useState(false)
+  const [editEmailDialogOpen, setEditEmailDialogOpen] = useState(false)
   const history = useHistory()
   const [logoutMutation] = useLogoutMutation({
     onCompleted: (data) => {
@@ -59,6 +61,14 @@ export default function UserSettingBalloon({ props }: { props: propsType }) {
                 tabIndex={0}
               >
                 ユーザー名変更
+              </div>
+              <div
+                onClick={() => setEditEmailDialogOpen(true)}
+                className="options-item-option"
+                role="button"
+                tabIndex={0}
+              >
+                メールアドレス変更
               </div>
               <div
                 onClick={() => {
@@ -105,6 +115,7 @@ export default function UserSettingBalloon({ props }: { props: propsType }) {
       />
       <DeleteUserDialog props={{ deleteUserDialogOpen, setDeleteUserDialogOpen, refetch }} />
       <EditUserNameDialog props={{ editUserNameDialogOpen, setEditUserNameDialogOpen }} />
+      <EditEmailDialog props={{ editEmailDialogOpen, setEditEmailDialogOpen }} />
     </>
   )
 }
@@ -126,7 +137,7 @@ const BalloonContainer = styled.div<CustomProps>`
   font-size: 14px;
   .balloon-item-frame {
     position: relative;
-    width: 150px;
+    width: 166px;
     background: white;
     box-shadow: 0px 2px 20px -7px rgba(0, 0, 0, 0.4);
     border-radius: 5px;

@@ -20,5 +20,7 @@ module Types
     field :send_reset_password_mail, mutation: Mutations::SendResetPasswordMail
     field :reset_password, mutation: Mutations::ResetPassword
     field :edit_user_name, mutation: Mutations::EditUserName
+    field :send_mail_for_edit_email, mutation: Mutations::SendMailForEditEmail
+    field :edit_email, mutation: Mutations::EditEmail
   end
 end

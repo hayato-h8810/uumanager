@@ -9,6 +9,7 @@ import Header from './components/header'
 import Footer from './components/footer'
 import Confirmation from './views/confirmation'
 import ResetPassword from './views/resetPassword'
+import EditEmail from './views/editEmail'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/userHome" component={UserHome} />
         <Route path="/confirmation/:confirmationToken" component={Confirmation} />
         <Route path="/resetPassword/:resetPasswordToken" component={ResetPassword} />
+        <Route path="/editEmail/:editEmailToken" component={EditEmail} />
         <Route component={PageNotFound} />
       </Switch>
       <Footer />

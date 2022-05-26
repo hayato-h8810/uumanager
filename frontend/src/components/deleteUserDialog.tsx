@@ -59,6 +59,9 @@ export default function DeleteUserDialog({ props }: { props: propsType }) {
               fullWidth
               variant="standard"
             />
+            {passwordError && (
+              <DialogContentText className="error-value">パスワードが間違っています。</DialogContentText>
+            )}
           </DialogContent>
           <DialogActions>
             <LoadingButton
@@ -95,6 +98,10 @@ const DialogContainer = styled(Dialog)`
     color: white;
     & .MuiDialogContentText-root {
       color: white;
+    }
+    .error-value {
+      color: #d32f2f;
+      font-size: 14px;
     }
     .MuiTextField-root {
       .MuiInput-root {
