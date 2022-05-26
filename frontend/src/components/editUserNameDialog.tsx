@@ -1,6 +1,7 @@
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, TextField } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { useEffect, useState } from 'react'
+import styled from 'styled-components'
 import { useEditUserNameMutation } from '../api/graphql'
 
 interface propsType {
@@ -13,14 +14,17 @@ export default function EditUserNameDialog({ props }: { props: propsType }) {
   const [isConfirm, setIsConfirm] = useState(false)
   const [userNameValue, setUserNameValue] = useState('')
   const [passwordValue, setPasswordValue] = useState('')
-  const [inputError, setInputError] = useState(false)
+  const [passwordError, setPasswordError] = useState('')
+  const [userNameError, setUserNameError] = useState('')
   const [editUserNameMutation, { loading }] = useEditUserNameMutation({
     onCompleted: () => {
       setEditUserNameDialogOpen(false)
+      setUserNameValue('')
+      setPasswordValue('')
     },
     onError: (error) => {
       if (error?.message === 'PASSWORD_ERROR') {
-        setInputError(true)
+        setPasswordError('パスワードが間違っています。')
       }
     },
   })
@@ -30,12 +34,13 @@ export default function EditUserNameDialog({ props }: { props: propsType }) {
       setIsConfirm(false)
       setUserNameValue('')
       setPasswordValue('')
-      setInputError(false)
+      setPasswordError('')
+      setUserNameError('')
     }
   }, [editUserNameDialogOpen])
 
   return (
-    <Dialog
+    <DialogContainer
       open={editUserNameDialogOpen}
       onBackdropClick={() => {
         setEditUserNameDialogOpen(false)
@@ -49,12 +54,13 @@ export default function EditUserNameDialog({ props }: { props: propsType }) {
             <TextField
               value={passwordValue}
               onChange={(e) => setPasswordValue(e.target.value)}
-              error={inputError}
+              error={!!passwordError}
               type="password"
               autoFocus
               fullWidth
               variant="standard"
             />
+            {passwordError && <DialogContentText className="error-value">{passwordError}</DialogContentText>}
           </DialogContent>
           <DialogActions>
             <LoadingButton
@@ -73,12 +79,13 @@ export default function EditUserNameDialog({ props }: { props: propsType }) {
             <TextField
               value={userNameValue}
               onChange={(e) => setUserNameValue(e.target.value)}
-              error={inputError}
+              error={!!userNameError}
               type="text"
               autoFocus
               fullWidth
               variant="standard"
             />
+            {userNameError && <DialogContentText className="error-value">{userNameError}</DialogContentText>}
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setEditUserNameDialogOpen(false)} variant="text">
@@ -87,9 +94,8 @@ export default function EditUserNameDialog({ props }: { props: propsType }) {
             <Button
               onClick={() => {
                 if (!userNameValue) {
-                  setInputError(true)
+                  setUserNameError('ユーザー名を入力して下さい。')
                 } else {
-                  setInputError(false)
                   setIsConfirm(true)
                 }
               }}
@@ -100,6 +106,13 @@ export default function EditUserNameDialog({ props }: { props: propsType }) {
           </DialogActions>
         </>
       )}
-    </Dialog>
+    </DialogContainer>
   )
 }
+
+const DialogContainer = styled(Dialog)`
+  .error-value {
+    color: #d32f2f;
+    font-size: 14px;
+  }
+`
