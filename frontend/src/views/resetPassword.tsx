@@ -1,4 +1,4 @@
-import Index from '../components/resetPassword/Index'
+import Index from '../components/resetPassword'
 
 export default function ResetPassword() {
   return <Index />
