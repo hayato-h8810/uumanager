@@ -46,19 +46,25 @@ export default function Form() {
   const onSubmit: SubmitHandler<FormInput> = (data) => {
     const token = resetPasswordToken.match(/^\d+-([\da-zA-Z]+)-/)
     const email = resetPasswordToken.match(/^\d+-[\da-zA-Z]+-(.+)$/)
-    if (token && email)
+    if (token && email) {
       resetPasswordMutation({
         variables: { email: email[1], newPassword: data.password, resetPasswordToken: token[1] },
       })
+    }
   }
   useEffect(() => {
     const resetPasswordMailSentTimestanp = resetPasswordToken.match(/^\d+/)
+    const token = resetPasswordToken.match(/^\d+-([\da-zA-Z]+)-/)
+    const email = resetPasswordToken.match(/^\d+-[\da-zA-Z]+-(.+)$/)
     if (resetPasswordMailSentTimestanp) {
       const resetPasswordMailSentDate = new Date(Number(resetPasswordMailSentTimestanp[0]) * 1000)
       const currentDate = new Date()
       if (Math.floor((currentDate.getTime() - resetPasswordMailSentDate.getTime()) / (1000 * 3600)) >= 1) {
         setInformation('有効期限切れです。')
       }
+    }
+    if (!token || !email) {
+      setInformation('無効なURLです。')
     }
   }, [])
 
