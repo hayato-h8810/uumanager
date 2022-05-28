@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
-import Modal from '@mui/material/Modal'
-import { useCurrentUserQuery, useDeleteUserMutation } from '../api/graphql'
+import { useCurrentUserQuery } from '../api/graphql'
 import UserSettingBalloon from './userSettingBalloon'
+import Notification from './notification'
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
@@ -16,11 +16,11 @@ export default function Header() {
   if (currentUser) {
     return (
       <HeaderContainer>
+        <Notification />
         <UserSettingButton
           onClick={(e) => {
             setAnchorEl(e.currentTarget)
           }}
-          className="header-item-user-setting"
           role="button"
           tabIndex={0}
         >
@@ -59,27 +59,15 @@ const HeaderContainer = styled.div`
   width: 100%;
   height: 75px;
   min-width: 1440px;
-  .header-item-user-setting {
-    display: inline-block;
-  }
 `
 
 const UserSettingButton = styled.div`
   color: white;
+  display: inline-block;
   cursor: pointer;
   margin-top: 20px;
   margin-left: 100px;
   &:hover {
     color: #c8c8c8;
-  }
-`
-
-const ModalContainer = styled(Modal)`
-  .MuiBackdrop-root {
-    background: rgba(0, 0, 0, 0.7);
-  }
-  .modalFrame {
-    background: white;
-    position: relative;
   }
 `
