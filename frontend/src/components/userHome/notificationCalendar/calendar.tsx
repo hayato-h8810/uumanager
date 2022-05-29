@@ -123,7 +123,7 @@ const Container = styled.div`
 
 const CalendarContainer = styled.div`
   width: 550px;
-  margin-top: 35px;
+  margin-top: 50px;
   display: inline-block;
   vertical-align: top;
   position: relative;

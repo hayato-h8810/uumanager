@@ -6,7 +6,6 @@ import Login from './views/login'
 import UserHome from './views/userHome'
 import PageNotFound from './views/pageNotFound'
 import Header from './components/header'
-import Footer from './components/footer'
 import Confirmation from './views/confirmation'
 import ResetPassword from './views/resetPassword'
 import EditEmail from './views/editEmail'
@@ -25,7 +24,6 @@ function App() {
         <Route path="/editEmail/:editEmailToken" component={EditEmail} />
         <Route component={PageNotFound} />
       </Switch>
-      <Footer />
     </Router>
   )
 }

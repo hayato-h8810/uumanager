@@ -1,11 +1,15 @@
 import styled from 'styled-components'
 import Index from '../components/createUser/index'
+import Footer from '../components/footer'
 
 export default function CreateUserContainer() {
   return (
-    <Container>
-      <Index />
-    </Container>
+    <>
+      <Container>
+        <Index />
+      </Container>
+      <Footer />
+    </>
   )
 }
 

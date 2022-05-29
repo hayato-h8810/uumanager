@@ -163,16 +163,16 @@ export default function EventList({ props }: { props: propType }) {
 const Container = styled.div`
   grid-area: eventList;
   margin-left: 100px;
-  margin-top: 60px;
+  margin-top: 75px;
   position: relative;
   &::before {
     content: '';
     background: #ddd;
     width: 1px;
-    height: 548px;
+    height: 568px;
     position: absolute;
     left: 420px;
-    top: -25px;
+    top: -10px;
   }
 `
 

@@ -54,13 +54,16 @@ export default function UserDescription() {
 const Container = styled.div`
   grid-area: userDiscription;
   margin-left: 30px;
+  min-height: 235px;
 `
 
 const Title = styled.h1`
-  padding-top: 5px;
+  padding-top: 35px;
   padding-left: 70px;
   font-weight: normal;
   font-size: 20px;
+  max-width: 720px;
+  word-wrap: break-word;
 `
 const Contents = styled.div`
   padding-top: 10px;

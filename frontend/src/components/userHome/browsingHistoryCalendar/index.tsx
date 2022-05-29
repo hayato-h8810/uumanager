@@ -42,7 +42,7 @@ export default function Index() {
 
 const Container = styled.div`
   display: grid;
-  grid-template-rows: 604px;
+  grid-template-rows: 659px;
   grid-template-columns: 600px 840px;
   grid-template-areas: 'eventList calendar';
 `

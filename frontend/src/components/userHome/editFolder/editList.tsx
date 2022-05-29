@@ -250,7 +250,7 @@ const Container = styled.div`
   &::before {
     content: '';
     width: 1px;
-    height: 550px;
+    height: 600px;
     position: absolute;
     background: #ddd;
     top: 60px;
@@ -260,12 +260,12 @@ const Container = styled.div`
 
 const BackButton = styled.div`
   position: absolute;
-  top: 5px;
+  top: 20px;
   left: 20px;
 `
 
 const Title = styled.div`
-  margin-top: 45px;
+  margin-top: 75px;
   margin-left: 120px;
   font-size: 20px;
   position: relative;

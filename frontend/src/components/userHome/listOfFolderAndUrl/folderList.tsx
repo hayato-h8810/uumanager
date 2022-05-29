@@ -228,23 +228,23 @@ const Container = styled.div`
   &::before {
     content: '';
     width: 1px;
-    height: 530px;
+    height: 570px;
     position: absolute;
     background: #ddd;
     top: 40px;
-    left: 460px;
+    left: 475px;
   }
 `
 
 const Title = styled.div`
-  margin-top: 50px;
+  margin-top: 65px;
   margin-left: 110px;
   font-size: 20px;
   margin-bottom: 10px;
 `
 
 const EditButton = styled.div`
-  top: 55px;
+  top: 70px;
   left: 334px;
   position: absolute;
   .MuiButton-root {
@@ -402,6 +402,6 @@ const AddFolderForm = styled.div`
 
 const PaginationContainer = styled.div`
   position: absolute;
-  top: 550px;
+  top: 565px;
   left: 167px;
 `
