@@ -13,7 +13,7 @@ export default function Index() {
 
 const Container = styled.div`
   display: grid;
-  grid-template-rows: 659px;
+  grid-template-rows: 714px;
   grid-template-columns: 500px 940px;
   grid-template-areas: 'editList batchTransfer';
 `

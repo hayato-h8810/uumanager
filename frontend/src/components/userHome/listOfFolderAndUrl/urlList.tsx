@@ -331,7 +331,7 @@ const Container = styled.div`
 `
 
 const HeadLine = styled.div`
-  margin-top: 60px;
+  margin-top: 75px;
   margin-left: 80px;
   position: relative;
 `
@@ -514,6 +514,6 @@ const Contents = styled.div`
 
 const PaginationContainer = styled.div`
   position: absolute;
-  top: 550px;
+  top: 565px;
   left: 400px;
 `

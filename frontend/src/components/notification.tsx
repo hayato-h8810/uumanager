@@ -118,10 +118,11 @@ export default function Notification() {
 const NotificationIconContainer = styled.div`
   position: relative;
   display: inline-block;
-  margin-left: 300px;
+  margin-left: 800px;
   .MuiIconButton-root {
     .MuiSvgIcon-root {
       color: white;
+      font-size: 22px;
     }
     &::before {
       position: absolute;

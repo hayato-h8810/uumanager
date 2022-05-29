@@ -169,7 +169,7 @@ const Container = styled.div`
 
 const Headline = styled.div`
   margin-left: 85px;
-  margin-top: 45px;
+  margin-top: 60px;
 `
 
 const Title = styled.div`

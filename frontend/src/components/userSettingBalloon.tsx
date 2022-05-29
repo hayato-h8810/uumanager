@@ -172,6 +172,8 @@ const Header = styled.div`
     margin-left: 20px;
     margin-bottom: 10px;
     max-width: 120px;
+    max-height: 300px;
+    overflow: hidden;
     word-wrap: break-word;
   }
 `

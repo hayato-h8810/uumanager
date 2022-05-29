@@ -1,12 +1,16 @@
 import styled from 'styled-components'
+import Footer from '../components/footer'
 import Index from '../components/login/index'
 
 export default function LoginContainer() {
   return (
-    <Container>
-      <h1>login</h1>
-      <Index />
-    </Container>
+    <>
+      <Container>
+        <h1>login</h1>
+        <Index />
+      </Container>
+      <Footer />
+    </>
   )
 }
 

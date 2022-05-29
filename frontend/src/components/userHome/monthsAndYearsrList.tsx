@@ -76,7 +76,7 @@ export default function MonthsAndYearsList({ props }: { props: propType }) {
 
 const Container = styled.div`
   display: inline-block;
-  margin-top: 93px;
+  margin-top: 108px;
   margin-left: 60px;
   table {
     border-collapse: collapse;

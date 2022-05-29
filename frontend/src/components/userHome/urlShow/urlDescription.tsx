@@ -141,13 +141,13 @@ export default function UrlDescription() {
 
 const Container = styled.div`
   grid-area: urlDescription;
-  min-height: 659px;
+  min-height: 714px;
   margin-left: 5px;
 `
 
 const Headline = styled.div`
   position: relative;
-  margin-top: 40px;
+  margin-top: 65px;
   margin-left: 140px;
   font-size: 20px;
 `
