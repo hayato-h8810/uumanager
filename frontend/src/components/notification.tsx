@@ -16,6 +16,10 @@ export default function Notification() {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const [displayNotifications, setDisplayNotifications] = useState<Url[]>([])
   const history = useHistory()
+  const today = () => {
+    const tz = (new Date().getTimezoneOffset() + 540) * 60 * 1000
+    return new Date(new Date().getTime() + tz)
+  }
   useFetchFolderAndUrlQuery({
     onCompleted: (data) => {
       const notificationsArray: Url[] = []
@@ -29,10 +33,6 @@ export default function Notification() {
     },
   })
   const [editUrlMutation] = useEditUrlMutation()
-  const today = () => {
-    const tz = (new Date().getTimezoneOffset() + 540) * 60 * 1000
-    return new Date(new Date().getTime() + tz)
-  }
 
   return (
     <>
