@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { useCurrentUserQuery } from '../api/graphql'
@@ -7,15 +7,24 @@ import Notification from './notification'
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
+  const [inLandingPage, setInLandingPage] = useState(false)
   const history = useHistory()
   const location = useLocation()
   const { data: { currentUser = null } = {}, refetch } = useCurrentUserQuery({
     fetchPolicy: 'network-only',
   })
 
+  useEffect(() => {
+    if (location.pathname === '/') {
+      setInLandingPage(true)
+    } else {
+      setInLandingPage(false)
+    }
+  }, [location.pathname])
+
   return (
-    <HeaderContainer>
-      <Title onClick={() => history.push('/')}>URL管理アプリ</Title>
+    <HeaderContainer inLandingPage={inLandingPage}>
+      <Title onClick={() => history.push('/')}>WebManager</Title>
       {currentUser ? (
         <>
           <Notification />
@@ -53,16 +62,17 @@ export default function Header() {
   )
 }
 
-const HeaderContainer = styled.div`
+const HeaderContainer = styled.div<{ inLandingPage: boolean }>`
   background: #2c2c2c;
   width: 100%;
   height: 75px;
-  min-width: 1440px;
+  min-width: ${(props) => (props.inLandingPage ? '1425px' : '1440px')};
+  ${(props) => props.inLandingPage && 'position: sticky; top: 0; z-index: 5000;'}
 `
 const Title = styled.div`
   display: inline-block;
   color: white;
-  font-size: 20px;
+  font-size: 22px;
   margin-left: 140px;
   cursor: pointer;
   &:hover {
