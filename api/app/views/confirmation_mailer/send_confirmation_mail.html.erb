@@ -1,9 +1,10 @@
+<% require "./app/components/views.rb"%>
 <p><%= @email %>様</p>
 
-<P>URL管理アプリにご登録いただき、ありがとうございます。このメールは、ご登録いただいたメールアドレスが正しいか確認するためのメールです。</P>
+<P>UUManagerにご登録いただき、ありがとうございます。このメールは、ご登録いただいたメールアドレスが正しいか確認するためのメールです。</P>
 
 <p>下記のリンクをクリックしていただくと、メール認証が完了します。</p>
 
-<%= link_to "http://localhost:8000/confirmation/#{@user.confirmation_sent_at.to_i}-#{@email}", "http://localhost:8000/confirmation/#{@user.confirmation_sent_at.to_i}-#{@email}" %>
+<%= link_to "#{create_string_depend_on_the_environments()}/confirmation/#{@user.confirmation_sent_at.to_i}-#{@email}", "#{create_string_depend_on_the_environments()}/confirmation/#{@user.confirmation_sent_at.to_i}-#{@email}" %>
 
 <p>このURLの有効期限は<%= Time.at(@user.confirmation_sent_at.to_i + 3600).strftime("%y/%m/%d %T") %>です。このメールに心当たりがない方は、お手数ですがこのメールは破棄してください。</p>

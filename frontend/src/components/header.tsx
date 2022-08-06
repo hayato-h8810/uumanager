@@ -1,4 +1,4 @@
-import { useEffect,useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { useCurrentUserQuery } from '../api/graphql'
@@ -24,7 +24,7 @@ export default function Header() {
 
   return (
     <HeaderContainer inLandingPage={inLandingPage}>
-      <Title onClick={() => history.push('/')}>WebManager</Title>
+      <Title onClick={() => history.push('/')}>UUManager</Title>
       {currentUser ? (
         <>
           <Notification />

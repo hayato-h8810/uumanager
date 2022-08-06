@@ -6,9 +6,14 @@ import App from './App'
 import reportWebVitals from './reportWebVitals'
 
 const link = createHttpLink({
-  uri: 'http://localhost:8000/graphql',
+  uri: 'https://uumanager.com/graphql',
   credentials: 'include',
 })
+
+// const link = createHttpLink({
+//   uri: 'http://localhost:8000/graphql',
+//   credentials: 'include',
+// })
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),

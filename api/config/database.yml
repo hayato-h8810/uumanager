@@ -85,5 +85,5 @@ test:
 production:
   <<: *default
   database: api_production
-  username: api
-  password: <%= ENV['API_DATABASE_PASSWORD'] %>
+  username: <%= ENV['PRODACTION_POSTGRES_USER'] %>
+  password: <%= ENV['PRODACTION_POSTGRES_PASSWORD'] %>

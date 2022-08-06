@@ -1,9 +1,10 @@
+<% require "./app/components/views.rb"%>
 <%= @new_email %>様
 
 このメールは、変更するメールアドレスが正しいかどうか確認するためのメールです。
 
 下記のリンクをクリックしていただくと、メールアドレスの変更が完了します。
 
-<%= link_to "http://localhost:8000/editEmail/#{@user.edit_email_sent_at.to_i}-#{@new_email}", "http://localhost:8000/editEmail/#{@user.edit_email_sent_at.to_i}-#{@new_email}" %>
+<%= link_to "http://#{create_string_depend_on_the_environments()}/editEmail/#{@user.edit_email_sent_at.to_i}-#{@new_email}", "http://#{create_string_depend_on_the_environments()}/editEmail/#{@user.edit_email_sent_at.to_i}-#{@new_email}" %>
 
 このURLの有効期限は<%= (@user.edit_email_sent_at + 3600).strftime("%y/%m/%d %T") %>です。このメールに心当たりがない方は、お手数ですがこのメールは破棄してください。

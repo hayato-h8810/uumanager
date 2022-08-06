@@ -24,7 +24,7 @@ export default function LandingPageContainer() {
     <>
       <Title>
         <div className="title-text">
-          <span className="title-text-first-line">WebManagerは、気に入ったwebサイトを管理</span>
+          <span className="title-text-first-line">UUManagerは、気に入ったwebサイトを管理</span>
           <span className="title-text-second-line">するための様々な手段を提供します。</span>
         </div>
       </Title>
