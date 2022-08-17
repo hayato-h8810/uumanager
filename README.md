@@ -1,7 +1,7 @@
 ## UUManager
 UUManagerは、ネットを使って調べ物をしたり、資料集めをしたいと言うような需要を満たす為に制作されたアプリです。  
-サイトのurlを保存するといった基本的な機能以外にも、保存したurlごとに通知日を設定したり、独自のタイトルを付与出来る機能など、多くのニーズに答えられることを心掛けました。その他の機能に付きましては、下記の機能一覧をご参照ください。  
- 
+サイトのurlを保存するといった基本的な機能以外にも、保存したurlごとに通知日を設定したり、独自のタイトルを付与出来る機能など、多くのニーズに答えられることを心掛けました。その他の機能に付きましては、下記の機能一覧をご参照ください。   
+通信規格にはGraphQLを使用しています。
 
 ![titleLogo](https://user-images.githubusercontent.com/91232959/185062742-23bb99c1-c454-4743-96c1-06669a9545e0.png)
 
@@ -30,7 +30,7 @@ https://uumanager.com/
 - ログイン履歴機能(chart.js)
 
 ## AWS構成図
-![configurationDiagram drawio](https://user-images.githubusercontent.com/91232959/184792748-1ee8ef01-d536-4ade-b7c3-23c0cfdab3a7.png)
+![configurationDiagram drawio](https://user-images.githubusercontent.com/91232959/185143728-d3f1c102-ca03-4159-946e-a982f79592c8.png)
 
 ## 使用技術
 - Ruby 2.7.4
@@ -41,6 +41,7 @@ https://uumanager.com/
 - React 17.0.2
 - Nginx
 - Docker/Docker-compose
+- GraphQL
 - AWS
   - VPC
   - EC2
