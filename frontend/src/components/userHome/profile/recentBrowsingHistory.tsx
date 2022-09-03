@@ -76,7 +76,7 @@ export default function RecentBrowsingHistory() {
         })()}
       </Contents>
       {fetchBrowsingHistory && fetchBrowsingHistory?.length > 6 && (
-        <ShowMoreButton href="/userHome/browsingHistory">もっと見る</ShowMoreButton>
+        <ShowMoreButton href="/userHome/browsingHistoryCalendar">もっと見る</ShowMoreButton>
       )}
     </Container>
   )
